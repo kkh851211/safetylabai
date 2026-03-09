@@ -1,0 +1,1034 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>생체인식 키오스크 기능 목록표 v1.0</title>
+    <style>
+        :root {
+            --bg: #0f1117;
+            --s1: #1a1f2e;
+            --t1: #e8eaf0;
+            --t3: #8c95aa;
+            --bd: #232b3e;
+            --blue: #4f80ff;
+            --green: #10b981;
+            --orange: #f59e0b;
+            --red: #ef4444;
+            --purple: #a78bfa;
+            --teal: #14b8a6;
+            --transition: background 0.2s, color 0.2s, border-color 0.2s;
+        }
+
+        body.light {
+            --bg: #f5f7fa;
+            --s1: #ffffff;
+            --t1: #1a1f2e;
+            --t3: #5a6478;
+            --bd: #d1d9e6;
+        }
+
+        html { overflow-y: scroll; }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            background: var(--bg);
+            color: var(--t1);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            font-size: 14px;
+            line-height: 1.6;
+            transition: var(--transition);
+        }
+
+        .inner-container {
+            max-width: 1100px; margin: 0 auto;
+            padding: 0 24px; width: 100%; height: 100%;
+            display: flex; align-items: center;
+        }
+
+        header {
+            background: var(--s1); border-bottom: 1px solid var(--bd);
+            height: 56px; position: sticky; top: 0; z-index: 100;
+            transition: var(--transition);
+        }
+
+        .header-inner { justify-content: space-between; }
+        .header-left  { display: flex; align-items: center; gap: 12px; }
+
+        .logo {
+            width: 32px; height: 32px; background: var(--blue);
+            border-radius: 8px; display: flex; align-items: center;
+            justify-content: center; font-size: 16px; color: #fff; flex-shrink: 0;
+        }
+
+        .title-wrap h1 { font-size: 15px; font-weight: 700; color: var(--t1); }
+        .title-wrap p  { font-size: 11px; color: var(--t3); }
+
+        .badges { display: flex; gap: 6px; }
+        .badge {
+            font-size: 11px; font-weight: 600; padding: 3px 8px;
+            border-radius: 20px; border: 1px solid var(--bd);
+            color: var(--t3); transition: var(--transition);
+        }
+        .badge.blue   { background: rgba(79,128,255,0.12);  color: var(--blue);   border-color: rgba(79,128,255,0.3); }
+        .badge.green  { background: rgba(16,185,129,0.12);  color: var(--green);  border-color: rgba(16,185,129,0.3); }
+        .badge.orange { background: rgba(245,158,11,0.12);  color: var(--orange); border-color: rgba(245,158,11,0.3); }
+        .badge.teal   { background: rgba(20,184,166,0.12);  color: var(--teal);   border-color: rgba(20,184,166,0.3); }
+        .badge.purple { background: rgba(167,139,250,0.12); color: var(--purple); border-color: rgba(167,139,250,0.3); }
+
+        .toggle-btn {
+            background: var(--bg); border: 1px solid var(--bd); color: var(--t1);
+            padding: 6px 12px; border-radius: 8px; cursor: pointer;
+            font-size: 13px; transition: var(--transition); white-space: nowrap;
+        }
+        .toggle-btn:hover { border-color: var(--blue); }
+
+        nav { background: var(--s1); border-bottom: 1px solid var(--bd); transition: var(--transition); }
+        .nav-inner { overflow-x: auto; height: 100%; }
+        .nav-inner::-webkit-scrollbar { display: none; }
+
+        .tab-btn {
+            background: none; border: none; border-bottom: 2px solid transparent;
+            color: var(--t3); padding: 12px 16px; cursor: pointer;
+            font-size: 13px; font-weight: 500; white-space: nowrap;
+            transition: color 0.15s, border-color 0.15s;
+        }
+        .tab-btn:hover { color: var(--t1); }
+        .tab-btn.active { color: var(--blue); border-bottom: 2px solid var(--blue); }
+
+        main { padding: 24px; max-width: 1100px; margin: 0 auto; }
+
+        .page { display: none; }
+        .page.active { display: block; }
+
+        .card {
+            background: var(--s1); border-radius: 12px;
+            padding: 18px; border: 1px solid var(--bd);
+            transition: var(--transition);
+        }
+
+        .card-title {
+            font-size: 11px; font-weight: 700; color: var(--t3);
+            text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 14px;
+        }
+
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+        .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+        .grid-4 { display: grid; grid-template-columns: repeat(4,1fr); gap: 16px; }
+        .mb16 { margin-bottom: 16px; }
+        .mb8  { margin-bottom: 8px; }
+
+        .stat-num   { font-size: 28px; font-weight: 800; color: var(--t1); line-height: 1.1; }
+        .stat-label { font-size: 12px; color: var(--t3); margin-top: 4px; }
+        .stat-sub   { font-size: 11px; color: var(--t3); margin-top: 8px; padding-top: 8px; border-top: 1px solid var(--bd); }
+
+        /* ── 테이블 ── */
+        table { width: 100%; border-collapse: collapse; }
+        th {
+            text-align: left; font-size: 11px; font-weight: 600; color: var(--t3);
+            padding: 8px 10px; border-bottom: 1px solid var(--bd);
+            text-transform: uppercase; letter-spacing: 0.05em;
+        }
+        td {
+            padding: 10px; border-bottom: 1px solid var(--bd);
+            font-size: 13px; color: var(--t1); vertical-align: top;
+        }
+        tr:last-child td { border-bottom: none; }
+        tr:hover td { background: rgba(79,128,255,0.04); }
+
+        /* MVP 행 — 파란 강조 */
+        tr.row-mvp td { background: rgba(79,128,255,0.05); }
+        tr.row-mvp:hover td { background: rgba(79,128,255,0.09); }
+        tr.row-mvp td:first-child { border-left: 3px solid var(--blue); padding-left: 8px; }
+
+        /* v2 행 — 그레이 */
+        tr.row-v2 td { background: transparent; }
+        tr.row-v2 td:first-child { border-left: 3px solid var(--t3); padding-left: 8px; }
+
+        /* v3 / 장기 행 */
+        tr.row-v3 td { background: rgba(167,139,250,0.04); }
+        tr.row-v3 td:first-child { border-left: 3px solid var(--purple); padding-left: 8px; }
+
+        /* 03.04 신규 행 */
+        tr.row-new td { background: rgba(20,184,166,0.06); }
+        tr.row-new:hover td { background: rgba(20,184,166,0.11); }
+        tr.row-new td:first-child { border-left: 3px solid var(--teal); padding-left: 8px; }
+
+        /* ── 배지 ── */
+        .ver {
+            display: inline-block; font-size: 11px; font-weight: 700;
+            padding: 2px 8px; border-radius: 20px; white-space: nowrap;
+        }
+        .ver.mvp    { background: rgba(79,128,255,0.12);  color: var(--blue); }
+        .ver.v2     { background: rgba(139,147,170,0.12); color: var(--t3); }
+        .ver.v3     { background: rgba(167,139,250,0.12); color: var(--purple); }
+        .ver.teal   { background: rgba(20,184,166,0.12);  color: var(--teal); }
+        .ver.red    { background: rgba(239,68,68,0.12);   color: var(--red); }
+
+        .status {
+            display: inline-flex; align-items: center; gap: 4px;
+            font-size: 11px; font-weight: 700;
+            padding: 3px 8px; border-radius: 20px;
+        }
+        .status.confirmed { background: rgba(16,185,129,0.12);  color: var(--green); }
+        .status.discuss   { background: rgba(245,158,11,0.12);  color: var(--orange); }
+        .status.later     { background: rgba(139,147,170,0.12); color: var(--t3); }
+        .status.new       { background: rgba(20,184,166,0.12);  color: var(--teal); }
+
+        /* ── item-list ── */
+        .item-list { list-style: none; }
+        .item-list li {
+            display: flex; align-items: flex-start; gap: 10px;
+            padding: 10px 0; border-bottom: 1px solid var(--bd);
+            font-size: 13px; color: var(--t1);
+        }
+        .item-list li:last-child { border-bottom: none; }
+
+        .dot { width: 6px; height: 6px; border-radius: 50%; margin-top: 6px; flex-shrink: 0; }
+        .dot-blue   { background: var(--blue); }
+        .dot-green  { background: var(--green); }
+        .dot-orange { background: var(--orange); }
+        .dot-red    { background: var(--red); }
+        .dot-purple { background: var(--purple); }
+        .dot-teal   { background: var(--teal); }
+        .dot-gray   { background: var(--t3); }
+
+        /* ── 섹션 ── */
+        .section-label {
+            font-size: 11px; font-weight: 700; color: var(--blue);
+            text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 6px;
+        }
+        .section-desc { font-size: 13px; color: var(--t3); margin-bottom: 16px; line-height: 1.7; }
+
+        .notice-banner {
+            display: flex; align-items: center; gap: 10px;
+            background: rgba(20,184,166,0.08); border: 1px solid rgba(20,184,166,0.3);
+            border-radius: 10px; padding: 10px 16px; margin-bottom: 16px;
+            font-size: 12px; color: var(--teal); font-weight: 600;
+        }
+
+        /* ── expand ── */
+        .expand-card { border: 1px solid var(--bd); border-radius: 10px; overflow: hidden; margin-bottom: 8px; }
+        .expand-card.expand-new { border-color: rgba(20,184,166,0.4); }
+        .expand-card.expand-v3  { border-color: rgba(167,139,250,0.35); }
+
+        .expand-header {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 12px 16px; background: var(--bg); cursor: pointer; transition: var(--transition);
+        }
+        .expand-header:hover { background: rgba(79,128,255,0.06); }
+        .expand-card.expand-new .expand-header { background: rgba(20,184,166,0.05); }
+        .expand-card.expand-new .expand-header:hover { background: rgba(20,184,166,0.1); }
+        .expand-card.expand-v3  .expand-header { background: rgba(167,139,250,0.04); }
+        .expand-card.expand-v3  .expand-header:hover { background: rgba(167,139,250,0.09); }
+
+        .expand-header-left {
+            display: flex; align-items: center; gap: 10px;
+            font-size: 13px; font-weight: 700; color: var(--t1);
+        }
+        .expand-body { padding: 14px 16px; background: var(--s1); border-top: 1px solid var(--bd); display: none; }
+        .expand-body.open { display: block; }
+        .chevron { font-size: 11px; color: var(--t3); transition: transform 0.2s; }
+        .chevron.open { transform: rotate(180deg); }
+
+        /* ── action-tag ── */
+        .action-tag {
+            display: inline-block; font-size: 10px; font-weight: 700;
+            padding: 1px 6px; border-radius: 4px; margin-right: 4px;
+        }
+        .tag-0304   { background: rgba(20,184,166,0.15);  color: var(--teal); }
+        .tag-urgent { background: rgba(239,68,68,0.15);   color: var(--red); }
+        .tag-new    { background: rgba(167,139,250,0.15); color: var(--purple); }
+        .tag-later  { background: rgba(139,147,170,0.12); color: var(--t3); }
+
+        /* ── 비교 카드 (MVP vs Next) ── */
+        .compare-wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+        .compare-col { border-radius: 12px; border: 1px solid var(--bd); overflow: hidden; }
+        .compare-col.col-mvp  { border-color: rgba(79,128,255,0.35); }
+        .compare-col.col-next { border-color: rgba(139,147,170,0.3); }
+        .compare-col.col-v3   { border-color: rgba(167,139,250,0.35); }
+
+        .compare-head {
+            padding: 12px 16px; font-size: 12px; font-weight: 700;
+            display: flex; align-items: center; gap: 8px;
+        }
+        .compare-head.mvp-head  { background: rgba(79,128,255,0.1);  color: var(--blue); }
+        .compare-head.next-head { background: rgba(139,147,170,0.08); color: var(--t3); }
+        .compare-head.v3-head   { background: rgba(167,139,250,0.1);  color: var(--purple); }
+        .compare-head.teal-head { background: rgba(20,184,166,0.1);   color: var(--teal); }
+
+        .compare-body { padding: 10px 16px; background: var(--s1); }
+
+        @media(max-width:720px) { .grid-3,.grid-4,.compare-wrap { grid-template-columns: 1fr 1fr; } }
+        @media(max-width:560px) {
+            main { padding: 12px; }
+            .inner-container { padding: 0 12px; }
+            .grid-2,.grid-3,.grid-4,.compare-wrap { grid-template-columns: 1fr; }
+            .badges { display: none; }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <div class="inner-container header-inner">
+            <div class="header-left">
+                <div class="logo">📝</div>
+                <div class="title-wrap">
+                    <h1>생체인식 키오스크 기능 목록표 (Feature List)</h1>
+                    <p>코드아이디어 → 세이프티랩 | PRD v1.0 기반 · MVP vs 다음 버전 구분</p>
+                </div>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;">
+                <div class="badges">
+                    <span class="badge blue">MVP</span>
+                    <span class="badge orange">v2 다음 버전</span>
+                    <span class="badge purple">v3 장기</span>
+                    <span class="badge teal">03.04 반영</span>
+                </div>
+                <button class="toggle-btn" id="themeBtn" onclick="toggleTheme()">☀️ 라이트</button>
+            </div>
+        </div>
+    </header>
+
+    <nav>
+        <div class="inner-container nav-inner">
+            <button class="tab-btn active" onclick="showTab('overview',this)">📋 전체 요약</button>
+            <button class="tab-btn" onclick="showTab('mvp',this)">🔵 MVP 기능</button>
+            <button class="tab-btn" onclick="showTab('v2',this)">⚪ v2 다음 버전</button>
+            <button class="tab-btn" onclick="showTab('v3',this)">🟣 v3 장기 로드맵</button>
+            <button class="tab-btn" onclick="showTab('matrix',this)">📊 전체 기능 매트릭스</button>
+        </div>
+    </nav>
+
+    <main>
+
+        <!-- ══════════════ TAB 1: 전체 요약 ══════════════ -->
+        <div class="page active" id="page-overview">
+            <div class="section-label">Feature List Overview — MVP · v2 · v3 버전 구분</div>
+            <p class="section-desc">PRD v1.0 기반으로 전체 기능을 <strong>MVP(가온병원 납품 목표)</strong> / <strong>v2 다음 버전</strong> / <strong>v3 장기 로드맵</strong>으로 구분합니다. 03.04 추가 확정 기능 포함.</p>
+
+            <div class="notice-banner">
+                📅 2026.03.04 추가 확정 — 원격 앱 관리 · 지점별 통계 관리는 MVP에 포함
+            </div>
+
+            <!-- 통계 요약 -->
+            <div class="grid-4 mb16">
+                <div class="card">
+                    <div class="card-title">MVP 기능</div>
+                    <div class="stat-num" style="color:var(--blue)">24</div>
+                    <div class="stat-label">가온병원 납품 대상</div>
+                    <div class="stat-sub">03.04 추가 5건 포함</div>
+                </div>
+                <div class="card">
+                    <div class="card-title">v2 다음 버전</div>
+                    <div class="stat-num" style="color:var(--t3)">10</div>
+                    <div class="stat-label">안정화 이후 추가</div>
+                    <div class="stat-sub">SRT·코레일 납품 대비</div>
+                </div>
+                <div class="card">
+                    <div class="card-title">v3 장기 로드맵</div>
+                    <div class="stat-num" style="color:var(--purple)">7</div>
+                    <div class="stat-label">별도 계약 또는 장기</div>
+                    <div class="stat-sub">음주·폐활량·모바일 앱</div>
+                </div>
+                <div class="card">
+                    <div class="card-title">전체 기능</div>
+                    <div class="stat-num" style="color:var(--orange)">41</div>
+                    <div class="stat-label">기능 항목 합계</div>
+                    <div class="stat-sub">9개 모듈 분류</div>
+                </div>
+            </div>
+
+            <!-- 버전 정의 -->
+            <div class="grid-2 mb16">
+                <div class="card" style="border-color:rgba(79,128,255,0.35);">
+                    <div class="card-title" style="color:var(--blue)">🔵 MVP — 가온병원 납품 목표 (15주 이내)</div>
+                    <ul class="item-list">
+                        <li><span class="dot dot-blue"></span><span>rPPG 기반 비접촉 혈압·심박 측정 핵심 기능</span></li>
+                        <li><span class="dot dot-blue"></span><span>Quality Gate — 측정 품질 자동 판정 및 재측정 안내</span></li>
+                        <li><span class="dot dot-blue"></span><span>숨겨진 관리자 페이지 — 패스워드 잠금, 설정 관리</span></li>
+                        <li><span class="dot dot-blue"></span><span>캘리브레이션 수집 도구 — AI·커프 동시 기록</span></li>
+                        <li><span class="dot dot-blue"></span><span>데이터 저장 구조 — 비식별 암호화, 라벨링 항목</span></li>
+                        <li><span class="dot dot-blue"></span><span>보안·라이선스 인증키 시스템 (HW 고유번호 기반)</span></li>
+                        <li><span class="dot dot-blue"></span><span>인증 방식 다각화 — 얼굴·이름 입력</span></li>
+                        <li><span class="dot dot-blue"></span><span>사용자 UX 화면 — 동의·면책·결과·재측정</span></li>
+                        <li><span class="dot dot-teal"></span><span><strong>원격 앱 관리</strong> — 기기 리셋·SW 배포·이상 알림 <span class="action-tag tag-0304">03.04 추가</span></span></li>
+                        <li><span class="dot dot-teal"></span><span><strong>지점별 통계 관리</strong> — 집계·추이·리포트·내보내기 <span class="action-tag tag-0304">03.04 추가</span></span></li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <div class="card-title" style="color:var(--t3)">⚪ v2 다음 버전 — 안정화 후 · SRT·코레일 납품 대비</div>
+                    <ul class="item-list">
+                        <li><span class="dot dot-gray"></span><span>RFID 카드 리더기·지문 인식기 연동 인터페이스</span></li>
+                        <li><span class="dot dot-gray"></span><span>예외 상황 자동 대응 — 오프라인 모드·센서 오류 복구</span></li>
+                        <li><span class="dot dot-gray"></span><span>관리자 계정 다중 권한 체계 (지점별 접근 제어)</span></li>
+                        <li><span class="dot dot-gray"></span><span>AI 모델 v1.x 업데이트 (3개월 — 코레일 데이터 반영)</span></li>
+                        <li><span class="dot dot-gray"></span><span>박람회·학술대회 키오스크 배치용 독립 수집 모드</span></li>
+                        <li><span class="dot dot-gray"></span><span>다국어 UX 화면 (영어 지원)</span></li>
+                        <li><span class="dot dot-gray"></span><span>원격 관리 대시보드 고도화 — 기기 그룹 관리·일괄 명령</span></li>
+                        <li><span class="dot dot-gray"></span><span>통계 알림 — 지점별 이상 지표 자동 감지 및 리포트</span></li>
+                        <li><span class="dot dot-gray"></span><span>라벨링 설문 UX 고도화 — 설문 항목 동적 구성</span></li>
+                        <li><span class="dot dot-gray"></span><span>클라우드(AWS) 연동 및 국외 이전 동의 플로우</span></li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- MVP vs v2 한눈에 비교 -->
+            <div class="card mb16">
+                <div class="card-title">버전별 포함 기능 한눈에 비교</div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>모듈</th>
+                            <th>MVP 포함</th>
+                            <th>v2 다음 버전</th>
+                            <th>v3 장기</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>rPPG 측정 핵심</strong></td>
+                            <td><span class="ver mvp">MVP ✓</span></td>
+                            <td>정확도 개선</td>
+                            <td>모바일 앱 확장</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Quality Gate</strong></td>
+                            <td><span class="ver mvp">MVP ✓</span></td>
+                            <td>임계값 자동 조정</td>
+                            <td>—</td>
+                        </tr>
+                        <tr>
+                            <td><strong>관리자 인터페이스</strong></td>
+                            <td><span class="ver mvp">MVP ✓</span></td>
+                            <td>다중 권한 체계</td>
+                            <td>—</td>
+                        </tr>
+                        <tr>
+                            <td><strong>캘리브레이션 수집</strong></td>
+                            <td><span class="ver mvp">MVP ✓</span></td>
+                            <td>수집 모드 고도화</td>
+                            <td>—</td>
+                        </tr>
+                        <tr>
+                            <td><strong>데이터 저장·라벨링</strong></td>
+                            <td><span class="ver mvp">MVP ✓</span></td>
+                            <td>설문 UX 고도화</td>
+                            <td>클라우드 연동</td>
+                        </tr>
+                        <tr>
+                            <td><strong>보안·라이선스</strong></td>
+                            <td><span class="ver mvp">MVP ✓</span></td>
+                            <td>—</td>
+                            <td>—</td>
+                        </tr>
+                        <tr>
+                            <td><strong>인증 방식</strong></td>
+                            <td><span class="ver mvp">MVP ✓</span> 얼굴·이름</td>
+                            <td>RFID·지문 연동</td>
+                            <td>—</td>
+                        </tr>
+                        <tr>
+                            <td><strong>사용자 UX</strong></td>
+                            <td><span class="ver mvp">MVP ✓</span></td>
+                            <td>다국어 지원</td>
+                            <td>—</td>
+                        </tr>
+                        <tr>
+                            <td><strong>예외 상황 대응</strong></td>
+                            <td>기본 처리</td>
+                            <td><span class="ver v2">v2 ✓</span> 자동 복구</td>
+                            <td>—</td>
+                        </tr>
+                        <tr class="row-new">
+                            <td><strong>원격 앱 관리</strong> <span class="action-tag tag-0304">03.04</span></td>
+                            <td><span class="ver teal">MVP ✓</span></td>
+                            <td>그룹 관리·일괄 명령</td>
+                            <td>—</td>
+                        </tr>
+                        <tr class="row-new">
+                            <td><strong>지점별 통계 관리</strong> <span class="action-tag tag-0304">03.04</span></td>
+                            <td><span class="ver teal">MVP ✓</span></td>
+                            <td>알림 고도화</td>
+                            <td>—</td>
+                        </tr>
+                        <tr>
+                            <td><strong>AI 모델 업데이트</strong></td>
+                            <td>v1.0 초기 모델</td>
+                            <td><span class="ver v2">v2 ✓</span> v1.x 업데이트</td>
+                            <td>v2.0 박람회 이후</td>
+                        </tr>
+                        <tr>
+                            <td><strong>음주·폐활량 연동</strong></td>
+                            <td>—</td>
+                            <td>—</td>
+                            <td><span class="ver v3">v3 ✓</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>모바일 앱 (스마트폰 측정)</strong></td>
+                            <td>—</td>
+                            <td>—</td>
+                            <td><span class="ver v3">v3 ✓</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+
+        <!-- ══════════════ TAB 2: MVP 기능 ══════════════ -->
+        <div class="page" id="page-mvp">
+            <div class="section-label">MVP Features — 가온병원 납품 목표 (15주 이내)</div>
+            <p class="section-desc">MVP는 <strong>가온병원 1차 납품 및 현장 안정화 운영</strong>을 목표로 하는 기능 집합입니다. 03.04 추가 확정 기능 포함.</p>
+
+            <div class="notice-banner">
+                📅 2026.03.04 추가 확정 — 원격 앱 관리 · 지점별 통계 관리가 MVP 범위에 포함됨
+            </div>
+
+            <!-- M1: rPPG 측정 -->
+            <div class="expand-card mb8">
+                <div class="expand-header" onclick="toggleExpand(this)">
+                    <div class="expand-header-left">
+                        📡 M1. rPPG 기반 비접촉 혈압·심박 측정
+                        <span class="ver mvp" style="margin-left:4px;">MVP</span>
+                    </div>
+                    <span class="chevron open">▼</span>
+                </div>
+                <div class="expand-body open">
+                    <table>
+                        <thead><tr><th>기능 ID</th><th>기능명</th><th>설명</th><th>버전</th><th>상태</th></tr></thead>
+                        <tbody>
+                            <tr class="row-mvp"><td>M1-01</td><td>카메라 기반 심박·파형 수집</td><td>rPPG 알고리즘으로 카메라 영상에서 심박 및 혈압 파형 신호 추출</td><td><span class="ver mvp">MVP</span></td><td><span class="status confirmed">✓ 확정</span></td></tr>
+                            <tr class="row-mvp"><td>M1-02</td><td>수축기/이완기 혈압 AI 추정</td><td>추출된 파형 데이터를 AI 모델에 입력하여 수축기·이완기 혈압 수치 추정</td><td><span class="ver mvp">MVP</span></td><td><span class="status confirmed">✓ 확정</span></td></tr>
+                            <tr class="row-mvp"><td>M1-03</td><td>심박수 추정</td><td>심박 파형에서 분당 심박수(BPM) 추정</td><td><span class="ver mvp">MVP</span></td><td><span class="status confirmed">✓ 확정</span></td></tr>
+                            <tr class="row-mvp"><td>M1-04</td><td>안정화 유도 화면</td><td>측정 전 30초 정면 응시 안내 — 움직임 감지 시 재안내</td><td><span class="ver mvp">MVP</span></td><td><span class="status confirmed">✓ 확정</span></td></tr>
+                            <tr class="row-mvp"><td>M1-05</td><td>커프 혈압계 2차 검증 루트</td><td>AI 추정값 불확실 시 커프 혈압계로 2차 측정 — 항시 제공 (불변 설계 원칙)</td><td><span class="ver mvp">MVP</span></td><td><span class="status confirmed">✓ 확정</span></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- M2: Quality Gate -->
+            <div class="expand-card mb8">
+                <div class="expand-header" onclick="toggleExpand(this)">
+                    <div class="expand-header-left">
+                        🔍 M2. Quality Gate (측정 품질 자동 판정)
+                        <span class="ver mvp" style="margin-left:4px;">MVP</span>
+                    </div>
+                    <span class="chevron open">▼</span>
+                </div>
+                <div class="expand-body open">
+                    <table>
+                        <thead><tr><th>기능 ID</th><th>기능명</th><th>설명</th><th>버전</th><th>상태</th></tr></thead>
+                        <tbody>
+                            <tr class="row-mvp"><td>M2-01</td><td>조도 자동 측정</td><td>측정 환경 조도 실시간 감지 — 기준값 미달 시 탈락 처리</td><td><span class="ver mvp">MVP</span></td><td><span class="status confirmed">✓ 확정</span></td></tr>
+                            <tr class="row-mvp"><td>M2-02</td><td>움직임 감지</td><td>측정 중 얼굴·상체 움직임 감지 — 기준값 초과 시 탈락</td><td><span class="ver mvp">MVP</span></td><td><span class="status confirmed">✓ 확정</span></td></tr>
+                            <tr class="row-mvp"><td>M2-03</td><td>카메라 화질 판정</td><td>카메라 선명도·초점 품질 자동 체크 — 기준 미달 시 탈락</td><td><span class="ver mvp">MVP</span></td><td><span class="status confirmed">✓ 확정</span></td></tr>
+                            <tr class="row-mvp"><td>M2-04</td><td>탈락 원인 안내 화면</td><td>조도 부족 / 움직임 감지 / 화질 불량 중 탈락 원인 구체적 안내</td><td><span class="ver mvp">MVP</span></td><td><span class="status confirmed">✓ 확정</span></td></tr>
+                            <tr class="row-mvp"><td>M2-05</td><td>재측정 유도 (최대 3회)</td><td>탈락 시 즉시 재측정 버튼 제공 — 연속 3회 탈락 시 커프 혈압계 안내로 전환</td><td><span class="ver mvp">MVP</span></td><td><span class="status confirmed">✓ 확정</span></td></tr>
+                            <tr class="row-mvp"><td>M2-06</td><td>품질 지표 자동 저장</td><td>조도·움직임·화질 수치를 측정 레코드에 함께 저장 — AI 학습 데이터 품질 분석 용도</td><td><span class="ver mvp">MVP</span></td><td><span class="status confirmed">✓ 확정</span></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- M3: 관리자 인터페이스 -->
+            <div class="expand-card mb8">
+                <div class="expand-header" onclick="toggleExpand(this)">
+                    <div class="expand-header-left">
+                        🔐 M3. 숨겨진 관리자 인터페이스
+                        <span class="ver mvp" style="margin-left:4px;">MVP</span>
+                    </div>
+                    <span class="chevron open">▼</span>
+                </div>
+                <div class="expand-body open">
+                    <table>
+                        <thead><tr><th>기능 ID</th><th>기능명</th><th>설명</th><th>버전</th><th>상태</th></tr></thead>
+                        <tbody>
+                            <tr class="row-mvp"><td>M3-01</td><td>패스워드 잠금 숨겨진 접근</td><td>일반 사용자 화면에서 보이지 않는 숨겨진 버튼 — 패스워드 입력 후 관리자 페이지 접근</td><td><span class="ver mvp">MVP</span></td><td><span class="status confirmed">✓ 확정</span></td></tr>
+                            <tr class="row-mvp"><td>M3-02</td><td>헬스케어 범위 설정</td><td>수축기/이완기 정상·주의·위험 범위 수치 설정 — 관리자 전용</td><td><span class="ver mvp">MVP</span></td><td><span class="status discuss">△ 협의 필요</span></td></tr>
+                            <tr class="row-mvp"><td>M3-03</td><td>화면 밝기 조절</td><td>키오스크 디스플레이 밝기 관리자 설정</td><td><span class="ver mvp">MVP</span></td><td><span class="status confirmed">✓ 확정</span></td></tr>
+                            <tr class="row-mvp"><td>M3-04</td><td>카메라 선명도 조절</td><td>사용자 화면의 얼굴 선명도는 결과에 영향 없는 수준으로 낮게 유지 (보안)</td><td><span class="ver mvp">MVP</span></td><td><span class="status confirmed">✓ 확정</span></td></tr>
+                            <tr class="row-mvp"><td>M3-05</td><td>설정 변경 로그 기록</td><td>변경 시각·항목·이전 값·새 값을 관리자 로그에 자동 기록</td><td><span class="ver mvp">MVP</span></td><td><span class="status confirmed">✓ 확정</span></td></tr>
+                            <tr class="row-mvp"><td>M3-06</td><td>패스워드 오류 잠금</td><td>패스워드 오류 5회 시 일정 시간 잠금 처리</td><td><span class="ver mvp">MVP</span></td><td><span class="status confirmed">✓ 확정</span></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- M4: 캘리브레이션 -->
+            <div class="expand-card mb8">
+                <div class="expand-header" onclick="toggleExpand(this)">
+                    <div class="expand-header-left">
+                        🧪 M4. 캘리브레이션 수집 도구
+                        <span class="ver mvp" style="margin-left:4px;">MVP</span>
+                    </div>
+                    <span class="chevron">▼</span>
+                </div>
+                <div class="expand-body">
+                    <table>
+                        <thead><tr><th>기능 ID</th><th>기능명</th><th>설명</th><th>버전</th><th>상태</th></tr></thead>
+                        <tbody>
+                            <tr class="row-mvp"><td>M4-01</td><td>실험 모드 활성화</td><td>관리자 페이지에서만 실험 모드 ON/OFF — 일반 사용자 접근 불가</td><td><span class="ver mvp">MVP</span></td><td><span class="status confirmed">✓ 확정</span></td></tr>
+                            <tr class="row-mvp"><td>M4-02</td><td>AI·커프 동시 기록</td><td>AI 추정값과 커프 혈압계 측정값을 한 세션에 동시 기록 — 정답지 생성</td><td><span class="ver mvp">MVP</span></td><td><span class="status confirmed">✓ 확정</span></td></tr>
+                            <tr class="row-mvp"><td>M4-03</td><td>세션 관리</td><td>측정 세션별 데이터를 그룹화하여 저장 — 피험자·날짜·기기 ID 포함</td><td><span class="ver mvp">MVP</span></td><td><span class="status confirmed">✓ 확정</span></td></tr>
+                            <tr class="row-mvp"><td>M4-04</td><td>보정 파이프라인 연동</td><td>수집 데이터를 3개월 단위 AI 모델 재학습 파이프라인에 자동 연결</td><td><span class="ver mvp">MVP</span></td><td><span class="status confirmed">✓ 확정</span></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- M5: 데이터 저장 -->
+            <div class="expand-card mb8">
+                <div class="expand-header" onclick="toggleExpand(this)">
+                    <div class="expand-header-left">
+                        🗄️ M5. 데이터 저장 구조 & 라벨링
+                        <span class="ver mvp" style="margin-left:4px;">MVP</span>
+                    </div>
+                    <span class="chevron">▼</span>
+                </div>
+                <div class="expand-body">
+                    <table>
+                        <thead><tr><th>기능 ID</th><th>기능명</th><th>설명</th><th>버전</th><th>상태</th></tr></thead>
+                        <tbody>
+                            <tr class="row-mvp"><td>M5-01</td><td>비식별 암호화 저장</td><td>이름 등 개인정보 암호화 후 비식별 처리 저장 (개인정보보호법 필수)</td><td><span class="ver mvp">MVP</span></td><td><span class="status confirmed">✓ 확정</span></td></tr>
+                            <tr class="row-mvp"><td>M5-02</td><td>라벨링 항목 설문 수집</td><td>연령·성별·국적 / 혈압약 복용 / 흡연·커피 섭취 설문 — 측정 전 수집</td><td><span class="ver mvp">MVP</span></td><td><span class="status discuss">△ 협의 필요</span></td></tr>
+                            <tr class="row-mvp"><td>M5-03</td><td>측정 환경 자동 수집</td><td>조도·움직임·측정 시각 자동 기록 — Quality Gate 데이터 연동</td><td><span class="ver mvp">MVP</span></td><td><span class="status confirmed">✓ 확정</span></td></tr>
+                            <tr class="row-new"><td>M5-04</td><td>지점 코드·기기 ID 체계</td><td>납품처 지점 코드 및 기기 고유 ID 자동 태깅 — 지점별 통계 집계 기반 <span class="action-tag tag-0304">03.04</span></td><td><span class="ver teal">MVP</span></td><td><span class="status new">★ 신규</span></td></tr>
+                            <tr class="row-mvp"><td>M5-05</td><td>확장 가능 저장 구조 설계</td><td>음주·폐활량 등 미래 측정 항목 추가 가능한 스키마 설계</td><td><span class="ver mvp">MVP</span></td><td><span class="status confirmed">✓ 확정</span></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- M6: 보안·라이선스 -->
+            <div class="expand-card mb8">
+                <div class="expand-header" onclick="toggleExpand(this)">
+                    <div class="expand-header-left">
+                        🛡️ M6. 보안·라이선스 시스템
+                        <span class="ver mvp" style="margin-left:4px;">MVP</span>
+                    </div>
+                    <span class="chevron">▼</span>
+                </div>
+                <div class="expand-body">
+                    <table>
+                        <thead><tr><th>기능 ID</th><th>기능명</th><th>설명</th><th>버전</th><th>상태</th></tr></thead>
+                        <tbody>
+                            <tr class="row-mvp"><td>M6-01</td><td>HW 고유번호 기반 인증키 발급</td><td>기기 HW 고유번호로 1:1 매핑된 라이선스 인증키 생성 — 타 기기에서 사용 불가</td><td><span class="ver mvp">MVP</span></td><td><span class="status discuss">△ 협의 필요</span></td></tr>
+                            <tr class="row-mvp"><td>M6-02</td><td>인증키 검증 부팅 체크</td><td>SW 실행 시 HW 고유번호와 인증키 대조 — 불일치 시 실행 차단</td><td><span class="ver mvp">MVP</span></td><td><span class="status confirmed">✓ 확정</span></td></tr>
+                            <tr class="row-mvp"><td>M6-03</td><td>원격 유지보수 접근 통제</td><td>인증된 관리자 계정에서만 원격 접근 허용 — 접근 이력 로그 보관</td><td><span class="ver mvp">MVP</span></td><td><span class="status confirmed">✓ 확정</span></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- M7: 인증 방식 -->
+            <div class="expand-card mb8">
+                <div class="expand-header" onclick="toggleExpand(this)">
+                    <div class="expand-header-left">
+                        🪪 M7. 인증 방식
+                        <span class="ver mvp" style="margin-left:4px;">MVP</span>
+                        <span class="ver v2" style="margin-left:4px;">v2 확장</span>
+                    </div>
+                    <span class="chevron">▼</span>
+                </div>
+                <div class="expand-body">
+                    <table>
+                        <thead><tr><th>기능 ID</th><th>기능명</th><th>설명</th><th>버전</th><th>상태</th></tr></thead>
+                        <tbody>
+                            <tr class="row-mvp"><td>M7-01</td><td>얼굴 인식 인증</td><td>카메라로 얼굴 인식 — 사용자 DB 매칭 후 인증</td><td><span class="ver mvp">MVP</span></td><td><span class="status confirmed">✓ 확정</span></td></tr>
+                            <tr class="row-mvp"><td>M7-02</td><td>이름 직접 입력 대체 인증</td><td>얼굴 인식 실패·불편 사용자 대상 키보드 이름 입력 인증</td><td><span class="ver mvp">MVP</span></td><td><span class="status confirmed">✓ 확정</span></td></tr>
+                            <tr class="row-v2"><td>M7-03</td><td>RFID 카드 리더기 연동</td><td>RFID 카드 태깅으로 사용자 인증 — 출입 통제 시스템 연동</td><td><span class="ver v2">v2</span></td><td><span class="status later">다음 버전</span></td></tr>
+                            <tr class="row-v2"><td>M7-04</td><td>지문 인식기 연동</td><td>외부 지문 인식 디바이스 연동 인터페이스</td><td><span class="ver v2">v2</span></td><td><span class="status later">다음 버전</span></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- M8: 사용자 UX -->
+            <div class="expand-card mb8">
+                <div class="expand-header" onclick="toggleExpand(this)">
+                    <div class="expand-header-left">
+                        🖥️ M8. 사용자 UX 화면
+                        <span class="ver mvp" style="margin-left:4px;">MVP</span>
+                    </div>
+                    <span class="chevron">▼</span>
+                </div>
+                <div class="expand-body">
+                    <table>
+                        <thead><tr><th>기능 ID</th><th>기능명</th><th>설명</th><th>버전</th><th>상태</th></tr></thead>
+                        <tbody>
+                            <tr class="row-mvp"><td>M8-01</td><td>개인정보 동의 화면</td><td>얼굴 인식 별도 동의 + 민감정보(혈압) 별도 동의 — 법적 필수</td><td><span class="ver mvp">MVP</span></td><td><span class="status confirmed">✓ 확정</span></td></tr>
+                            <tr class="row-mvp"><td>M8-02</td><td>면책 문구 표시</td><td>"본 측정값은 의료 진단이 아닙니다" 결과 화면에 항상 표시 — 법적 필수</td><td><span class="ver mvp">MVP</span></td><td><span class="status confirmed">✓ 확정</span></td></tr>
+                            <tr class="row-mvp"><td>M8-03</td><td>측정 결과 화면</td><td>수축기·이완기·심박 수치 + 정상/주의/위험 색상 판정 표시</td><td><span class="ver mvp">MVP</span></td><td><span class="status confirmed">✓ 확정</span></td></tr>
+                            <tr class="row-mvp"><td>M8-04</td><td>재측정 안내 화면</td><td>Quality Gate 탈락·측정 실패 시 안내 문구 및 재시도 버튼</td><td><span class="ver mvp">MVP</span></td><td><span class="status confirmed">✓ 확정</span></td></tr>
+                            <tr class="row-v2"><td>M8-05</td><td>다국어 지원 (영어)</td><td>외국인 사용자 대응 — 영어 UI 전환 지원</td><td><span class="ver v2">v2</span></td><td><span class="status later">다음 버전</span></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- M9: 원격 앱 관리 (03.04) -->
+            <div class="expand-card expand-new mb8">
+                <div class="expand-header" onclick="toggleExpand(this)">
+                    <div class="expand-header-left">
+                        📱 M9. 원격 앱 관리 (기기 원격 리셋)
+                        <span class="ver teal" style="margin-left:4px;">MVP</span>
+                        <span class="action-tag tag-0304">03.04 추가</span>
+                    </div>
+                    <span class="chevron open">▼</span>
+                </div>
+                <div class="expand-body open">
+                    <table>
+                        <thead><tr><th>기능 ID</th><th>기능명</th><th>설명</th><th>버전</th><th>상태</th></tr></thead>
+                        <tbody>
+                            <tr class="row-new"><td>M9-01</td><td>기기 원격 리셋·재시작</td><td>관리자 앱/웹에서 특정 기기 선택 → 강제 리셋·재시작 명령 전송 (2단계 인증 권장)</td><td><span class="ver teal">MVP</span></td><td><span class="status new">★ 신규</span></td></tr>
+                            <tr class="row-new"><td>M9-02</td><td>원격 SW 배포</td><td>SW 업데이트 패키지 원격 배포 — 기기별 설치 진행률·성공/실패 상태 실시간 확인</td><td><span class="ver teal">MVP</span></td><td><span class="status new">★ 신규</span></td></tr>
+                            <tr class="row-new"><td>M9-03</td><td>기기 상태 모니터링</td><td>기기별 온라인/오프라인 상태, 마지막 통신 시각, 오류 로그 실시간 확인</td><td><span class="ver teal">MVP</span></td><td><span class="status new">★ 신규</span></td></tr>
+                            <tr class="row-new"><td>M9-04</td><td>이상 알림 자동 발송</td><td>30분 이상 오프라인·반복 오류 감지 시 관리자에게 푸시·이메일 자동 발송</td><td><span class="ver teal">MVP</span></td><td><span class="status new">★ 신규</span></td></tr>
+                            <tr class="row-new"><td>M9-05</td><td>명령 이력 로그 보관</td><td>실행자·기기 ID·실행 시각·명령 종류를 이력 로그에 의무 보관</td><td><span class="ver teal">MVP</span></td><td><span class="status new">★ 신규</span></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- M10: 지점별 통계 (03.04) -->
+            <div class="expand-card expand-new">
+                <div class="expand-header" onclick="toggleExpand(this)">
+                    <div class="expand-header-left">
+                        📊 M10. 지점별 통계 관리
+                        <span class="ver teal" style="margin-left:4px;">MVP</span>
+                        <span class="action-tag tag-0304">03.04 추가</span>
+                    </div>
+                    <span class="chevron open">▼</span>
+                </div>
+                <div class="expand-body open">
+                    <table>
+                        <thead><tr><th>기능 ID</th><th>기능명</th><th>설명</th><th>버전</th><th>상태</th></tr></thead>
+                        <tbody>
+                            <tr class="row-new"><td>M10-01</td><td>지점별 측정 데이터 집계</td><td>납품처를 지점 단위로 구분 — 측정 건수·혈압 분포·출입 허가율 집계</td><td><span class="ver teal">MVP</span></td><td><span class="status new">★ 신규</span></td></tr>
+                            <tr class="row-new"><td>M10-02</td><td>일별·주별·월별 추이 차트</td><td>혈압 측정 추이 시각화 차트 + 지점 간 비교 기능</td><td><span class="ver teal">MVP</span></td><td><span class="status new">★ 신규</span></td></tr>
+                            <tr class="row-new"><td>M10-03</td><td>출입 현황 리포트</td><td>출입 허가·거부 건수, Quality Gate 탈락 비율 등 운영 지표 제공</td><td><span class="ver teal">MVP</span></td><td><span class="status new">★ 신규</span></td></tr>
+                            <tr class="row-new"><td>M10-04</td><td>CSV / Excel 내보내기</td><td>지점별·기간별 통계를 CSV·Excel 형식으로 내보내기 — 개인정보 미포함</td><td><span class="ver teal">MVP</span></td><td><span class="status new">★ 신규</span></td></tr>
+                            <tr class="row-new"><td>M10-05</td><td>비식별 집계 전용 화면</td><td>통계 화면에는 비식별·집계 데이터만 노출 — 개인 원본 직접 접근 차단 (법적 필수)</td><td><span class="ver teal">MVP</span></td><td><span class="status new">★ 신규</span></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- ══════════════ TAB 3: v2 다음 버전 ══════════════ -->
+        <div class="page" id="page-v2">
+            <div class="section-label">v2 Features — 안정화 이후 · SRT·코레일 납품 대비</div>
+            <p class="section-desc">가온병원 납품 후 현장 안정화 및 SRT·코레일 등 <strong>추가 납품처 대응을 위한 다음 버전 기능</strong>입니다.</p>
+
+            <div class="card mb16" style="border-color:rgba(139,147,170,0.3);">
+                <div class="card-title">v2 기능 목록</div>
+                <table>
+                    <thead>
+                        <tr><th>기능 ID</th><th>기능명</th><th>설명</th><th>우선 배경</th><th>상태</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr class="row-v2">
+                            <td>V2-01</td>
+                            <td>RFID 카드 리더기 연동</td>
+                            <td>RFID 카드 태깅 인증 — 출입 통제 시스템 연동 인터페이스</td>
+                            <td>코레일·SRT 출입 시스템 요구</td>
+                            <td><span class="status later">다음 버전</span></td>
+                        </tr>
+                        <tr class="row-v2">
+                            <td>V2-02</td>
+                            <td>지문 인식기 연동</td>
+                            <td>외부 지문 인식 디바이스 연동 인터페이스</td>
+                            <td>인증 다각화 확장</td>
+                            <td><span class="status later">다음 버전</span></td>
+                        </tr>
+                        <tr class="row-v2">
+                            <td>V2-03</td>
+                            <td>예외 상황 자동 복구</td>
+                            <td>오프라인 모드 자동 전환 / 센서 오류 자동 감지 및 재시작 / 시스템 로그 관리</td>
+                            <td>현장 운영 안정성</td>
+                            <td><span class="status later">다음 버전</span></td>
+                        </tr>
+                        <tr class="row-v2">
+                            <td>V2-04</td>
+                            <td>관리자 계정 다중 권한 체계</td>
+                            <td>지점별 관리자 계정 분리 — 접근 가능 지점·기능 권한 개별 설정</td>
+                            <td>복수 납품처 운영 시 필수</td>
+                            <td><span class="status later">다음 버전</span></td>
+                        </tr>
+                        <tr class="row-v2">
+                            <td>V2-05</td>
+                            <td>AI 모델 v1.x 업데이트</td>
+                            <td>코레일 170명 + 가온병원 운영 데이터 기반 첫 번째 3개월 업데이트 — 오탐률 개선</td>
+                            <td>AI 고도화 1차 사이클</td>
+                            <td><span class="status later">다음 버전</span></td>
+                        </tr>
+                        <tr class="row-v2">
+                            <td>V2-06</td>
+                            <td>박람회·학술대회 독립 수집 모드</td>
+                            <td>코엑스 등 행사장 배치용 — 네트워크 없이 독립 수집 후 일괄 동기화</td>
+                            <td>2차 데이터 수집</td>
+                            <td><span class="status later">다음 버전</span></td>
+                        </tr>
+                        <tr class="row-v2">
+                            <td>V2-07</td>
+                            <td>다국어 UX (영어 지원)</td>
+                            <td>영어 UI 전환 — 외국인 사용자 대응</td>
+                            <td>외국인 직원 다수 납품처 대응</td>
+                            <td><span class="status later">다음 버전</span></td>
+                        </tr>
+                        <tr class="row-v2">
+                            <td>V2-08</td>
+                            <td>원격 관리 대시보드 고도화</td>
+                            <td>기기 그룹 관리 / 일괄 명령 전송 / 납품처별 기기 현황 지도 뷰</td>
+                            <td>납품처 확장 대비</td>
+                            <td><span class="status later">다음 버전</span></td>
+                        </tr>
+                        <tr class="row-v2">
+                            <td>V2-09</td>
+                            <td>통계 이상 지표 알림</td>
+                            <td>특정 지점 Quality Gate 탈락률 급등·측정 건수 급감 등 이상 지표 자동 감지 및 알림</td>
+                            <td>운영 품질 관리</td>
+                            <td><span class="status later">다음 버전</span></td>
+                        </tr>
+                        <tr class="row-v2">
+                            <td>V2-10</td>
+                            <td>클라우드(AWS) 연동 및 국외 이전 동의</td>
+                            <td>데이터 클라우드 업로드 파이프라인 + 국외 이전 동의 플로우 구현</td>
+                            <td>대규모 데이터 수집 확장</td>
+                            <td><span class="status discuss">△ 협의 필요</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="card" style="background:rgba(245,158,11,0.06);border-color:rgba(245,158,11,0.3);">
+                <div class="card-title" style="color:var(--orange)">⚠️ v2 착수 전 선행 조건</div>
+                <ul class="item-list">
+                    <li><span class="dot dot-orange"></span><span><strong>가온병원 현장 안정화 완료</strong> — 납품 후 버그 없이 일정 기간 안정 운영이 확인된 후 v2 개발 착수</span></li>
+                    <li><span class="dot dot-orange"></span><span><strong>코레일 170명 데이터 수집 완료</strong> — AI 모델 v1.x 업데이트(V2-05)의 선행 조건</span></li>
+                    <li><span class="dot dot-orange"></span><span><strong>지점 코드·기기 ID 체계 검증</strong> — MVP에서 설계된 체계가 실제 운영에서 정상 동작하는지 확인 후 다중 권한 체계(V2-04) 착수</span></li>
+                    <li><span class="dot dot-orange"></span><span><strong>클라우드 연동 범위 및 보안 정책 양사 합의</strong> — V2-10 착수 전 필수</span></li>
+                </ul>
+            </div>
+        </div>
+
+
+        <!-- ══════════════ TAB 4: v3 장기 로드맵 ══════════════ -->
+        <div class="page" id="page-v3">
+            <div class="section-label">v3 Long-term Roadmap — 별도 계약 또는 장기 협력</div>
+            <p class="section-desc">현재 계약 범위 밖의 장기 확장 기능입니다. 별도 계약 또는 이익 공유(Benefit Share) 협력 방식으로 추진 예정입니다.</p>
+
+            <div class="card mb16" style="border-color:rgba(167,139,250,0.35);">
+                <div class="card-title" style="color:var(--purple)">🟣 v3 장기 기능 목록</div>
+                <table>
+                    <thead>
+                        <tr><th>기능 ID</th><th>기능명</th><th>설명</th><th>배경</th><th>상태</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr class="row-v3">
+                            <td>V3-01</td>
+                            <td>음주측정기 연동</td>
+                            <td>외부 음주측정기와 연동 — 혈압·심박과 함께 출입 복합 판단 지원</td>
+                            <td>Total Healthcare 확장</td>
+                            <td><span class="ver v3">v3 장기</span></td>
+                        </tr>
+                        <tr class="row-v3">
+                            <td>V3-02</td>
+                            <td>폐활량 측정기 연동</td>
+                            <td>폐활량 측정 디바이스 연동 — 호흡기 건강 지표 추가</td>
+                            <td>Total Healthcare 확장</td>
+                            <td><span class="ver v3">v3 장기</span></td>
+                        </tr>
+                        <tr class="row-v3">
+                            <td>V3-03</td>
+                            <td>모바일 앱 인터페이스</td>
+                            <td>스마트폰 앱에서 생체 신호 측정 결과 조회 및 개인 건강 히스토리 관리</td>
+                            <td>개인 사용자 접근성 확대</td>
+                            <td><span class="ver v3">v3 장기</span></td>
+                        </tr>
+                        <tr class="row-v3">
+                            <td>V3-04</td>
+                            <td>스마트폰 카메라 기반 rPPG</td>
+                            <td>전용 키오스크 없이 스마트폰 카메라로 혈압·심박 측정 — 요양보호사 방문 활용 시나리오</td>
+                            <td>모바일 확장 시나리오</td>
+                            <td><span class="ver v3">v3 장기</span></td>
+                        </tr>
+                        <tr class="row-v3">
+                            <td>V3-05</td>
+                            <td>정부 과제 연계 모듈</td>
+                            <td>보건복지부 등 정부 과제 연계 — 데이터 포맷·보안 요구사항 준수 모듈</td>
+                            <td>정부 과제 수주</td>
+                            <td><span class="ver v3">v3 장기</span></td>
+                        </tr>
+                        <tr class="row-v3">
+                            <td>V3-06</td>
+                            <td>AI 모델 v2.0 (박람회 이후)</td>
+                            <td>코엑스 박람회 등 불특정 다수 데이터 반영 — 다양한 인구집단 정확도 향상</td>
+                            <td>AI 고도화 2차 사이클</td>
+                            <td><span class="ver v3">v3 장기</span></td>
+                        </tr>
+                        <tr class="row-v3">
+                            <td>V3-07</td>
+                            <td>이익 공유 정산 대시보드</td>
+                            <td>납품처별 성과(측정 건수·수익) 기반 Benefit Share 정산 내역 조회</td>
+                            <td>세이프티랩-코드아이디어 장기 협력</td>
+                            <td><span class="ver v3">v3 장기</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="grid-2">
+                <div class="card" style="border-color:rgba(167,139,250,0.3);background:rgba(167,139,250,0.04);">
+                    <div class="card-title" style="color:var(--purple)">🤝 이익 공유 (Benefit Share) 제안</div>
+                    <p style="font-size:13px;color:var(--t1);line-height:1.8;">
+                        세이프티랩(발주처)은 본 프로젝트가 성공적으로 개발될 경우
+                        <strong>향후 제품 납품 시 발생하는 이익을 코드아이디어와 공유</strong>하는 장기 협력 관계를 제안했습니다.
+                        v3 기능들은 이 Benefit Share 구조 하에서 추진될 가능성이 높습니다.
+                    </p>
+                    <div style="margin-top:12px;">
+                        <ul class="item-list">
+                            <li><span class="dot dot-purple"></span><span>공유 비율, 대상 납품처, 기간 등 세부 조건 별도 협의 필요</span></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-title">v3 착수 전 선행 조건</div>
+                    <ul class="item-list">
+                        <li><span class="dot dot-purple"></span><span>MVP 가온병원 납품 완료 및 현장 검증 완료</span></li>
+                        <li><span class="dot dot-purple"></span><span>v2 안정화 및 SRT·코레일 납품 완료</span></li>
+                        <li><span class="dot dot-purple"></span><span>이익 공유 조건 (비율·기간·대상 납품처) 양사 합의 완료</span></li>
+                        <li><span class="dot dot-purple"></span><span>스마트폰 카메라 rPPG(V3-04) — 별도 HW 없이 측정 가능한 모델 정확도 달성 후 착수</span></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- ══════════════ TAB 5: 전체 기능 매트릭스 ══════════════ -->
+        <div class="page" id="page-matrix">
+            <div class="section-label">Full Feature Matrix — 전체 기능 버전별 매트릭스</div>
+            <p class="section-desc">전체 41개 기능 항목을 모듈·버전·상태·담당 기준으로 한눈에 정리한 매트릭스입니다.</p>
+
+            <div class="notice-banner">
+                📅 03.04 추가 확정 — M9·M10 모듈 신규 (teal 강조)
+            </div>
+
+            <div class="card mb16">
+                <div class="card-title">기능 매트릭스 범례</div>
+                <div style="display:flex;gap:12px;flex-wrap:wrap;padding-top:4px;">
+                    <span><span class="ver mvp">MVP</span> 가온병원 납품 목표</span>
+                    <span><span class="ver teal">MVP</span> MVP · 03.04 추가 확정</span>
+                    <span><span class="ver v2">v2</span> 안정화 후 다음 버전</span>
+                    <span><span class="ver v3">v3</span> 장기 로드맵</span>
+                    <span><span class="status confirmed">✓ 확정</span></span>
+                    <span><span class="status discuss">△ 협의</span></span>
+                    <span><span class="status new">★ 신규</span></span>
+                    <span><span class="status later">다음 버전</span></span>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">전체 기능 목록</div>
+                <table>
+                    <thead>
+                        <tr><th>ID</th><th>모듈</th><th>기능명</th><th>버전</th><th>담당</th><th>상태</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr class="row-mvp"><td>M1-01</td><td>rPPG 측정</td><td>카메라 기반 심박·파형 수집</td><td><span class="ver mvp">MVP</span></td><td>코드아이디어</td><td><span class="status confirmed">✓ 확정</span></td></tr>
+                        <tr class="row-mvp"><td>M1-02</td><td>rPPG 측정</td><td>수축기/이완기 혈압 AI 추정</td><td><span class="ver mvp">MVP</span></td><td>코드아이디어</td><td><span class="status confirmed">✓ 확정</span></td></tr>
+                        <tr class="row-mvp"><td>M1-03</td><td>rPPG 측정</td><td>심박수 추정</td><td><span class="ver mvp">MVP</span></td><td>코드아이디어</td><td><span class="status confirmed">✓ 확정</span></td></tr>
+                        <tr class="row-mvp"><td>M1-04</td><td>rPPG 측정</td><td>안정화 유도 화면</td><td><span class="ver mvp">MVP</span></td><td>코드아이디어</td><td><span class="status confirmed">✓ 확정</span></td></tr>
+                        <tr class="row-mvp"><td>M1-05</td><td>rPPG 측정</td><td>커프 혈압계 2차 검증 루트</td><td><span class="ver mvp">MVP</span></td><td>코드아이디어</td><td><span class="status confirmed">✓ 확정</span></td></tr>
+                        <tr class="row-mvp"><td>M2-01</td><td>Quality Gate</td><td>조도 자동 측정</td><td><span class="ver mvp">MVP</span></td><td>코드아이디어</td><td><span class="status confirmed">✓ 확정</span></td></tr>
+                        <tr class="row-mvp"><td>M2-02</td><td>Quality Gate</td><td>움직임 감지</td><td><span class="ver mvp">MVP</span></td><td>코드아이디어</td><td><span class="status confirmed">✓ 확정</span></td></tr>
+                        <tr class="row-mvp"><td>M2-03</td><td>Quality Gate</td><td>카메라 화질 판정</td><td><span class="ver mvp">MVP</span></td><td>코드아이디어</td><td><span class="status confirmed">✓ 확정</span></td></tr>
+                        <tr class="row-mvp"><td>M2-04</td><td>Quality Gate</td><td>탈락 원인 안내 화면</td><td><span class="ver mvp">MVP</span></td><td>코드아이디어</td><td><span class="status confirmed">✓ 확정</span></td></tr>
+                        <tr class="row-mvp"><td>M2-05</td><td>Quality Gate</td><td>재측정 유도 (최대 3회)</td><td><span class="ver mvp">MVP</span></td><td>코드아이디어</td><td><span class="status confirmed">✓ 확정</span></td></tr>
+                        <tr class="row-mvp"><td>M2-06</td><td>Quality Gate</td><td>품질 지표 자동 저장</td><td><span class="ver mvp">MVP</span></td><td>코드아이디어</td><td><span class="status confirmed">✓ 확정</span></td></tr>
+                        <tr class="row-mvp"><td>M3-01</td><td>관리자 인터페이스</td><td>패스워드 잠금 숨겨진 접근</td><td><span class="ver mvp">MVP</span></td><td>코드아이디어</td><td><span class="status confirmed">✓ 확정</span></td></tr>
+                        <tr class="row-mvp"><td>M3-02</td><td>관리자 인터페이스</td><td>헬스케어 범위 설정</td><td><span class="ver mvp">MVP</span></td><td>양사 협의</td><td><span class="status discuss">△ 협의</span></td></tr>
+                        <tr class="row-mvp"><td>M3-03</td><td>관리자 인터페이스</td><td>화면 밝기 조절</td><td><span class="ver mvp">MVP</span></td><td>코드아이디어</td><td><span class="status confirmed">✓ 확정</span></td></tr>
+                        <tr class="row-mvp"><td>M3-04</td><td>관리자 인터페이스</td><td>카메라 선명도 조절</td><td><span class="ver mvp">MVP</span></td><td>코드아이디어</td><td><span class="status confirmed">✓ 확정</span></td></tr>
+                        <tr class="row-mvp"><td>M3-05</td><td>관리자 인터페이스</td><td>설정 변경 로그 기록</td><td><span class="ver mvp">MVP</span></td><td>코드아이디어</td><td><span class="status confirmed">✓ 확정</span></td></tr>
+                        <tr class="row-mvp"><td>M3-06</td><td>관리자 인터페이스</td><td>패스워드 오류 잠금</td><td><span class="ver mvp">MVP</span></td><td>코드아이디어</td><td><span class="status confirmed">✓ 확정</span></td></tr>
+                        <tr class="row-mvp"><td>M4-01</td><td>캘리브레이션</td><td>실험 모드 활성화</td><td><span class="ver mvp">MVP</span></td><td>코드아이디어</td><td><span class="status confirmed">✓ 확정</span></td></tr>
+                        <tr class="row-mvp"><td>M4-02</td><td>캘리브레이션</td><td>AI·커프 동시 기록</td><td><span class="ver mvp">MVP</span></td><td>코드아이디어</td><td><span class="status confirmed">✓ 확정</span></td></tr>
+                        <tr class="row-mvp"><td>M4-03</td><td>캘리브레이션</td><td>세션 관리</td><td><span class="ver mvp">MVP</span></td><td>코드아이디어</td><td><span class="status confirmed">✓ 확정</span></td></tr>
+                        <tr class="row-mvp"><td>M4-04</td><td>캘리브레이션</td><td>보정 파이프라인 연동</td><td><span class="ver mvp">MVP</span></td><td>코드아이디어</td><td><span class="status confirmed">✓ 확정</span></td></tr>
+                        <tr class="row-mvp"><td>M5-01</td><td>데이터 저장</td><td>비식별 암호화 저장</td><td><span class="ver mvp">MVP</span></td><td>코드아이디어</td><td><span class="status confirmed">✓ 확정</span></td></tr>
+                        <tr class="row-mvp"><td>M5-02</td><td>데이터 저장</td><td>라벨링 항목 설문 수집</td><td><span class="ver mvp">MVP</span></td><td>양사 협의</td><td><span class="status discuss">△ 협의</span></td></tr>
+                        <tr class="row-mvp"><td>M5-03</td><td>데이터 저장</td><td>측정 환경 자동 수집</td><td><span class="ver mvp">MVP</span></td><td>코드아이디어</td><td><span class="status confirmed">✓ 확정</span></td></tr>
+                        <tr class="row-new"><td>M5-04</td><td>데이터 저장</td><td>지점 코드·기기 ID 체계</td><td><span class="ver teal">MVP</span></td><td>양사 협의</td><td><span class="status new">★ 신규</span></td></tr>
+                        <tr class="row-mvp"><td>M5-05</td><td>데이터 저장</td><td>확장 가능 저장 구조 설계</td><td><span class="ver mvp">MVP</span></td><td>코드아이디어</td><td><span class="status confirmed">✓ 확정</span></td></tr>
+                        <tr class="row-mvp"><td>M6-01</td><td>보안·라이선스</td><td>HW 기반 인증키 발급</td><td><span class="ver mvp">MVP</span></td><td>코드아이디어</td><td><span class="status discuss">△ 협의</span></td></tr>
+                        <tr class="row-mvp"><td>M6-02</td><td>보안·라이선스</td><td>인증키 검증 부팅 체크</td><td><span class="ver mvp">MVP</span></td><td>코드아이디어</td><td><span class="status confirmed">✓ 확정</span></td></tr>
+                        <tr class="row-mvp"><td>M6-03</td><td>보안·라이선스</td><td>원격 유지보수 접근 통제</td><td><span class="ver mvp">MVP</span></td><td>코드아이디어</td><td><span class="status confirmed">✓ 확정</span></td></tr>
+                        <tr class="row-mvp"><td>M7-01</td><td>인증 방식</td><td>얼굴 인식 인증</td><td><span class="ver mvp">MVP</span></td><td>코드아이디어</td><td><span class="status confirmed">✓ 확정</span></td></tr>
+                        <tr class="row-mvp"><td>M7-02</td><td>인증 방식</td><td>이름 직접 입력 인증</td><td><span class="ver mvp">MVP</span></td><td>코드아이디어</td><td><span class="status confirmed">✓ 확정</span></td></tr>
+                        <tr class="row-v2"><td>M7-03</td><td>인증 방식</td><td>RFID 카드 리더기 연동</td><td><span class="ver v2">v2</span></td><td>코드아이디어</td><td><span class="status later">다음 버전</span></td></tr>
+                        <tr class="row-v2"><td>M7-04</td><td>인증 방식</td><td>지문 인식기 연동</td><td><span class="ver v2">v2</span></td><td>코드아이디어</td><td><span class="status later">다음 버전</span></td></tr>
+                        <tr class="row-mvp"><td>M8-01</td><td>사용자 UX</td><td>개인정보 동의 화면</td><td><span class="ver mvp">MVP</span></td><td>코드아이디어</td><td><span class="status confirmed">✓ 확정</span></td></tr>
+                        <tr class="row-mvp"><td>M8-02</td><td>사용자 UX</td><td>면책 문구 표시</td><td><span class="ver mvp">MVP</span></td><td>코드아이디어</td><td><span class="status confirmed">✓ 확정</span></td></tr>
+                        <tr class="row-mvp"><td>M8-03</td><td>사용자 UX</td><td>측정 결과 화면</td><td><span class="ver mvp">MVP</span></td><td>코드아이디어</td><td><span class="status confirmed">✓ 확정</span></td></tr>
+                        <tr class="row-mvp"><td>M8-04</td><td>사용자 UX</td><td>재측정 안내 화면</td><td><span class="ver mvp">MVP</span></td><td>코드아이디어</td><td><span class="status confirmed">✓ 확정</span></td></tr>
+                        <tr class="row-v2"><td>M8-05</td><td>사용자 UX</td><td>다국어 지원 (영어)</td><td><span class="ver v2">v2</span></td><td>코드아이디어</td><td><span class="status later">다음 버전</span></td></tr>
+                        <tr class="row-new"><td>M9-01</td><td>원격 앱 관리</td><td>기기 원격 리셋·재시작</td><td><span class="ver teal">MVP</span></td><td>코드아이디어</td><td><span class="status new">★ 신규</span></td></tr>
+                        <tr class="row-new"><td>M9-02</td><td>원격 앱 관리</td><td>원격 SW 배포</td><td><span class="ver teal">MVP</span></td><td>코드아이디어</td><td><span class="status new">★ 신규</span></td></tr>
+                        <tr class="row-new"><td>M9-03</td><td>원격 앱 관리</td><td>기기 상태 모니터링</td><td><span class="ver teal">MVP</span></td><td>코드아이디어</td><td><span class="status new">★ 신규</span></td></tr>
+                        <tr class="row-new"><td>M9-04</td><td>원격 앱 관리</td><td>이상 알림 자동 발송</td><td><span class="ver teal">MVP</span></td><td>코드아이디어</td><td><span class="status new">★ 신규</span></td></tr>
+                        <tr class="row-new"><td>M9-05</td><td>원격 앱 관리</td><td>명령 이력 로그 보관</td><td><span class="ver teal">MVP</span></td><td>코드아이디어</td><td><span class="status new">★ 신규</span></td></tr>
+                        <tr class="row-new"><td>M10-01</td><td>지점별 통계</td><td>지점별 측정 데이터 집계</td><td><span class="ver teal">MVP</span></td><td>코드아이디어</td><td><span class="status new">★ 신규</span></td></tr>
+                        <tr class="row-new"><td>M10-02</td><td>지점별 통계</td><td>일별·주별·월별 추이 차트</td><td><span class="ver teal">MVP</span></td><td>코드아이디어</td><td><span class="status new">★ 신규</span></td></tr>
+                        <tr class="row-new"><td>M10-03</td><td>지점별 통계</td><td>출입 현황 리포트</td><td><span class="ver teal">MVP</span></td><td>코드아이디어</td><td><span class="status new">★ 신규</span></td></tr>
+                        <tr class="row-new"><td>M10-04</td><td>지점별 통계</td><td>CSV / Excel 내보내기</td><td><span class="ver teal">MVP</span></td><td>코드아이디어</td><td><span class="status new">★ 신규</span></td></tr>
+                        <tr class="row-new"><td>M10-05</td><td>지점별 통계</td><td>비식별 집계 전용 화면</td><td><span class="ver teal">MVP</span></td><td>코드아이디어</td><td><span class="status new">★ 신규</span></td></tr>
+                        <tr class="row-v2"><td>V2-03</td><td>예외 대응</td><td>예외 상황 자동 복구</td><td><span class="ver v2">v2</span></td><td>코드아이디어</td><td><span class="status later">다음 버전</span></td></tr>
+                        <tr class="row-v2"><td>V2-04</td><td>관리자</td><td>다중 권한 체계</td><td><span class="ver v2">v2</span></td><td>코드아이디어</td><td><span class="status later">다음 버전</span></td></tr>
+                        <tr class="row-v2"><td>V2-05</td><td>AI 업데이트</td><td>AI 모델 v1.x 업데이트</td><td><span class="ver v2">v2</span></td><td>코드아이디어</td><td><span class="status later">다음 버전</span></td></tr>
+                        <tr class="row-v2"><td>V2-06</td><td>데이터 수집</td><td>박람회·학술대회 독립 수집 모드</td><td><span class="ver v2">v2</span></td><td>세이프티랩+코드아이디어</td><td><span class="status later">다음 버전</span></td></tr>
+                        <tr class="row-v2"><td>V2-07</td><td>사용자 UX</td><td>다국어 지원 (영어)</td><td><span class="ver v2">v2</span></td><td>코드아이디어</td><td><span class="status later">다음 버전</span></td></tr>
+                        <tr class="row-v2"><td>V2-08</td><td>원격 관리</td><td>원격 관리 대시보드 고도화</td><td><span class="ver v2">v2</span></td><td>코드아이디어</td><td><span class="status later">다음 버전</span></td></tr>
+                        <tr class="row-v2"><td>V2-09</td><td>통계</td><td>통계 이상 지표 알림</td><td><span class="ver v2">v2</span></td><td>코드아이디어</td><td><span class="status later">다음 버전</span></td></tr>
+                        <tr class="row-v2"><td>V2-10</td><td>클라우드</td><td>AWS 연동 및 국외 이전 동의</td><td><span class="ver v2">v2</span></td><td>양사 협의</td><td><span class="status discuss">△ 협의</span></td></tr>
+                        <tr class="row-v3"><td>V3-01</td><td>확장 디바이스</td><td>음주측정기 연동</td><td><span class="ver v3">v3</span></td><td>별도 계약</td><td><span class="ver v3">장기</span></td></tr>
+                        <tr class="row-v3"><td>V3-02</td><td>확장 디바이스</td><td>폐활량 측정기 연동</td><td><span class="ver v3">v3</span></td><td>별도 계약</td><td><span class="ver v3">장기</span></td></tr>
+                        <tr class="row-v3"><td>V3-03</td><td>모바일</td><td>모바일 앱 인터페이스</td><td><span class="ver v3">v3</span></td><td>별도 계약</td><td><span class="ver v3">장기</span></td></tr>
+                        <tr class="row-v3"><td>V3-04</td><td>모바일</td><td>스마트폰 카메라 기반 rPPG</td><td><span class="ver v3">v3</span></td><td>별도 계약</td><td><span class="ver v3">장기</span></td></tr>
+                        <tr class="row-v3"><td>V3-05</td><td>정부 과제</td><td>정부 과제 연계 모듈</td><td><span class="ver v3">v3</span></td><td>별도 계약</td><td><span class="ver v3">장기</span></td></tr>
+                        <tr class="row-v3"><td>V3-06</td><td>AI 업데이트</td><td>AI 모델 v2.0 (박람회 이후)</td><td><span class="ver v3">v3</span></td><td>코드아이디어</td><td><span class="ver v3">장기</span></td></tr>
+                        <tr class="row-v3"><td>V3-07</td><td>정산</td><td>이익 공유 정산 대시보드</td><td><span class="ver v3">v3</span></td><td>양사 협의</td><td><span class="ver v3">장기</span></td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </main>
+
+    <script>
+        function showTab(id, btn) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById('page-' + id).classList.add('active');
+            btn.classList.add('active');
+        }
+        function toggleTheme() {
+            const isLight = document.body.classList.toggle('light');
+            document.getElementById('themeBtn').textContent = isLight ? '🌙 다크' : '☀️ 라이트';
+        }
+        function toggleExpand(header) {
+            const body = header.nextElementSibling;
+            const chevron = header.querySelector('.chevron');
+            body.classList.toggle('open');
+            chevron.classList.toggle('open');
+        }
+    </script>
+
+</body>
+</html>
