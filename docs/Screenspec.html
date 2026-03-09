@@ -1768,8 +1768,195 @@ tr.r-v12 td:first-child{border-left:3px solid var(--purple);padding-left:8px;}
     </div>
   </div>
   <div class="page" id="page-a4">
-    <div class="sec-label">준비 중</div>
-    <p class="sec-desc">A-4 통계 탭 — 10단계에서 채워집니다.</p>
+    <div class="sec-label">A-4. 지점별 통계 화면 (관리자 앱·웹)</div>
+    <p class="sec-desc">2026.03.04 추가 확정 항목입니다. 키오스크 측정 데이터를 지점·기간별로 집계하여 관리자가 건강 지표 트렌드 및 출입 패턴을 파악할 수 있는 화면입니다. A-4-01~04는 ver.1.0 상세 명세, A-4-05(이상 알림 리포트)는 ver.1.1, A-4-06(정산 보고서)은 ver.1.2 요약 명세입니다.</p>
+
+    <!-- A-4-01 -->
+    <div class="sc sc-new mb8">
+      <div class="sh" onclick="ts(this)">
+        <span class="sid s-teal">A-4-01</span>
+        <div class="si">
+          <div class="sn">통계 대시보드 화면 <span class="ver v10t">ver.1.0</span></div>
+          <div class="ss">전체 지점 측정 현황 집계 — 오늘·이번 주·이번 달 주요 지표 한 화면 요약</div>
+        </div>
+        <span class="chev open">▼</span>
+      </div>
+      <div class="sb open">
+        <div class="sp">
+          <div class="sp-t">UI 요소</div>
+          <div class="ur"><div class="ue">기간 선택 탭</div><div class="ud">오늘 / 이번 주 / 이번 달 / 직접 설정 기간 선택 탭 — 선택 기간에 따라 전체 대시보드 데이터 갱신</div><div><span class="ut tog">TOGGLE</span></div></div>
+          <div class="ur"><div class="ue">핵심 지표 카드</div><div class="ud">총 측정 건수 / 출입 허가 건수 / 출입 거부 건수 / 커프 2차 검증 건수 / Quality Gate 통과율 — 전기간 대비 증감률 표시</div><div><span class="ut dsp">DISPLAY</span></div></div>
+          <div class="ur"><div class="ue">판정 분포 도넛 차트</div><div class="ud">정상 / 주의 / 위험 판정 비율 도넛 차트 — 각 영역 탭 시 해당 판정 이력 A-1-02로 이동</div><div><span class="ut dsp">DISPLAY</span></div></div>
+          <div class="ur"><div class="ue">시간대별 측정 분포 차트</div><div class="ud">시간대(0~23시)별 측정 건수 막대 차트 — 측정 집중 시간대 시각화</div><div><span class="ut dsp">DISPLAY</span></div></div>
+          <div class="ur"><div class="ue">지점별 측정 현황 테이블</div><div class="ud">지점명 / 기기 수 / 측정 건수 / 허가율 / 평균 수축기·이완기 / QG 통과율 표시 — 지점명 탭 시 A-4-02 지점 상세로 이동</div><div><span class="ut dsp">DISPLAY</span></div></div>
+          <div class="ur"><div class="ue">혈압 평균 추이 미니 차트</div><div class="ud">전체 지점 평균 수축기·이완기 혈압 추이 라인 차트 — 선택 기간 기준 표시</div><div><span class="ut dsp">DISPLAY</span></div></div>
+        </div>
+        <div class="sp">
+          <div class="sp-t g">동작</div>
+          <div class="fr"><span class="ft usr">사용자 조작</span><div class="fa">기간 탭 변경 → 선택 기간 기준 전체 대시보드 데이터 갱신</div><span class="fn ok">데이터 갱신</span></div>
+          <div class="fr"><span class="ft usr">사용자 조작</span><div class="fa">판정 분포 차트 영역 탭 → 해당 판정 이력 A-1-02 화면으로 이동 (필터 자동 적용)</div><span class="fn ok">→ A-1-02</span></div>
+          <div class="fr"><span class="ft usr">사용자 조작</span><div class="fa">지점별 테이블 지점명 탭 → 해당 지점 상세 통계 A-4-02 화면으로 이동</div><span class="fn ok">→ A-4-02</span></div>
+          <div class="fr"><span class="ft tmr">타이머</span><div class="fa">"오늘" 기간 선택 시 5분 간격 자동 데이터 갱신 — 갱신 중 로딩 인디케이터 표시</div><span class="fn ok">주기적 갱신</span></div>
+        </div>
+        <div class="sp">
+          <div class="sp-t r">예외 처리</div>
+          <div class="er"><div class="ec">데이터 없음</div><div class="eh">선택 기간 내 측정 데이터 없을 시 "해당 기간의 측정 데이터가 없습니다" 안내 + 차트 영역 빈 상태 UI 표시</div></div>
+          <div class="er"><div class="ec">통계 집계 지연</div><div class="eh">대용량 데이터 집계 지연 시 "데이터를 불러오는 중입니다" 스켈레톤 UI 표시 — 집계 완료 후 순차 렌더링</div></div>
+          <div class="er"><div class="ec">개인정보 집계 원칙</div><div class="eh">모든 통계 데이터는 비식별 집계 데이터만 표시 — 개인 식별 가능 수치 미노출. 개인별 원시 데이터 직접 조회 불가</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- A-4-02 -->
+    <div class="sc sc-new mb8">
+      <div class="sh" onclick="ts(this)">
+        <span class="sid s-teal">A-4-02</span>
+        <div class="si">
+          <div class="sn">지점 상세 통계 화면 <span class="ver v10t">ver.1.0</span></div>
+          <div class="ss">개별 지점 측정 데이터 심층 분석 — 기기별·시간대별·판정별 상세 통계</div>
+        </div>
+        <span class="chev">▼</span>
+      </div>
+      <div class="sb">
+        <div class="sp">
+          <div class="sp-t">UI 요소</div>
+          <div class="ur"><div class="ue">지점 선택 드롭다운</div><div class="ud">조회할 지점 선택 — 권한 범위 내 접근 가능 지점 목록 표시</div><div><span class="ut inp">INPUT</span></div></div>
+          <div class="ur"><div class="ue">기간 선택</div><div class="ud">날짜 범위 선택 달력 UI — 최대 조회 범위 설정 (예: 3개월 이내, 협의 필요)</div><div><span class="ut inp">INPUT</span></div></div>
+          <div class="ur"><div class="ue">기기별 측정 현황</div><div class="ud">지점 내 기기별 측정 건수·허가율·QG 통과율 비교 막대 차트</div><div><span class="ut dsp">DISPLAY</span></div></div>
+          <div class="ur"><div class="ue">요일별 측정 분포</div><div class="ud">요일별 평균 측정 건수 히트맵 또는 막대 차트 — 측정 집중 요일 패턴 파악</div><div><span class="ut dsp">DISPLAY</span></div></div>
+          <div class="ur"><div class="ue">혈압 분포 히스토그램</div><div class="ud">수축기·이완기 측정값 분포 히스토그램 — 정상·주의·위험 범위 색상 구분 표시</div><div><span class="ut dsp">DISPLAY</span></div></div>
+          <div class="ur"><div class="ue">QG 탈락 원인 분석</div><div class="ud">Quality Gate 탈락 원인(조도·움직임·화질)별 비율 파이 차트 + 탈락률 추이</div><div><span class="ut dsp">DISPLAY</span></div></div>
+          <div class="ur"><div class="ue">추이 차트 링크</div><div class="ud">"추이 분석 보기" 버튼 — A-4-03 화면으로 이동 (현재 지점·기간 필터 유지)</div><div><span class="ut btn">BTN</span></div></div>
+        </div>
+        <div class="sp">
+          <div class="sp-t g">동작</div>
+          <div class="fr"><span class="ft usr">사용자 조작</span><div class="fa">지점·기간 선택 변경 → 전체 차트·통계 데이터 갱신</div><span class="fn ok">데이터 갱신</span></div>
+          <div class="fr"><span class="ft usr">사용자 조작</span><div class="fa">차트 영역 탭·호버 → 해당 데이터 포인트 상세 수치 툴팁 표시</div><span class="fn ok">툴팁 표시</span></div>
+          <div class="fr"><span class="ft usr">사용자 조작</span><div class="fa">"추이 분석 보기" 버튼 탭 → A-4-03 화면으로 이동 (현재 지점·기간 필터 자동 인계)</div><span class="fn ok">→ A-4-03</span></div>
+        </div>
+        <div class="sp">
+          <div class="sp-t r">예외 처리</div>
+          <div class="er"><div class="ec">지점 접근 권한</div><div class="eh">권한 범위 외 지점 선택 시도 시 드롭다운 목록에서 해당 지점 비노출 또는 "접근 권한이 없는 지점입니다" 안내 (ver.1.1 다중 권한 연동 시 적용)</div></div>
+          <div class="er"><div class="ec">조회 범위 초과</div><div class="eh">최대 조회 범위 초과 선택 시 "조회 가능 범위는 최대 N개월입니다" 안내 + 날짜 범위 자동 조정</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- A-4-03 -->
+    <div class="sc sc-new mb8">
+      <div class="sh" onclick="ts(this)">
+        <span class="sid s-teal">A-4-03</span>
+        <div class="si">
+          <div class="sn">혈압·판정 추이 차트 화면 <span class="ver v10t">ver.1.0</span></div>
+          <div class="ss">기간별 평균 혈압·판정 비율 변화 추이 — 지점 건강 지표 트렌드 파악</div>
+        </div>
+        <span class="chev">▼</span>
+      </div>
+      <div class="sb">
+        <div class="sp">
+          <div class="sp-t">UI 요소</div>
+          <div class="ur"><div class="ue">지점·기간 선택</div><div class="ud">지점 선택 드롭다운 + 기간 선택 (일별·주별·월별 집계 단위 선택 가능)</div><div><span class="ut inp">INPUT</span></div></div>
+          <div class="ur"><div class="ue">평균 혈압 추이 라인 차트</div><div class="ud">평균 수축기·이완기 혈압 이중 라인 차트 — 설정된 정상·주의 기준선 수평 참조선 함께 표시</div><div><span class="ut dsp">DISPLAY</span></div></div>
+          <div class="ur"><div class="ue">판정 비율 추이 스택 바 차트</div><div class="ud">기간별 정상·주의·위험 판정 비율 스택 바 차트 — 위험 비율 상승 시 시각 강조</div><div><span class="ut dsp">DISPLAY</span></div></div>
+          <div class="ur"><div class="ue">측정 건수 추이 바 차트</div><div class="ud">기간별 총 측정 건수 막대 차트 — 측정 빈도 변화 파악</div><div><span class="ut dsp">DISPLAY</span></div></div>
+          <div class="ur"><div class="ue">지점 비교 토글</div><div class="ud">복수 지점 동시 비교 ON/OFF — ON 시 최대 5개 지점 동시 라인 표시 (색상 구분)</div><div><span class="ut tog">TOGGLE</span></div></div>
+          <div class="ur"><div class="ue">차트 확대·다운로드</div><div class="ud">각 차트 우측 상단 확대 버튼 + PNG 이미지 다운로드 버튼</div><div><span class="ut btn">BTN</span></div></div>
+        </div>
+        <div class="sp">
+          <div class="sp-t g">동작</div>
+          <div class="fr"><span class="ft usr">사용자 조작</span><div class="fa">지점·기간·집계 단위 변경 → 전체 차트 데이터 갱신</div><span class="fn ok">차트 갱신</span></div>
+          <div class="fr"><span class="ft usr">사용자 조작</span><div class="fa">지점 비교 ON → 지점 추가 선택 팝업 → 최대 5개 지점 동시 라인 비교 표시</div><span class="fn ok">다중 지점 비교</span></div>
+          <div class="fr"><span class="ft usr">사용자 조작</span><div class="fa">차트 데이터 포인트 탭·호버 → 해당 기간 수치 상세 툴팁 표시</div><span class="fn ok">툴팁 표시</span></div>
+          <div class="fr"><span class="ft usr">사용자 조작</span><div class="fa">PNG 다운로드 버튼 탭 → 현재 차트 PNG 이미지 파일 다운로드</div><span class="fn ok">이미지 다운로드</span></div>
+        </div>
+        <div class="sp">
+          <div class="sp-t r">예외 처리</div>
+          <div class="er"><div class="ec">지점 비교 5개 초과</div><div class="eh">5개 초과 지점 추가 시도 시 "최대 5개 지점까지 동시 비교 가능합니다" 안내 — 추가 차단</div></div>
+          <div class="er"><div class="ec">단기간 일별 집계</div><div class="eh">1일 단위 집계 선택 시 최대 조회 기간 제한 권장 (예: 90일 이내) — 초과 시 자동으로 주별 집계로 전환 + 안내 표시</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- A-4-04 -->
+    <div class="sc sc-new mb8">
+      <div class="sh" onclick="ts(this)">
+        <span class="sid s-teal">A-4-04</span>
+        <div class="si">
+          <div class="sn">통계 데이터 내보내기 화면 <span class="ver v10t">ver.1.0</span></div>
+          <div class="ss">조건 기반 통계 데이터 CSV·Excel 내보내기 — 비식별 집계 데이터만 제공</div>
+        </div>
+        <span class="chev">▼</span>
+      </div>
+      <div class="sb">
+        <div class="sp">
+          <div class="sp-t">UI 요소</div>
+          <div class="ur"><div class="ue">내보내기 범위 선택</div><div class="ud">지점 선택(전체 또는 특정 지점) + 기간 선택 + 집계 단위(일별·주별·월별) 선택</div><div><span class="ut inp">INPUT</span></div></div>
+          <div class="ur"><div class="ue">포함 항목 선택</div><div class="ud">측정 건수 / 판정 분포 / 평균 혈압 수치 / QG 통과율 / 커프 검증 건수 항목별 체크박스 선택</div><div><span class="ut tog">TOGGLE</span></div></div>
+          <div class="ur"><div class="ue">파일 형식 선택</div><div class="ud">CSV / Excel(.xlsx) 파일 형식 선택 라디오 버튼</div><div><span class="ut tog">TOGGLE</span></div></div>
+          <div class="ur"><div class="ue">미리보기 테이블</div><div class="ud">선택 조건 기반 내보내기 예상 데이터 미리보기 — 최대 10행 표시</div><div><span class="ut dsp">DISPLAY</span></div></div>
+          <div class="ur"><div class="ue">내보내기 버튼</div><div class="ud">"내보내기 실행" — 조건 선택 완료 시 활성화</div><div><span class="ut btn">BTN</span></div></div>
+          <div class="ur"><div class="ue">내보내기 이력</div><div class="ud">최근 내보내기 이력 5건 표시 — 파일명·다운로드 시각·실행자·재다운로드 버튼</div><div><span class="ut dsp">DISPLAY</span></div></div>
+        </div>
+        <div class="sp">
+          <div class="sp-t g">동작</div>
+          <div class="fr"><span class="ft usr">사용자 조작</span><div class="fa">범위·항목·형식 선택 → 미리보기 테이블 실시간 업데이트</div><span class="fn ok">미리보기 갱신</span></div>
+          <div class="fr"><span class="ft usr">사용자 조작</span><div class="fa">"내보내기 실행" 탭 → 파일 생성 진행 표시 → 완료 시 파일 자동 다운로드</div><span class="fn ok">파일 다운로드</span></div>
+          <div class="fr"><span class="ft sys">시스템 처리</span><div class="fa">내보내기 실행 시 실행자·조건·시각·파일명을 내보내기 이력에 자동 저장</div><span class="fn ok">이력 저장</span></div>
+        </div>
+        <div class="sp">
+          <div class="sp-t r">예외 처리</div>
+          <div class="er"><div class="ec">대용량 파일 생성</div><div class="eh">예상 데이터 건수 10만 건 초과 시 "데이터가 많아 파일 생성에 시간이 걸릴 수 있습니다. 완료 시 이메일로 다운로드 링크를 전송합니다" 안내</div></div>
+          <div class="er"><div class="ec">내보내기 권한</div><div class="eh">내보내기 기능은 슈퍼 관리자·관리자 역할만 사용 가능 — 조회 전용 역할은 버튼 비활성 처리 (ver.1.1 다중 권한 연동 시 적용)</div></div>
+          <div class="er"><div class="ec">개인정보 포함 방지</div><div class="eh">내보내기 데이터에 개인 식별 가능 정보 포함 시도 시 자동 필터링 + "비식별 집계 데이터만 내보내기 가능합니다" 안내</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- A-4-05 ver.1.1 -->
+    <div class="sc sc-v11 mb8">
+      <div class="sh" onclick="ts(this)">
+        <span class="sid s-gray">A-4-05</span>
+        <div class="si">
+          <div class="sn">이상 수치 알림 리포트 화면 <span class="ver v11">ver.1.1</span></div>
+          <div class="ss">위험 판정 급증·평균 혈압 이상 상승 등 통계적 이상 패턴 자동 감지 리포트</div>
+        </div>
+        <span class="chev">▼</span>
+      </div>
+      <div class="sb">
+        <div class="sp">
+          <div class="sp-t">UI 요소 (요약 명세)</div>
+          <div class="ur"><div class="ue">이상 패턴 알림 목록</div><div class="ud">감지된 이상 패턴 목록 — 패턴 유형(위험 비율 급증·평균 혈압 이상·QG 탈락률 급등) / 감지 지점 / 감지 시각 / 심각도 표시</div><div><span class="ut dsp">DISPLAY</span></div></div>
+          <div class="ur"><div class="ue">이상 패턴 상세 리포트</div><div class="ud">선택 알림 탭 시 해당 지점·기간의 상세 추이 차트 + 비교 기준 기간 데이터 나란히 표시</div><div><span class="ut dsp">DISPLAY</span></div></div>
+          <div class="ur"><div class="ue">알림 임계값 설정 버튼</div><div class="ud">이상 감지 임계값(예: 위험 비율 N% 초과 시 알림) 설정 화면 이동 버튼 — 슈퍼 관리자만 접근 가능</div><div><span class="ut btn">BTN</span></div></div>
+          <div class="ur"><div class="ue">처리 완료 버튼</div><div class="ud">알림 항목별 "확인 완료" — 처리자·시각·메모 저장</div><div><span class="ut btn">BTN</span></div></div>
+        </div>
+        <div class="sp">
+          <div class="sp-t r">예외 처리 (요약)</div>
+          <div class="er"><div class="ec">임계값 미설정</div><div class="eh">이상 감지 임계값 미설정 시 기본값(위험 비율 20% 초과, 평균 수축기 140 초과) 자동 적용 — 기본값 협의 필요</div></div>
+          <div class="er"><div class="ec">단기 데이터 오탐</div><div class="eh">데이터 누적이 적은 초기 운영 기간(예: 운영 7일 미만)의 이상 감지 알림은 "데이터 누적 부족으로 정확도가 낮을 수 있습니다" 경고 표시</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- A-4-06 ver.1.2 -->
+    <div class="sc sc-v12">
+      <div class="sh" onclick="ts(this)">
+        <span class="sid s-purple">A-4-06</span>
+        <div class="si">
+          <div class="sn">정산 보고서 화면 <span class="ver v12">ver.1.2</span></div>
+          <div class="ss">지점별·기기별 측정 건수 기반 과금·정산 보고서 생성 — 별도 계약 항목</div>
+        </div>
+        <span class="chev">▼</span>
+      </div>
+      <div class="sb">
+        <div class="sp">
+          <div class="sp-t">UI 요소 (요약 명세)</div>
+          <div class="ur"><div class="ue">정산 기간 선택</div><div class="ud">월별 정산 기간 선택 — 정산 기준(측정 건수·라이선스 유형·기기 수) 과금 모델은 ver.1.2 착수 시 별도 협의</div><div><span class="ut inp">INPUT</span></div></div>
+          <div class="ur"><div class="ue">지점별 정산 내역 테이블</div><div class="ud">지점명 / 기기 수 / 측정 건수 / 라이선스 유형 / 산정 금액 표시</div><div><span class="ut dsp">DISPLAY</span></div></div>
+          <div class="ur"><div class="ue">정산 보고서 내보내기</div><div class="ud">PDF / Excel 형식 정산 보고서 내보내기 — 코드아이디어 내부 회계 연동 여부는 ver.1.2 착수 시 협의</div><div><span class="ut btn">BTN</span></div></div>
+        </div>
+      </div>
+    </div>
   </div>
 </main>
 
