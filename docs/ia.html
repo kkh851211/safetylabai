@@ -1,0 +1,1341 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>생체인식 키오스크 IA (정보구조도) v1.0</title>
+    <style>
+        :root {
+            --bg: #0f1117;
+            --s1: #1a1f2e;
+            --t1: #e8eaf0;
+            --t3: #8c95aa;
+            --bd: #232b3e;
+            --blue: #4f80ff;
+            --green: #10b981;
+            --orange: #f59e0b;
+            --red: #ef4444;
+            --purple: #a78bfa;
+            --teal: #14b8a6;
+            --transition: background 0.2s, color 0.2s, border-color 0.2s;
+        }
+        body.light {
+            --bg: #f5f7fa; --s1: #ffffff;
+            --t1: #1a1f2e; --t3: #5a6478; --bd: #d1d9e6;
+        }
+        html { overflow-y: scroll; }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            background: var(--bg); color: var(--t1);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            font-size: 14px; line-height: 1.6; transition: var(--transition);
+        }
+        .inner-container {
+            max-width: 1100px; margin: 0 auto; padding: 0 24px;
+            width: 100%; height: 100%; display: flex; align-items: center;
+        }
+        header {
+            background: var(--s1); border-bottom: 1px solid var(--bd);
+            height: 56px; position: sticky; top: 0; z-index: 100; transition: var(--transition);
+        }
+        .header-inner { justify-content: space-between; }
+        .header-left  { display: flex; align-items: center; gap: 12px; }
+        .logo {
+            width: 32px; height: 32px; background: var(--blue); border-radius: 8px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 16px; color: #fff; flex-shrink: 0;
+        }
+        .title-wrap h1 { font-size: 15px; font-weight: 700; color: var(--t1); }
+        .title-wrap p  { font-size: 11px; color: var(--t3); }
+        .badges { display: flex; gap: 6px; }
+        .badge {
+            font-size: 11px; font-weight: 600; padding: 3px 8px;
+            border-radius: 20px; border: 1px solid var(--bd); color: var(--t3); transition: var(--transition);
+        }
+        .badge.blue   { background: rgba(79,128,255,0.12);  color: var(--blue);   border-color: rgba(79,128,255,0.3); }
+        .badge.green  { background: rgba(16,185,129,0.12);  color: var(--green);  border-color: rgba(16,185,129,0.3); }
+        .badge.orange { background: rgba(245,158,11,0.12);  color: var(--orange); border-color: rgba(245,158,11,0.3); }
+        .badge.teal   { background: rgba(20,184,166,0.12);  color: var(--teal);   border-color: rgba(20,184,166,0.3); }
+        .badge.purple { background: rgba(167,139,250,0.12); color: var(--purple); border-color: rgba(167,139,250,0.3); }
+        .toggle-btn {
+            background: var(--bg); border: 1px solid var(--bd); color: var(--t1);
+            padding: 6px 12px; border-radius: 8px; cursor: pointer;
+            font-size: 13px; transition: var(--transition); white-space: nowrap;
+        }
+        .toggle-btn:hover { border-color: var(--blue); }
+        nav { background: var(--s1); border-bottom: 1px solid var(--bd); transition: var(--transition); }
+        .nav-inner { overflow-x: auto; height: 100%; }
+        .nav-inner::-webkit-scrollbar { display: none; }
+        .tab-btn {
+            background: none; border: none; border-bottom: 2px solid transparent;
+            color: var(--t3); padding: 12px 16px; cursor: pointer;
+            font-size: 13px; font-weight: 500; white-space: nowrap;
+            transition: color 0.15s, border-color 0.15s;
+        }
+        .tab-btn:hover { color: var(--t1); }
+        .tab-btn.active { color: var(--blue); border-bottom: 2px solid var(--blue); }
+        main { padding: 24px; max-width: 1100px; margin: 0 auto; }
+        .page { display: none; }
+        .page.active { display: block; }
+        .card {
+            background: var(--s1); border-radius: 12px;
+            padding: 18px; border: 1px solid var(--bd); transition: var(--transition);
+        }
+        .card-title {
+            font-size: 11px; font-weight: 700; color: var(--t3);
+            text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 14px;
+        }
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+        .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+        .mb16 { margin-bottom: 16px; }
+        .stat-num   { font-size: 28px; font-weight: 800; color: var(--t1); line-height: 1.1; }
+        .stat-label { font-size: 12px; color: var(--t3); margin-top: 4px; }
+        .stat-sub   { font-size: 11px; color: var(--t3); margin-top: 8px; padding-top: 8px; border-top: 1px solid var(--bd); }
+        .grid-4 { display: grid; grid-template-columns: repeat(4,1fr); gap: 16px; }
+        .section-label {
+            font-size: 11px; font-weight: 700; color: var(--blue);
+            text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 6px;
+        }
+        .section-desc { font-size: 13px; color: var(--t3); margin-bottom: 16px; line-height: 1.7; }
+        .notice-banner {
+            display: flex; align-items: center; gap: 10px;
+            background: rgba(20,184,166,0.08); border: 1px solid rgba(20,184,166,0.3);
+            border-radius: 10px; padding: 10px 16px; margin-bottom: 16px;
+            font-size: 12px; color: var(--teal); font-weight: 600;
+        }
+        .item-list { list-style: none; }
+        .item-list li {
+            display: flex; align-items: flex-start; gap: 10px;
+            padding: 10px 0; border-bottom: 1px solid var(--bd);
+            font-size: 13px; color: var(--t1);
+        }
+        .item-list li:last-child { border-bottom: none; }
+        .dot { width: 6px; height: 6px; border-radius: 50%; margin-top: 6px; flex-shrink: 0; }
+        .dot-blue   { background: var(--blue); }
+        .dot-green  { background: var(--green); }
+        .dot-orange { background: var(--orange); }
+        .dot-red    { background: var(--red); }
+        .dot-purple { background: var(--purple); }
+        .dot-teal   { background: var(--teal); }
+        .dot-gray   { background: var(--t3); }
+        .action-tag {
+            display: inline-block; font-size: 10px; font-weight: 700;
+            padding: 1px 6px; border-radius: 4px; margin-right: 4px;
+        }
+        .tag-0304   { background: rgba(20,184,166,0.15);  color: var(--teal); }
+        .tag-v11    { background: rgba(139,147,170,0.15); color: var(--t3); }
+        .tag-v12    { background: rgba(167,139,250,0.15); color: var(--purple); }
+
+        /* ── 버전 배지 ── */
+        .ver {
+            display: inline-block; font-size: 10px; font-weight: 700;
+            padding: 2px 7px; border-radius: 20px; white-space: nowrap; flex-shrink: 0;
+        }
+        .ver.v10  { background: rgba(79,128,255,0.12);  color: var(--blue); }
+        .ver.v10t { background: rgba(20,184,166,0.12);  color: var(--teal); }
+        .ver.v11  { background: rgba(139,147,170,0.12); color: var(--t3); }
+        .ver.v12  { background: rgba(167,139,250,0.12); color: var(--purple); }
+
+        /* ════════════════════════════════
+           IA 트리 컴포넌트
+        ════════════════════════════════ */
+
+        /* 루트 시스템 블록 */
+        .ia-root {
+            display: flex; flex-direction: column; gap: 12px;
+        }
+
+        /* L0: 시스템 루트 노드 */
+        .ia-system {
+            background: var(--s1); border: 1px solid var(--bd);
+            border-radius: 12px; overflow: hidden;
+        }
+        .ia-system-head {
+            display: flex; align-items: center; gap: 10px;
+            padding: 14px 18px;
+            background: rgba(79,128,255,0.08);
+            border-bottom: 1px solid rgba(79,128,255,0.2);
+            cursor: pointer; transition: var(--transition);
+        }
+        .ia-system-head:hover { background: rgba(79,128,255,0.14); }
+        .ia-system-icon {
+            width: 32px; height: 32px; border-radius: 8px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 16px; flex-shrink: 0;
+        }
+        .ia-system-icon.blue   { background: rgba(79,128,255,0.2); }
+        .ia-system-icon.green  { background: rgba(16,185,129,0.2); }
+        .ia-system-icon.orange { background: rgba(245,158,11,0.2); }
+        .ia-system-icon.purple { background: rgba(167,139,250,0.2); }
+        .ia-system-icon.teal   { background: rgba(20,184,166,0.2); }
+        .ia-system-icon.red    { background: rgba(239,68,68,0.2); }
+
+        .ia-system-title {
+            font-size: 14px; font-weight: 800; color: var(--t1); flex: 1;
+        }
+        .ia-system-sub { font-size: 11px; color: var(--t3); margin-top: 1px; }
+        .ia-chevron { font-size: 11px; color: var(--t3); transition: transform 0.2s; }
+        .ia-chevron.open { transform: rotate(180deg); }
+
+        .ia-system-body { display: none; padding: 14px 18px; }
+        .ia-system-body.open { display: block; }
+
+        /* L1: 섹션 그룹 */
+        .ia-section {
+            margin-bottom: 14px;
+        }
+        .ia-section:last-child { margin-bottom: 0; }
+
+        .ia-section-label {
+            font-size: 10px; font-weight: 700; color: var(--t3);
+            text-transform: uppercase; letter-spacing: 0.07em;
+            margin-bottom: 6px; padding-left: 4px;
+        }
+
+        /* L1: 메뉴/화면 노드 */
+        .ia-nodes { display: flex; flex-direction: column; gap: 4px; }
+
+        .ia-node {
+            display: flex; align-items: stretch; gap: 0;
+            border-radius: 8px; overflow: hidden;
+            border: 1px solid var(--bd);
+            background: var(--bg);
+            transition: var(--transition);
+        }
+        .ia-node.node-new   { border-color: rgba(20,184,166,0.4); background: rgba(20,184,166,0.04); }
+        .ia-node.node-v11   { border-color: rgba(139,147,170,0.25); opacity: 0.8; }
+        .ia-node.node-v12   { border-color: rgba(167,139,250,0.3); background: rgba(167,139,250,0.04); opacity: 0.75; }
+
+        .ia-node-bar {
+            width: 3px; flex-shrink: 0;
+            background: var(--blue);
+        }
+        .ia-node-bar.green  { background: var(--green); }
+        .ia-node-bar.orange { background: var(--orange); }
+        .ia-node-bar.teal   { background: var(--teal); }
+        .ia-node-bar.purple { background: var(--purple); }
+        .ia-node-bar.red    { background: var(--red); }
+        .ia-node-bar.gray   { background: var(--t3); }
+
+        .ia-node-content {
+            flex: 1; padding: 10px 14px;
+            display: flex; align-items: flex-start; justify-content: space-between; gap: 10px;
+        }
+
+        .ia-node-left { flex: 1; }
+
+        .ia-node-name {
+            font-size: 13px; font-weight: 700; color: var(--t1);
+            display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
+        }
+        .ia-node-id {
+            font-size: 10px; font-weight: 700; color: var(--t3);
+            background: var(--bd); padding: 1px 5px; border-radius: 3px; flex-shrink: 0;
+        }
+        .ia-node-desc { font-size: 12px; color: var(--t3); margin-top: 3px; line-height: 1.5; }
+
+        /* L2: 하위 화면 칩 목록 */
+        .ia-children {
+            display: flex; flex-wrap: wrap; gap: 5px; margin-top: 8px;
+        }
+        .ia-child {
+            display: inline-flex; align-items: center; gap: 5px;
+            font-size: 11px; font-weight: 600;
+            padding: 3px 10px; border-radius: 20px;
+            background: var(--s1); border: 1px solid var(--bd);
+            color: var(--t3); transition: var(--transition);
+        }
+        .ia-child.blue   { background: rgba(79,128,255,0.08);  border-color: rgba(79,128,255,0.25);  color: var(--blue); }
+        .ia-child.green  { background: rgba(16,185,129,0.08);  border-color: rgba(16,185,129,0.25);  color: var(--green); }
+        .ia-child.orange { background: rgba(245,158,11,0.08);  border-color: rgba(245,158,11,0.25);  color: var(--orange); }
+        .ia-child.teal   { background: rgba(20,184,166,0.08);  border-color: rgba(20,184,166,0.25);  color: var(--teal); }
+        .ia-child.purple { background: rgba(167,139,250,0.08); border-color: rgba(167,139,250,0.25); color: var(--purple); }
+        .ia-child.red    { background: rgba(239,68,68,0.08);   border-color: rgba(239,68,68,0.25);   color: var(--red); }
+        .ia-child.gray   { background: rgba(139,147,170,0.08); border-color: rgba(139,147,170,0.2);  color: var(--t3); }
+
+        /* ── 테이블 ── */
+        table { width: 100%; border-collapse: collapse; }
+        th {
+            text-align: left; font-size: 11px; font-weight: 600; color: var(--t3);
+            padding: 8px 10px; border-bottom: 1px solid var(--bd);
+            text-transform: uppercase; letter-spacing: 0.05em;
+        }
+        td { padding: 10px; border-bottom: 1px solid var(--bd); font-size: 13px; color: var(--t1); vertical-align: top; }
+        tr:last-child td { border-bottom: none; }
+        tr:hover td { background: rgba(79,128,255,0.04); }
+        tr.row-new td { background: rgba(20,184,166,0.06); }
+        tr.row-new:hover td { background: rgba(20,184,166,0.11); }
+        tr.row-new td:first-child { border-left: 3px solid var(--teal); padding-left: 8px; }
+        tr.row-v11 td { opacity: 0.7; }
+        tr.row-v11 td:first-child { border-left: 3px solid var(--t3); padding-left: 8px; }
+        tr.row-v12 td { background: rgba(167,139,250,0.04); opacity: 0.7; }
+        tr.row-v12 td:first-child { border-left: 3px solid var(--purple); padding-left: 8px; }
+
+        @media(max-width:720px) { .grid-3,.grid-4 { grid-template-columns: 1fr 1fr; } }
+        @media(max-width:560px) {
+            main { padding: 12px; }
+            .inner-container { padding: 0 12px; }
+            .grid-2,.grid-3,.grid-4 { grid-template-columns: 1fr; }
+            .badges { display: none; }
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <div class="inner-container header-inner">
+        <div class="header-left">
+            <div class="logo">🗂️</div>
+            <div class="title-wrap">
+                <h1>생체인식 키오스크 IA (정보구조도)</h1>
+                <p>코드아이디어 → 세이프티랩 | PRD v1.0 기반 · 메뉴/화면 구조 트리</p>
+            </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;">
+            <div class="badges">
+                <span class="badge blue">ver.1.0</span>
+                <span class="badge orange">ver.1.1</span>
+                <span class="badge purple">ver.1.2</span>
+                <span class="badge teal">03.04 반영</span>
+            </div>
+            <button class="toggle-btn" id="themeBtn" onclick="toggleTheme()">☀️ 라이트</button>
+        </div>
+    </div>
+</header>
+
+<nav>
+    <div class="inner-container nav-inner">
+        <button class="tab-btn active" onclick="showTab('overview',this)">📋 개요</button>
+        <button class="tab-btn" onclick="showTab('kiosk',this)">🖥️ 키오스크 앱</button>
+        <button class="tab-btn" onclick="showTab('admin',this)">🔐 관리자 앱/웹</button>
+        <button class="tab-btn" onclick="showTab('data',this)">🗄️ 데이터 구조</button>
+        <button class="tab-btn" onclick="showTab('index',this)">📑 화면 목록</button>
+    </div>
+</nav>
+
+<main>
+
+<!-- ══════════════ TAB 1: 개요 ══════════════ -->
+<div class="page active" id="page-overview">
+    <div class="section-label">IA Overview — 시스템 구성 및 버전별 범위</div>
+    <p class="section-desc">생체인식 키오스크 시스템은 <strong>키오스크 앱 · 관리자 앱/웹 · 데이터 저장소</strong> 3개 하위 시스템으로 구성됩니다. 각 화면은 버전별로 구분됩니다.</p>
+
+    <div class="notice-banner">
+        📅 2026.03.04 추가 확정 — 원격 앱 관리 · 지점별 통계 화면이 ver.1.0에 포함됨
+    </div>
+
+    <div class="grid-4 mb16">
+        <div class="card">
+            <div class="card-title">전체 화면 수</div>
+            <div class="stat-num" style="color:var(--blue)">37</div>
+            <div class="stat-label">화면·페이지</div>
+            <div class="stat-sub">3개 하위 시스템</div>
+        </div>
+        <div class="card">
+            <div class="card-title">ver.1.0 화면</div>
+            <div class="stat-num" style="color:var(--blue)">24</div>
+            <div class="stat-label">가온병원 납품 목표</div>
+            <div class="stat-sub">03.04 추가 7면 포함</div>
+        </div>
+        <div class="card">
+            <div class="card-title">ver.1.1 화면</div>
+            <div class="stat-num" style="color:var(--t3)">8</div>
+            <div class="stat-label">안정화 후 추가</div>
+            <div class="stat-sub">RFID·지문·다국어 등</div>
+        </div>
+        <div class="card">
+            <div class="card-title">ver.1.2 화면</div>
+            <div class="stat-num" style="color:var(--purple)">5</div>
+            <div class="stat-label">장기 로드맵</div>
+            <div class="stat-sub">모바일·음주·폐활량</div>
+        </div>
+    </div>
+
+    <!-- 시스템 구성도 -->
+    <div class="card mb16">
+        <div class="card-title">시스템 구성 — 3개 하위 시스템</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;">
+            <div style="background:var(--bg);border:1px solid rgba(79,128,255,0.35);border-radius:10px;padding:14px;">
+                <div style="font-size:12px;font-weight:800;color:var(--blue);margin-bottom:10px;">🖥️ 키오스크 앱</div>
+                <ul class="item-list">
+                    <li><span class="dot dot-blue"></span><span>일반 사용자 측정 플로우 화면</span></li>
+                    <li><span class="dot dot-blue"></span><span>Quality Gate 판정 화면</span></li>
+                    <li><span class="dot dot-blue"></span><span>결과·동의·면책 화면</span></li>
+                    <li><span class="dot dot-blue"></span><span>현장 관리자 숨겨진 설정 화면</span></li>
+                    <li><span class="dot dot-blue"></span><span>캘리브레이션 실험 모드</span></li>
+                </ul>
+            </div>
+            <div style="background:var(--bg);border:1px solid rgba(20,184,166,0.35);border-radius:10px;padding:14px;">
+                <div style="font-size:12px;font-weight:800;color:var(--teal);margin-bottom:10px;">📱 관리자 앱/웹 <span class="action-tag tag-0304">03.04 추가</span></div>
+                <ul class="item-list">
+                    <li><span class="dot dot-teal"></span><span>출입 판단 보조 대시보드</span></li>
+                    <li><span class="dot dot-teal"></span><span>원격 기기 관리 (리셋·배포)</span></li>
+                    <li><span class="dot dot-teal"></span><span>지점별 통계 대시보드</span></li>
+                    <li><span class="dot dot-teal"></span><span>라이선스 인증키 관리</span></li>
+                    <li><span class="dot dot-teal"></span><span>이상 알림 수신 화면</span></li>
+                </ul>
+            </div>
+            <div style="background:var(--bg);border:1px solid rgba(16,185,129,0.3);border-radius:10px;padding:14px;">
+                <div style="font-size:12px;font-weight:800;color:var(--green);margin-bottom:10px;">🗄️ 데이터 저장소</div>
+                <ul class="item-list">
+                    <li><span class="dot dot-green"></span><span>측정 데이터 (비식별 암호화)</span></li>
+                    <li><span class="dot dot-green"></span><span>라벨링·설문 데이터</span></li>
+                    <li><span class="dot dot-green"></span><span>캘리브레이션 세션 데이터</span></li>
+                    <li><span class="dot dot-green"></span><span>관리자 설정·로그</span></li>
+                    <li><span class="dot dot-green"></span><span>라이선스 인증 DB</span></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- 버전별 범위 -->
+    <div class="card">
+        <div class="card-title">버전별 화면 범위 정의</div>
+        <table>
+            <thead>
+                <tr><th>버전</th><th>목표</th><th>포함 시스템</th><th>주요 추가 화면</th></tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><span class="ver v10">ver.1.0</span></td>
+                    <td>가온병원 납품 · 1차 안정화 운영</td>
+                    <td>키오스크 앱 전체 + 관리자 앱/웹 기본</td>
+                    <td>측정 플로우·Quality Gate·관리자 설정·캘리브레이션·원격 관리·지점별 통계</td>
+                </tr>
+                <tr>
+                    <td><span class="ver v11">ver.1.1</span></td>
+                    <td>SRT·코레일 납품 · 확장 인증·예외 대응</td>
+                    <td>키오스크 앱 확장 + 관리자 앱 고도화</td>
+                    <td>RFID·지문 인증·오프라인 모드·다국어 UX·다중 권한 설정·AWS 연동</td>
+                </tr>
+                <tr>
+                    <td><span class="ver v12">ver.1.2</span></td>
+                    <td>Total Healthcare 확장 · 장기 로드맵</td>
+                    <td>모바일 앱 신규 + 확장 디바이스</td>
+                    <td>스마트폰 rPPG·음주·폐활량 측정·이익 공유 정산 대시보드</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+<!-- ══════════════ TAB 2: 키오스크 앱 ══════════════ -->
+<div class="page" id="page-kiosk">
+    <div class="section-label">키오스크 앱 — 화면 구조 트리</div>
+    <p class="section-desc">현장에 설치된 키오스크 기기에서 실행되는 앱의 전체 화면 구조입니다. 일반 사용자 플로우와 관리자 전용 플로우로 구분됩니다.</p>
+
+    <div class="ia-root mb16">
+
+        <!-- ── 1. 진입 / 대기 ── -->
+        <div class="ia-system">
+            <div class="ia-system-head" onclick="toggleIA(this)">
+                <div class="ia-system-icon blue">🏠</div>
+                <div>
+                    <div class="ia-system-title">1. 진입 · 대기 화면</div>
+                    <div class="ia-system-sub">키오스크 앞 접근 시 자동 활성화 — 사용자를 측정 플로우로 안내</div>
+                </div>
+                <span class="ver v10" style="margin-left:auto;margin-right:10px;">ver.1.0</span>
+                <span class="ia-chevron open">▼</span>
+            </div>
+            <div class="ia-system-body open">
+                <div class="ia-nodes">
+                    <div class="ia-node">
+                        <div class="ia-node-bar"></div>
+                        <div class="ia-node-content">
+                            <div class="ia-node-left">
+                                <div class="ia-node-name"><span class="ia-node-id">K-1-01</span> 대기 화면 (Idle Screen)</div>
+                                <div class="ia-node-desc">키오스크 미사용 시 표시 — 접근 감지 시 자동 전환</div>
+                                <div class="ia-children">
+                                    <span class="ia-child blue">접근 감지 → 개인정보 동의 화면</span>
+                                </div>
+                            </div>
+                            <span class="ver v10">ver.1.0</span>
+                        </div>
+                    </div>
+                    <div class="ia-node">
+                        <div class="ia-node-bar"></div>
+                        <div class="ia-node-content">
+                            <div class="ia-node-left">
+                                <div class="ia-node-name"><span class="ia-node-id">K-1-02</span> 개인정보 동의 화면</div>
+                                <div class="ia-node-desc">얼굴 인식 별도 동의 + 민감정보(혈압) 별도 동의 — 법적 필수</div>
+                                <div class="ia-children">
+                                    <span class="ia-child green">동의 완료 → 인증 화면</span>
+                                    <span class="ia-child red">미동의 → 종료 안내 화면</span>
+                                </div>
+                            </div>
+                            <span class="ver v10">ver.1.0</span>
+                        </div>
+                    </div>
+                    <div class="ia-node">
+                        <div class="ia-node-bar"></div>
+                        <div class="ia-node-content">
+                            <div class="ia-node-left">
+                                <div class="ia-node-name"><span class="ia-node-id">K-1-03</span> 종료 안내 화면</div>
+                                <div class="ia-node-desc">미동의 또는 측정 포기 시 표시 후 대기 화면으로 복귀</div>
+                            </div>
+                            <span class="ver v10">ver.1.0</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ── 2. 인증 ── -->
+        <div class="ia-system">
+            <div class="ia-system-head" onclick="toggleIA(this)">
+                <div class="ia-system-icon green">🪪</div>
+                <div>
+                    <div class="ia-system-title">2. 본인 인증 화면</div>
+                    <div class="ia-system-sub">얼굴 인식(ver.1.0) → RFID·지문(ver.1.1) 순차 확장</div>
+                </div>
+                <span class="ver v10" style="margin-left:auto;margin-right:10px;">ver.1.0~</span>
+                <span class="ia-chevron open">▼</span>
+            </div>
+            <div class="ia-system-body open">
+                <div class="ia-nodes">
+                    <div class="ia-node">
+                        <div class="ia-node-bar green"></div>
+                        <div class="ia-node-content">
+                            <div class="ia-node-left">
+                                <div class="ia-node-name"><span class="ia-node-id">K-2-01</span> 얼굴 인식 인증 화면</div>
+                                <div class="ia-node-desc">카메라 얼굴 인식 — 사용자 DB 매칭 인증</div>
+                                <div class="ia-children">
+                                    <span class="ia-child green">인식 성공 → 안정화 유도 화면</span>
+                                    <span class="ia-child orange">인식 실패 → 이름 입력 화면</span>
+                                </div>
+                            </div>
+                            <span class="ver v10">ver.1.0</span>
+                        </div>
+                    </div>
+                    <div class="ia-node">
+                        <div class="ia-node-bar orange"></div>
+                        <div class="ia-node-content">
+                            <div class="ia-node-left">
+                                <div class="ia-node-name"><span class="ia-node-id">K-2-02</span> 이름 직접 입력 화면</div>
+                                <div class="ia-node-desc">얼굴 인식 불가 시 키보드로 이름 입력 — 대체 인증</div>
+                                <div class="ia-children">
+                                    <span class="ia-child green">입력 완료 → 안정화 유도 화면</span>
+                                </div>
+                            </div>
+                            <span class="ver v10">ver.1.0</span>
+                        </div>
+                    </div>
+                    <div class="ia-node node-v11">
+                        <div class="ia-node-bar gray"></div>
+                        <div class="ia-node-content">
+                            <div class="ia-node-left">
+                                <div class="ia-node-name"><span class="ia-node-id">K-2-03</span> RFID 카드 인증 화면 <span class="action-tag tag-v11">ver.1.1</span></div>
+                                <div class="ia-node-desc">RFID 카드 태깅 인증 — 출입 통제 시스템 연동</div>
+                            </div>
+                            <span class="ver v11">ver.1.1</span>
+                        </div>
+                    </div>
+                    <div class="ia-node node-v11">
+                        <div class="ia-node-bar gray"></div>
+                        <div class="ia-node-content">
+                            <div class="ia-node-left">
+                                <div class="ia-node-name"><span class="ia-node-id">K-2-04</span> 지문 인식 인증 화면 <span class="action-tag tag-v11">ver.1.1</span></div>
+                                <div class="ia-node-desc">외부 지문 인식 디바이스 연동 인증</div>
+                            </div>
+                            <span class="ver v11">ver.1.1</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ── 3. 측정 플로우 ── -->
+        <div class="ia-system">
+            <div class="ia-system-head" onclick="toggleIA(this)">
+                <div class="ia-system-icon blue">📡</div>
+                <div>
+                    <div class="ia-system-title">3. 측정 플로우 화면</div>
+                    <div class="ia-system-sub">안정화 유도 → Quality Gate → rPPG 측정 → 결과 표시</div>
+                </div>
+                <span class="ver v10" style="margin-left:auto;margin-right:10px;">ver.1.0</span>
+                <span class="ia-chevron open">▼</span>
+            </div>
+            <div class="ia-system-body open">
+                <div class="ia-section">
+                    <div class="ia-section-label">측정 전 준비</div>
+                    <div class="ia-nodes">
+                        <div class="ia-node">
+                            <div class="ia-node-bar"></div>
+                            <div class="ia-node-content">
+                                <div class="ia-node-left">
+                                    <div class="ia-node-name"><span class="ia-node-id">K-3-01</span> 라벨링 설문 화면</div>
+                                    <div class="ia-node-desc">혈압약 복용·흡연·커피 섭취 등 보조 지표 설문 수집 — 측정 전</div>
+                                    <div class="ia-children">
+                                        <span class="ia-child blue">설문 완료 → 안정화 유도 화면</span>
+                                    </div>
+                                </div>
+                                <span class="ver v10">ver.1.0</span>
+                            </div>
+                        </div>
+                        <div class="ia-node">
+                            <div class="ia-node-bar"></div>
+                            <div class="ia-node-content">
+                                <div class="ia-node-left">
+                                    <div class="ia-node-name"><span class="ia-node-id">K-3-02</span> 안정화 유도 화면</div>
+                                    <div class="ia-node-desc">정면 응시 30초 대기 안내 — 움직임 감지 시 재안내 팝업 표시</div>
+                                    <div class="ia-children">
+                                        <span class="ia-child blue">대기 완료 → Quality Gate 판정</span>
+                                    </div>
+                                </div>
+                                <span class="ver v10">ver.1.0</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="ia-section">
+                    <div class="ia-section-label">Quality Gate</div>
+                    <div class="ia-nodes">
+                        <div class="ia-node">
+                            <div class="ia-node-bar orange"></div>
+                            <div class="ia-node-content">
+                                <div class="ia-node-left">
+                                    <div class="ia-node-name"><span class="ia-node-id">K-3-03</span> Quality Gate 판정 화면</div>
+                                    <div class="ia-node-desc">조도·움직임·카메라 화질 자동 측정 — 통과/탈락 판정</div>
+                                    <div class="ia-children">
+                                        <span class="ia-child green">통과 → rPPG 측정 화면</span>
+                                        <span class="ia-child red">탈락 → 탈락 안내 화면</span>
+                                    </div>
+                                </div>
+                                <span class="ver v10">ver.1.0</span>
+                            </div>
+                        </div>
+                        <div class="ia-node">
+                            <div class="ia-node-bar red"></div>
+                            <div class="ia-node-content">
+                                <div class="ia-node-left">
+                                    <div class="ia-node-name"><span class="ia-node-id">K-3-04</span> Quality Gate 탈락 안내 화면</div>
+                                    <div class="ia-node-desc">탈락 원인(조도 부족 / 움직임 / 화질 불량) 구체 안내 — 재측정 버튼 제공</div>
+                                    <div class="ia-children">
+                                        <span class="ia-child blue">재측정 (최대 3회) → 안정화 화면</span>
+                                        <span class="ia-child orange">3회 탈락 → 커프 안내 화면</span>
+                                    </div>
+                                </div>
+                                <span class="ver v10">ver.1.0</span>
+                            </div>
+                        </div>
+                        <div class="ia-node">
+                            <div class="ia-node-bar orange"></div>
+                            <div class="ia-node-content">
+                                <div class="ia-node-left">
+                                    <div class="ia-node-name"><span class="ia-node-id">K-3-05</span> 커프 혈압계 안내 화면</div>
+                                    <div class="ia-node-desc">Quality Gate 3회 탈락 시 — 커프 혈압계 2차 측정 방법 안내</div>
+                                </div>
+                                <span class="ver v10">ver.1.0</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="ia-section">
+                    <div class="ia-section-label">rPPG 측정</div>
+                    <div class="ia-nodes">
+                        <div class="ia-node">
+                            <div class="ia-node-bar green"></div>
+                            <div class="ia-node-content">
+                                <div class="ia-node-left">
+                                    <div class="ia-node-name"><span class="ia-node-id">K-3-06</span> rPPG 측정 진행 화면</div>
+                                    <div class="ia-node-desc">카메라 혈압·심박 파형 수집 중 진행 표시 (약 30~60초)</div>
+                                    <div class="ia-children">
+                                        <span class="ia-child green">측정 완료 → 결과 화면</span>
+                                        <span class="ia-child red">측정 실패 → 오류 안내 화면</span>
+                                    </div>
+                                </div>
+                                <span class="ver v10">ver.1.0</span>
+                            </div>
+                        </div>
+                        <div class="ia-node">
+                            <div class="ia-node-bar red"></div>
+                            <div class="ia-node-content">
+                                <div class="ia-node-left">
+                                    <div class="ia-node-name"><span class="ia-node-id">K-3-07</span> 측정 오류 안내 화면</div>
+                                    <div class="ia-node-desc">센서 오류·측정 실패 시 안내 및 재시도 또는 커프 안내</div>
+                                </div>
+                                <span class="ver v10">ver.1.0</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="ia-section">
+                    <div class="ia-section-label">결과 표시</div>
+                    <div class="ia-nodes">
+                        <div class="ia-node">
+                            <div class="ia-node-bar blue"></div>
+                            <div class="ia-node-content">
+                                <div class="ia-node-left">
+                                    <div class="ia-node-name"><span class="ia-node-id">K-3-08</span> 측정 결과 화면</div>
+                                    <div class="ia-node-desc">수축기·이완기·심박 수치 + 정상/주의/위험 색상 판정 + 면책 문구</div>
+                                    <div class="ia-children">
+                                        <span class="ia-child green">정상 판정 → 출입 대기</span>
+                                        <span class="ia-child orange">주의/위험 → 커프 2차 검증 안내</span>
+                                    </div>
+                                </div>
+                                <span class="ver v10">ver.1.0</span>
+                            </div>
+                        </div>
+                        <div class="ia-node">
+                            <div class="ia-node-bar orange"></div>
+                            <div class="ia-node-content">
+                                <div class="ia-node-left">
+                                    <div class="ia-node-name"><span class="ia-node-id">K-3-09</span> 커프 2차 검증 안내 화면</div>
+                                    <div class="ia-node-desc">주의·위험 판정 시 커프 혈압계 측정 방법 안내 — 관리자 결정 대기</div>
+                                </div>
+                                <span class="ver v10">ver.1.0</span>
+                            </div>
+                        </div>
+                        <div class="ia-node">
+                            <div class="ia-node-bar blue"></div>
+                            <div class="ia-node-content">
+                                <div class="ia-node-left">
+                                    <div class="ia-node-name"><span class="ia-node-id">K-3-10</span> 출입 결과 화면</div>
+                                    <div class="ia-node-desc">관리자 최종 판단 결과 — 출입 허가 또는 거부 안내 표시 후 대기 화면 복귀</div>
+                                    <div class="ia-children">
+                                        <span class="ia-child green">허가 → 대기 화면 복귀</span>
+                                        <span class="ia-child red">거부 → 거부 안내 후 복귀</span>
+                                    </div>
+                                </div>
+                                <span class="ver v10">ver.1.0</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ── 4. 관리자 전용 (키오스크 내) ── -->
+        <div class="ia-system">
+            <div class="ia-system-head" onclick="toggleIA(this)">
+                <div class="ia-system-icon orange">🔐</div>
+                <div>
+                    <div class="ia-system-title">4. 관리자 전용 화면 (키오스크 내)</div>
+                    <div class="ia-system-sub">패스워드 잠금 숨겨진 접근 — 일반 사용자 화면에서 비노출</div>
+                </div>
+                <span class="ver v10" style="margin-left:auto;margin-right:10px;">ver.1.0</span>
+                <span class="ia-chevron open">▼</span>
+            </div>
+            <div class="ia-system-body open">
+                <div class="ia-nodes">
+                    <div class="ia-node">
+                        <div class="ia-node-bar orange"></div>
+                        <div class="ia-node-content">
+                            <div class="ia-node-left">
+                                <div class="ia-node-name"><span class="ia-node-id">K-4-01</span> 관리자 패스워드 입력 화면</div>
+                                <div class="ia-node-desc">숨겨진 버튼 탭 후 패스워드 입력 — 오류 5회 시 잠금</div>
+                                <div class="ia-children">
+                                    <span class="ia-child green">인증 성공 → 관리자 메인 화면</span>
+                                    <span class="ia-child red">5회 오류 → 잠금 안내 화면</span>
+                                </div>
+                            </div>
+                            <span class="ver v10">ver.1.0</span>
+                        </div>
+                    </div>
+                    <div class="ia-node">
+                        <div class="ia-node-bar orange"></div>
+                        <div class="ia-node-content">
+                            <div class="ia-node-left">
+                                <div class="ia-node-name"><span class="ia-node-id">K-4-02</span> 관리자 메인 화면</div>
+                                <div class="ia-node-desc">헬스케어 범위 설정 / 화면 밝기 / 카메라 선명도 / 실험 모드 진입</div>
+                                <div class="ia-children">
+                                    <span class="ia-child orange">헬스케어 범위 설정</span>
+                                    <span class="ia-child orange">화면·카메라 설정</span>
+                                    <span class="ia-child purple">실험 모드 진입</span>
+                                </div>
+                            </div>
+                            <span class="ver v10">ver.1.0</span>
+                        </div>
+                    </div>
+                    <div class="ia-node">
+                        <div class="ia-node-bar orange"></div>
+                        <div class="ia-node-content">
+                            <div class="ia-node-left">
+                                <div class="ia-node-name"><span class="ia-node-id">K-4-03</span> 헬스케어 범위 설정 화면</div>
+                                <div class="ia-node-desc">수축기/이완기 정상·주의·위험 범위 수치 설정 — 변경 로그 자동 기록</div>
+                            </div>
+                            <span class="ver v10">ver.1.0</span>
+                        </div>
+                    </div>
+                    <div class="ia-node">
+                        <div class="ia-node-bar orange"></div>
+                        <div class="ia-node-content">
+                            <div class="ia-node-left">
+                                <div class="ia-node-name"><span class="ia-node-id">K-4-04</span> 화면·카메라 설정 화면</div>
+                                <div class="ia-node-desc">화면 밝기 / 카메라 선명도 조절 — 결과 영향 없는 선에서 낮게 유지 원칙</div>
+                            </div>
+                            <span class="ver v10">ver.1.0</span>
+                        </div>
+                    </div>
+                    <div class="ia-node">
+                        <div class="ia-node-bar purple"></div>
+                        <div class="ia-node-content">
+                            <div class="ia-node-left">
+                                <div class="ia-node-name"><span class="ia-node-id">K-4-05</span> 캘리브레이션 실험 모드 화면</div>
+                                <div class="ia-node-desc">AI·커프 동시 기록 세션 — 피험자·날짜·기기 ID 포함 세션 단위 저장</div>
+                                <div class="ia-children">
+                                    <span class="ia-child purple">세션 시작 → 측정 플로우 진행</span>
+                                    <span class="ia-child purple">세션 저장·완료</span>
+                                </div>
+                            </div>
+                            <span class="ver v10">ver.1.0</span>
+                        </div>
+                    </div>
+                    <div class="ia-node node-v11">
+                        <div class="ia-node-bar gray"></div>
+                        <div class="ia-node-content">
+                            <div class="ia-node-left">
+                                <div class="ia-node-name"><span class="ia-node-id">K-4-06</span> 오프라인 모드 상태 화면 <span class="action-tag tag-v11">ver.1.1</span></div>
+                                <div class="ia-node-desc">네트워크 단절 시 오프라인 수집 모드 자동 전환 — 동기화 대기 상태 표시</div>
+                            </div>
+                            <span class="ver v11">ver.1.1</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ── 5. ver.1.2 확장 ── -->
+        <div class="ia-system">
+            <div class="ia-system-head" onclick="toggleIA(this)">
+                <div class="ia-system-icon purple">📱</div>
+                <div>
+                    <div class="ia-system-title">5. ver.1.2 확장 — 모바일 앱 · 확장 디바이스</div>
+                    <div class="ia-system-sub">스마트폰 카메라 rPPG · 음주 · 폐활량 측정 화면</div>
+                </div>
+                <span class="ver v12" style="margin-left:auto;margin-right:10px;">ver.1.2</span>
+                <span class="ia-chevron">▼</span>
+            </div>
+            <div class="ia-system-body">
+                <div class="ia-nodes">
+                    <div class="ia-node node-v12">
+                        <div class="ia-node-bar purple"></div>
+                        <div class="ia-node-content">
+                            <div class="ia-node-left">
+                                <div class="ia-node-name"><span class="ia-node-id">K-5-01</span> 스마트폰 rPPG 측정 화면 <span class="action-tag tag-v12">ver.1.2</span></div>
+                                <div class="ia-node-desc">전용 키오스크 없이 스마트폰 카메라로 혈압·심박 측정 — 요양보호사 방문 시나리오</div>
+                            </div>
+                            <span class="ver v12">ver.1.2</span>
+                        </div>
+                    </div>
+                    <div class="ia-node node-v12">
+                        <div class="ia-node-bar purple"></div>
+                        <div class="ia-node-content">
+                            <div class="ia-node-left">
+                                <div class="ia-node-name"><span class="ia-node-id">K-5-02</span> 음주측정기 연동 화면 <span class="action-tag tag-v12">ver.1.2</span></div>
+                                <div class="ia-node-desc">외부 음주측정기 연동 — 혈압·심박과 함께 복합 출입 판단 지원</div>
+                            </div>
+                            <span class="ver v12">ver.1.2</span>
+                        </div>
+                    </div>
+                    <div class="ia-node node-v12">
+                        <div class="ia-node-bar purple"></div>
+                        <div class="ia-node-content">
+                            <div class="ia-node-left">
+                                <div class="ia-node-name"><span class="ia-node-id">K-5-03</span> 폐활량 측정기 연동 화면 <span class="action-tag tag-v12">ver.1.2</span></div>
+                                <div class="ia-node-desc">폐활량 측정 디바이스 연동 — 호흡기 건강 지표 추가</div>
+                            </div>
+                            <span class="ver v12">ver.1.2</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div><!-- /ia-root -->
+</div>
+
+
+<!-- ══════════════ TAB 3: 관리자 앱/웹 ══════════════ -->
+<div class="page" id="page-admin">
+    <div class="section-label">관리자 앱/웹 — 화면 구조 트리</div>
+    <p class="section-desc">세이프티랩 및 코드아이디어 운영자가 사용하는 관리자 앱/웹의 전체 화면 구조입니다. 03.04 추가 확정 기능 포함.</p>
+
+    <div class="notice-banner">
+        📅 2026.03.04 추가 확정 — 원격 기기 관리(A-3) · 지점별 통계(A-4) 섹션 신규 추가
+    </div>
+
+    <div class="ia-root mb16">
+
+        <!-- A-1: 출입 판단 -->
+        <div class="ia-system">
+            <div class="ia-system-head" onclick="toggleIA(this)">
+                <div class="ia-system-icon orange">🚦</div>
+                <div>
+                    <div class="ia-system-title">A-1. 출입 판단 보조 대시보드</div>
+                    <div class="ia-system-sub">현장 관리자가 AI 판정 결과를 확인하고 최종 출입 결정</div>
+                </div>
+                <span class="ver v10" style="margin-left:auto;margin-right:10px;">ver.1.0</span>
+                <span class="ia-chevron open">▼</span>
+            </div>
+            <div class="ia-system-body open">
+                <div class="ia-nodes">
+                    <div class="ia-node">
+                        <div class="ia-node-bar orange"></div>
+                        <div class="ia-node-content">
+                            <div class="ia-node-left">
+                                <div class="ia-node-name"><span class="ia-node-id">A-1-01</span> 실시간 측정 결과 모니터 화면</div>
+                                <div class="ia-node-desc">사용자 측정 완료 시 수치·판정 색상 실시간 표시 — 관리자 결정 대기</div>
+                                <div class="ia-children">
+                                    <span class="ia-child green">출입 허가 버튼</span>
+                                    <span class="ia-child red">출입 거부 버튼</span>
+                                    <span class="ia-child teal">커프 2차 검증 요청</span>
+                                </div>
+                            </div>
+                            <span class="ver v10">ver.1.0</span>
+                        </div>
+                    </div>
+                    <div class="ia-node">
+                        <div class="ia-node-bar blue"></div>
+                        <div class="ia-node-content">
+                            <div class="ia-node-left">
+                                <div class="ia-node-name"><span class="ia-node-id">A-1-02</span> 출입 이력 로그 화면</div>
+                                <div class="ia-node-desc">허가/거부 결정 내역 — 타임스탬프·담당자·수치 포함 조회</div>
+                            </div>
+                            <span class="ver v10">ver.1.0</span>
+                        </div>
+                    </div>
+                    <div class="ia-node">
+                        <div class="ia-node-bar teal"></div>
+                        <div class="ia-node-content">
+                            <div class="ia-node-left">
+                                <div class="ia-node-name"><span class="ia-node-id">A-1-03</span> 커프 2차 검증 입력 화면</div>
+                                <div class="ia-node-desc">커프 측정값 입력 → AI 추정값과 비교 표시 → 캘리브레이션 데이터 자동 저장</div>
+                            </div>
+                            <span class="ver v10">ver.1.0</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- A-2: 라이선스·보안 -->
+        <div class="ia-system">
+            <div class="ia-system-head" onclick="toggleIA(this)">
+                <div class="ia-system-icon green">🛡️</div>
+                <div>
+                    <div class="ia-system-title">A-2. 라이선스 · 보안 관리</div>
+                    <div class="ia-system-sub">HW 기반 인증키 발급 및 관리</div>
+                </div>
+                <span class="ver v10" style="margin-left:auto;margin-right:10px;">ver.1.0</span>
+                <span class="ia-chevron open">▼</span>
+            </div>
+            <div class="ia-system-body open">
+                <div class="ia-nodes">
+                    <div class="ia-node">
+                        <div class="ia-node-bar green"></div>
+                        <div class="ia-node-content">
+                            <div class="ia-node-left">
+                                <div class="ia-node-name"><span class="ia-node-id">A-2-01</span> 인증키 발급 화면</div>
+                                <div class="ia-node-desc">HW 고유번호 입력 → 1:1 매핑 라이선스 인증키 생성 및 납품 패키지 포함</div>
+                            </div>
+                            <span class="ver v10">ver.1.0</span>
+                        </div>
+                    </div>
+                    <div class="ia-node">
+                        <div class="ia-node-bar green"></div>
+                        <div class="ia-node-content">
+                            <div class="ia-node-left">
+                                <div class="ia-node-name"><span class="ia-node-id">A-2-02</span> 인증키 관리 목록 화면</div>
+                                <div class="ia-node-desc">발급된 인증키 목록 — 기기명·납품처·발급일·상태(활성/만료) 조회</div>
+                            </div>
+                            <span class="ver v10">ver.1.0</span>
+                        </div>
+                    </div>
+                    <div class="ia-node node-v11">
+                        <div class="ia-node-bar gray"></div>
+                        <div class="ia-node-content">
+                            <div class="ia-node-left">
+                                <div class="ia-node-name"><span class="ia-node-id">A-2-03</span> 관리자 계정 다중 권한 설정 화면 <span class="action-tag tag-v11">ver.1.1</span></div>
+                                <div class="ia-node-desc">지점별 관리자 계정 분리 — 접근 가능 지점·기능 권한 개별 설정</div>
+                            </div>
+                            <span class="ver v11">ver.1.1</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- A-3: 원격 기기 관리 (03.04 신규) -->
+        <div class="ia-system">
+            <div class="ia-system-head" onclick="toggleIA(this)">
+                <div class="ia-system-icon teal">📱</div>
+                <div>
+                    <div class="ia-system-title">A-3. 원격 기기 관리 <span class="action-tag tag-0304" style="font-size:11px;">03.04 추가</span></div>
+                    <div class="ia-system-sub">원격 리셋·SW 배포·상태 모니터링·이상 알림</div>
+                </div>
+                <span class="ver v10t" style="margin-left:auto;margin-right:10px;">ver.1.0</span>
+                <span class="ia-chevron open">▼</span>
+            </div>
+            <div class="ia-system-body open">
+                <div class="ia-nodes">
+                    <div class="ia-node node-new">
+                        <div class="ia-node-bar teal"></div>
+                        <div class="ia-node-content">
+                            <div class="ia-node-left">
+                                <div class="ia-node-name"><span class="ia-node-id">A-3-01</span> 기기 목록 · 상태 모니터 화면</div>
+                                <div class="ia-node-desc">납품처별 전체 기기 온라인/오프라인 상태, 마지막 통신 시각, 오류 로그 실시간 조회</div>
+                                <div class="ia-children">
+                                    <span class="ia-child teal">기기 선택 → 상세 화면</span>
+                                    <span class="ia-child teal">원격 리셋 화면</span>
+                                    <span class="ia-child teal">SW 배포 화면</span>
+                                </div>
+                            </div>
+                            <span class="ver v10t">ver.1.0</span>
+                        </div>
+                    </div>
+                    <div class="ia-node node-new">
+                        <div class="ia-node-bar teal"></div>
+                        <div class="ia-node-content">
+                            <div class="ia-node-left">
+                                <div class="ia-node-name"><span class="ia-node-id">A-3-02</span> 기기 상세 화면</div>
+                                <div class="ia-node-desc">선택 기기 상세 — 기기명·지점·버전·오류 로그 + 원격 명령 버튼</div>
+                            </div>
+                            <span class="ver v10t">ver.1.0</span>
+                        </div>
+                    </div>
+                    <div class="ia-node node-new">
+                        <div class="ia-node-bar teal"></div>
+                        <div class="ia-node-content">
+                            <div class="ia-node-left">
+                                <div class="ia-node-name"><span class="ia-node-id">A-3-03</span> 원격 리셋 확인 화면</div>
+                                <div class="ia-node-desc">2단계 인증(OTP 권장) 확인 후 리셋 명령 전송 — 명령 이력 로그 자동 기록</div>
+                                <div class="ia-children">
+                                    <span class="ia-child teal">리셋 완료 → 기기 목록 복귀</span>
+                                    <span class="ia-child red">복구 실패 → 현장 방문 안내</span>
+                                </div>
+                            </div>
+                            <span class="ver v10t">ver.1.0</span>
+                        </div>
+                    </div>
+                    <div class="ia-node node-new">
+                        <div class="ia-node-bar teal"></div>
+                        <div class="ia-node-content">
+                            <div class="ia-node-left">
+                                <div class="ia-node-name"><span class="ia-node-id">A-3-04</span> 원격 SW 배포 화면</div>
+                                <div class="ia-node-desc">업데이트 패키지 선택 → 배포 대상 기기 선택 → 배포 진행률·성공/실패 상태 표시</div>
+                            </div>
+                            <span class="ver v10t">ver.1.0</span>
+                        </div>
+                    </div>
+                    <div class="ia-node node-new">
+                        <div class="ia-node-bar teal"></div>
+                        <div class="ia-node-content">
+                            <div class="ia-node-left">
+                                <div class="ia-node-name"><span class="ia-node-id">A-3-05</span> 이상 알림 수신 화면</div>
+                                <div class="ia-node-desc">오프라인·반복 오류 감지 시 알림 목록 — 기기명·지점·오류 코드·발생 시각 포함</div>
+                                <div class="ia-children">
+                                    <span class="ia-child teal">알림 탭 → 기기 상세 화면 이동</span>
+                                </div>
+                            </div>
+                            <span class="ver v10t">ver.1.0</span>
+                        </div>
+                    </div>
+                    <div class="ia-node node-new">
+                        <div class="ia-node-bar teal"></div>
+                        <div class="ia-node-content">
+                            <div class="ia-node-left">
+                                <div class="ia-node-name"><span class="ia-node-id">A-3-06</span> 명령 이력 로그 화면</div>
+                                <div class="ia-node-desc">원격 리셋·배포 등 전체 명령 이력 — 실행자·기기·시각·결과 조회</div>
+                            </div>
+                            <span class="ver v10t">ver.1.0</span>
+                        </div>
+                    </div>
+                    <div class="ia-node node-v11">
+                        <div class="ia-node-bar gray"></div>
+                        <div class="ia-node-content">
+                            <div class="ia-node-left">
+                                <div class="ia-node-name"><span class="ia-node-id">A-3-07</span> 기기 그룹 관리 화면 <span class="action-tag tag-v11">ver.1.1</span></div>
+                                <div class="ia-node-desc">납품처별 기기 그룹화 — 일괄 명령 전송 및 그룹 단위 모니터링</div>
+                            </div>
+                            <span class="ver v11">ver.1.1</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- A-4: 지점별 통계 (03.04 신규) -->
+        <div class="ia-system">
+            <div class="ia-system-head" onclick="toggleIA(this)">
+                <div class="ia-system-icon teal">📊</div>
+                <div>
+                    <div class="ia-system-title">A-4. 지점별 통계 관리 <span class="action-tag tag-0304" style="font-size:11px;">03.04 추가</span></div>
+                    <div class="ia-system-sub">납품처별 집계·추이·리포트·내보내기</div>
+                </div>
+                <span class="ver v10t" style="margin-left:auto;margin-right:10px;">ver.1.0</span>
+                <span class="ia-chevron open">▼</span>
+            </div>
+            <div class="ia-system-body open">
+                <div class="ia-nodes">
+                    <div class="ia-node node-new">
+                        <div class="ia-node-bar teal"></div>
+                        <div class="ia-node-content">
+                            <div class="ia-node-left">
+                                <div class="ia-node-name"><span class="ia-node-id">A-4-01</span> 지점별 통계 대시보드 (메인)</div>
+                                <div class="ia-node-desc">지점 필터 + 기간 선택(일/주/월) → 측정 건수·출입 허가율·Quality Gate 탈락 비율 집계 표시</div>
+                                <div class="ia-children">
+                                    <span class="ia-child teal">지점 상세 → A-4-02</span>
+                                    <span class="ia-child teal">추이 차트 → A-4-03</span>
+                                    <span class="ia-child teal">내보내기 → A-4-04</span>
+                                </div>
+                            </div>
+                            <span class="ver v10t">ver.1.0</span>
+                        </div>
+                    </div>
+                    <div class="ia-node node-new">
+                        <div class="ia-node-bar teal"></div>
+                        <div class="ia-node-content">
+                            <div class="ia-node-left">
+                                <div class="ia-node-name"><span class="ia-node-id">A-4-02</span> 지점 상세 통계 화면</div>
+                                <div class="ia-node-desc">특정 지점 상세 집계 — 혈압 분포·시간대별 측정 현황 (비식별 집계 전용)</div>
+                            </div>
+                            <span class="ver v10t">ver.1.0</span>
+                        </div>
+                    </div>
+                    <div class="ia-node node-new">
+                        <div class="ia-node-bar teal"></div>
+                        <div class="ia-node-content">
+                            <div class="ia-node-left">
+                                <div class="ia-node-name"><span class="ia-node-id">A-4-03</span> 혈압 추이 차트 화면</div>
+                                <div class="ia-node-desc">일별·주별·월별 혈압 측정 추이 시각화 + 지점 간 비교 차트</div>
+                            </div>
+                            <span class="ver v10t">ver.1.0</span>
+                        </div>
+                    </div>
+                    <div class="ia-node node-new">
+                        <div class="ia-node-bar teal"></div>
+                        <div class="ia-node-content">
+                            <div class="ia-node-left">
+                                <div class="ia-node-name"><span class="ia-node-id">A-4-04</span> 데이터 내보내기 화면</div>
+                                <div class="ia-node-desc">지점·기간 선택 → CSV / Excel 내보내기 — 개인정보 미포함 집계 데이터만</div>
+                            </div>
+                            <span class="ver v10t">ver.1.0</span>
+                        </div>
+                    </div>
+                    <div class="ia-node node-v11">
+                        <div class="ia-node-bar gray"></div>
+                        <div class="ia-node-content">
+                            <div class="ia-node-left">
+                                <div class="ia-node-name"><span class="ia-node-id">A-4-05</span> 통계 이상 지표 알림 화면 <span class="action-tag tag-v11">ver.1.1</span></div>
+                                <div class="ia-node-desc">Quality Gate 탈락률 급등·측정 건수 급감 등 이상 지표 자동 감지 알림 목록</div>
+                            </div>
+                            <span class="ver v11">ver.1.1</span>
+                        </div>
+                    </div>
+                    <div class="ia-node node-v12">
+                        <div class="ia-node-bar purple"></div>
+                        <div class="ia-node-content">
+                            <div class="ia-node-left">
+                                <div class="ia-node-name"><span class="ia-node-id">A-4-06</span> 이익 공유 정산 대시보드 <span class="action-tag tag-v12">ver.1.2</span></div>
+                                <div class="ia-node-desc">납품처별 성과(측정 건수·수익) 기반 Benefit Share 정산 내역 조회</div>
+                            </div>
+                            <span class="ver v12">ver.1.2</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- A-5: 계정·설정 -->
+        <div class="ia-system">
+            <div class="ia-system-head" onclick="toggleIA(this)">
+                <div class="ia-system-icon blue">⚙️</div>
+                <div>
+                    <div class="ia-system-title">A-5. 계정 · 앱 설정</div>
+                    <div class="ia-system-sub">로그인·알림·계정 관리</div>
+                </div>
+                <span class="ver v10" style="margin-left:auto;margin-right:10px;">ver.1.0</span>
+                <span class="ia-chevron">▼</span>
+            </div>
+            <div class="ia-system-body">
+                <div class="ia-nodes">
+                    <div class="ia-node">
+                        <div class="ia-node-bar blue"></div>
+                        <div class="ia-node-content">
+                            <div class="ia-node-left">
+                                <div class="ia-node-name"><span class="ia-node-id">A-5-01</span> 로그인 화면</div>
+                                <div class="ia-node-desc">관리자 계정 인증 — 인증된 계정에서만 원격 제어·통계 접근 허용</div>
+                            </div>
+                            <span class="ver v10">ver.1.0</span>
+                        </div>
+                    </div>
+                    <div class="ia-node">
+                        <div class="ia-node-bar blue"></div>
+                        <div class="ia-node-content">
+                            <div class="ia-node-left">
+                                <div class="ia-node-name"><span class="ia-node-id">A-5-02</span> 알림 설정 화면</div>
+                                <div class="ia-node-desc">이상 알림 수신 방법(푸시·이메일) 및 임계값 설정</div>
+                            </div>
+                            <span class="ver v10">ver.1.0</span>
+                        </div>
+                    </div>
+                    <div class="ia-node node-v11">
+                        <div class="ia-node-bar gray"></div>
+                        <div class="ia-node-content">
+                            <div class="ia-node-left">
+                                <div class="ia-node-name"><span class="ia-node-id">A-5-03</span> 다중 권한 계정 관리 화면 <span class="action-tag tag-v11">ver.1.1</span></div>
+                                <div class="ia-node-desc">계정 추가·삭제·권한 수정 — 지점별 접근 권한 개별 설정</div>
+                            </div>
+                            <span class="ver v11">ver.1.1</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div><!-- /ia-root -->
+</div>
+
+
+<!-- ══════════════ TAB 4: 데이터 구조 ══════════════ -->
+<div class="page" id="page-data">
+    <div class="section-label">데이터 구조 — 저장소 IA</div>
+    <p class="section-desc">시스템에서 생성·저장·활용되는 데이터 엔티티와 각 엔티티 간 관계를 정리합니다.</p>
+
+    <div class="grid-2 mb16">
+        <div class="card" style="border-color:rgba(79,128,255,0.3);">
+            <div class="card-title" style="color:var(--blue)">🗄️ 핵심 데이터 엔티티</div>
+            <ul class="item-list">
+                <li><span class="dot dot-blue"></span><span><strong>측정 레코드</strong> — 비식별 사용자 ID · AI 추정값 · 커프 측정값 · Quality Gate 품질 점수 · 측정 시각 · 지점 코드 · 기기 ID</span></li>
+                <li><span class="dot dot-blue"></span><span><strong>라벨링 데이터</strong> — 혈압약 복용 · 흡연 · 커피 섭취 · 연령 · 성별 · 국적 (측정 레코드와 1:1 연결)</span></li>
+                <li><span class="dot dot-blue"></span><span><strong>캘리브레이션 세션</strong> — 세션 ID · 피험자(비식별) · 날짜 · 기기 ID · AI-커프 쌍 데이터 목록</span></li>
+                <li><span class="dot dot-teal"></span><span><strong>기기 상태 로그</strong> — 기기 ID · 온라인/오프라인 기록 · 오류 코드 · 마지막 통신 시각 <span class="action-tag tag-0304">03.04 추가</span></span></li>
+                <li><span class="dot dot-teal"></span><span><strong>명령 이력</strong> — 명령 종류 · 기기 ID · 실행자 계정 · 실행 시각 · 결과 <span class="action-tag tag-0304">03.04 추가</span></span></li>
+                <li><span class="dot dot-green"></span><span><strong>관리자 설정 로그</strong> — 변경 항목 · 이전 값 · 새 값 · 변경 시각 · 담당자</span></li>
+                <li><span class="dot dot-green"></span><span><strong>라이선스 DB</strong> — HW 고유번호 · 인증키 · 납품처 · 발급일 · 상태</span></li>
+                <li><span class="dot dot-orange"></span><span><strong>동의 기록</strong> — 비식별 사용자 ID · 동의 항목 · 동의 시각 (암호화 저장)</span></li>
+            </ul>
+        </div>
+        <div class="card">
+            <div class="card-title">🔒 개인정보 처리 원칙</div>
+            <ul class="item-list">
+                <li><span class="dot dot-red"></span><span>이름 등 개인정보는 <strong>암호화 후 비식별 처리</strong> — DB에는 비식별 ID만 저장</span></li>
+                <li><span class="dot dot-red"></span><span>통계 화면에는 <strong>집계 데이터만 노출</strong> — 개인 원본 직접 접근 차단</span></li>
+                <li><span class="dot dot-red"></span><span>얼굴 인식·민감 건강정보는 <strong>별도 동의 항목</strong>으로 구분 수집</span></li>
+                <li><span class="dot dot-red"></span><span>클라우드 연동 시 <strong>국외 이전 동의</strong> 별도 확보 필요</span></li>
+                <li><span class="dot dot-teal"></span><span>내보내기(CSV/Excel) 파일에는 <strong>집계 수치만 포함</strong> — 개인 식별 불가 설계 <span class="action-tag tag-0304">03.04 추가</span></span></li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-title">데이터 엔티티 관계 요약</div>
+        <table>
+            <thead>
+                <tr><th>엔티티</th><th>생성 시점</th><th>저장 위치</th><th>접근 권한</th><th>버전</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>측정 레코드</td><td>rPPG 측정 완료 시</td><td>로컬 DB (암호화)</td><td>AI 연구자 · 통계 집계 한정</td><td><span class="ver v10">ver.1.0</span></td></tr>
+                <tr><td>라벨링 데이터</td><td>설문 완료 시</td><td>로컬 DB (암호화)</td><td>AI 연구자 전용</td><td><span class="ver v10">ver.1.0</span></td></tr>
+                <tr><td>캘리브레이션 세션</td><td>실험 모드 세션 완료 시</td><td>로컬 DB</td><td>AI 연구자 전용</td><td><span class="ver v10">ver.1.0</span></td></tr>
+                <tr><td>동의 기록</td><td>동의 화면 완료 시</td><td>로컬 DB (암호화)</td><td>법무·감사 목적 한정</td><td><span class="ver v10">ver.1.0</span></td></tr>
+                <tr><td>관리자 설정 로그</td><td>설정 변경 시</td><td>로컬 DB</td><td>현장 관리자·원격 관리자</td><td><span class="ver v10">ver.1.0</span></td></tr>
+                <tr><td>라이선스 DB</td><td>인증키 발급 시</td><td>코드아이디어 서버</td><td>코드아이디어 전용</td><td><span class="ver v10">ver.1.0</span></td></tr>
+                <tr class="row-new"><td>기기 상태 로그</td><td>기기 통신 이벤트 발생 시</td><td>관리자 서버</td><td>원격 관리자</td><td><span class="ver v10t">ver.1.0</span></td></tr>
+                <tr class="row-new"><td>명령 이력</td><td>원격 명령 실행 시</td><td>관리자 서버</td><td>원격 관리자 (감사 로그)</td><td><span class="ver v10t">ver.1.0</span></td></tr>
+                <tr class="row-v11"><td>오프라인 수집 버퍼</td><td>네트워크 단절 시 자동 생성</td><td>기기 로컬 임시 저장소</td><td>동기화 후 자동 삭제</td><td><span class="ver v11">ver.1.1</span></td></tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+<!-- ══════════════ TAB 5: 화면 목록 ══════════════ -->
+<div class="page" id="page-index">
+    <div class="section-label">화면 전체 목록 — Screen Index</div>
+    <p class="section-desc">시스템 전체 화면을 ID·시스템·버전·담당·상태 기준으로 정리한 인덱스입니다.</p>
+
+    <div class="notice-banner">
+        📅 03.04 추가 확정 — teal 강조 행 (A-3, A-4 섹션 일부)
+    </div>
+
+    <div class="card">
+        <div class="card-title">전체 화면 목록</div>
+        <table>
+            <thead>
+                <tr><th>화면 ID</th><th>화면명</th><th>시스템</th><th>버전</th><th>상태</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>K-1-01</td><td>대기 화면 (Idle Screen)</td><td>키오스크 앱</td><td><span class="ver v10">ver.1.0</span></td><td>✓ 확정</td></tr>
+                <tr><td>K-1-02</td><td>개인정보 동의 화면</td><td>키오스크 앱</td><td><span class="ver v10">ver.1.0</span></td><td>✓ 확정</td></tr>
+                <tr><td>K-1-03</td><td>종료 안내 화면</td><td>키오스크 앱</td><td><span class="ver v10">ver.1.0</span></td><td>✓ 확정</td></tr>
+                <tr><td>K-2-01</td><td>얼굴 인식 인증 화면</td><td>키오스크 앱</td><td><span class="ver v10">ver.1.0</span></td><td>✓ 확정</td></tr>
+                <tr><td>K-2-02</td><td>이름 직접 입력 화면</td><td>키오스크 앱</td><td><span class="ver v10">ver.1.0</span></td><td>✓ 확정</td></tr>
+                <tr class="row-v11"><td>K-2-03</td><td>RFID 카드 인증 화면</td><td>키오스크 앱</td><td><span class="ver v11">ver.1.1</span></td><td>다음 버전</td></tr>
+                <tr class="row-v11"><td>K-2-04</td><td>지문 인식 인증 화면</td><td>키오스크 앱</td><td><span class="ver v11">ver.1.1</span></td><td>다음 버전</td></tr>
+                <tr><td>K-3-01</td><td>라벨링 설문 화면</td><td>키오스크 앱</td><td><span class="ver v10">ver.1.0</span></td><td>△ 협의</td></tr>
+                <tr><td>K-3-02</td><td>안정화 유도 화면</td><td>키오스크 앱</td><td><span class="ver v10">ver.1.0</span></td><td>✓ 확정</td></tr>
+                <tr><td>K-3-03</td><td>Quality Gate 판정 화면</td><td>키오스크 앱</td><td><span class="ver v10">ver.1.0</span></td><td>✓ 확정</td></tr>
+                <tr><td>K-3-04</td><td>Quality Gate 탈락 안내 화면</td><td>키오스크 앱</td><td><span class="ver v10">ver.1.0</span></td><td>✓ 확정</td></tr>
+                <tr><td>K-3-05</td><td>커프 혈압계 안내 화면</td><td>키오스크 앱</td><td><span class="ver v10">ver.1.0</span></td><td>✓ 확정</td></tr>
+                <tr><td>K-3-06</td><td>rPPG 측정 진행 화면</td><td>키오스크 앱</td><td><span class="ver v10">ver.1.0</span></td><td>✓ 확정</td></tr>
+                <tr><td>K-3-07</td><td>측정 오류 안내 화면</td><td>키오스크 앱</td><td><span class="ver v10">ver.1.0</span></td><td>✓ 확정</td></tr>
+                <tr><td>K-3-08</td><td>측정 결과 화면</td><td>키오스크 앱</td><td><span class="ver v10">ver.1.0</span></td><td>✓ 확정</td></tr>
+                <tr><td>K-3-09</td><td>커프 2차 검증 안내 화면</td><td>키오스크 앱</td><td><span class="ver v10">ver.1.0</span></td><td>✓ 확정</td></tr>
+                <tr><td>K-3-10</td><td>출입 결과 화면</td><td>키오스크 앱</td><td><span class="ver v10">ver.1.0</span></td><td>✓ 확정</td></tr>
+                <tr><td>K-4-01</td><td>관리자 패스워드 입력 화면</td><td>키오스크 앱 (관리자)</td><td><span class="ver v10">ver.1.0</span></td><td>✓ 확정</td></tr>
+                <tr><td>K-4-02</td><td>관리자 메인 화면</td><td>키오스크 앱 (관리자)</td><td><span class="ver v10">ver.1.0</span></td><td>△ 협의</td></tr>
+                <tr><td>K-4-03</td><td>헬스케어 범위 설정 화면</td><td>키오스크 앱 (관리자)</td><td><span class="ver v10">ver.1.0</span></td><td>△ 협의</td></tr>
+                <tr><td>K-4-04</td><td>화면·카메라 설정 화면</td><td>키오스크 앱 (관리자)</td><td><span class="ver v10">ver.1.0</span></td><td>✓ 확정</td></tr>
+                <tr><td>K-4-05</td><td>캘리브레이션 실험 모드 화면</td><td>키오스크 앱 (관리자)</td><td><span class="ver v10">ver.1.0</span></td><td>✓ 확정</td></tr>
+                <tr class="row-v11"><td>K-4-06</td><td>오프라인 모드 상태 화면</td><td>키오스크 앱 (관리자)</td><td><span class="ver v11">ver.1.1</span></td><td>다음 버전</td></tr>
+                <tr class="row-v12"><td>K-5-01</td><td>스마트폰 rPPG 측정 화면</td><td>모바일 앱</td><td><span class="ver v12">ver.1.2</span></td><td>장기</td></tr>
+                <tr class="row-v12"><td>K-5-02</td><td>음주측정기 연동 화면</td><td>키오스크 앱 확장</td><td><span class="ver v12">ver.1.2</span></td><td>장기</td></tr>
+                <tr class="row-v12"><td>K-5-03</td><td>폐활량 측정기 연동 화면</td><td>키오스크 앱 확장</td><td><span class="ver v12">ver.1.2</span></td><td>장기</td></tr>
+                <tr><td>A-1-01</td><td>실시간 측정 결과 모니터 화면</td><td>관리자 앱/웹</td><td><span class="ver v10">ver.1.0</span></td><td>✓ 확정</td></tr>
+                <tr><td>A-1-02</td><td>출입 이력 로그 화면</td><td>관리자 앱/웹</td><td><span class="ver v10">ver.1.0</span></td><td>✓ 확정</td></tr>
+                <tr><td>A-1-03</td><td>커프 2차 검증 입력 화면</td><td>관리자 앱/웹</td><td><span class="ver v10">ver.1.0</span></td><td>✓ 확정</td></tr>
+                <tr><td>A-2-01</td><td>인증키 발급 화면</td><td>관리자 앱/웹</td><td><span class="ver v10">ver.1.0</span></td><td>△ 협의</td></tr>
+                <tr><td>A-2-02</td><td>인증키 관리 목록 화면</td><td>관리자 앱/웹</td><td><span class="ver v10">ver.1.0</span></td><td>✓ 확정</td></tr>
+                <tr class="row-v11"><td>A-2-03</td><td>관리자 계정 권한 설정 화면</td><td>관리자 앱/웹</td><td><span class="ver v11">ver.1.1</span></td><td>다음 버전</td></tr>
+                <tr class="row-new"><td>A-3-01</td><td>기기 목록 · 상태 모니터 화면</td><td>관리자 앱/웹</td><td><span class="ver v10t">ver.1.0</span></td><td>★ 신규</td></tr>
+                <tr class="row-new"><td>A-3-02</td><td>기기 상세 화면</td><td>관리자 앱/웹</td><td><span class="ver v10t">ver.1.0</span></td><td>★ 신규</td></tr>
+                <tr class="row-new"><td>A-3-03</td><td>원격 리셋 확인 화면</td><td>관리자 앱/웹</td><td><span class="ver v10t">ver.1.0</span></td><td>★ 신규</td></tr>
+                <tr class="row-new"><td>A-3-04</td><td>원격 SW 배포 화면</td><td>관리자 앱/웹</td><td><span class="ver v10t">ver.1.0</span></td><td>★ 신규</td></tr>
+                <tr class="row-new"><td>A-3-05</td><td>이상 알림 수신 화면</td><td>관리자 앱/웹</td><td><span class="ver v10t">ver.1.0</span></td><td>★ 신규</td></tr>
+                <tr class="row-new"><td>A-3-06</td><td>명령 이력 로그 화면</td><td>관리자 앱/웹</td><td><span class="ver v10t">ver.1.0</span></td><td>★ 신규</td></tr>
+                <tr class="row-v11"><td>A-3-07</td><td>기기 그룹 관리 화면</td><td>관리자 앱/웹</td><td><span class="ver v11">ver.1.1</span></td><td>다음 버전</td></tr>
+                <tr class="row-new"><td>A-4-01</td><td>지점별 통계 대시보드</td><td>관리자 앱/웹</td><td><span class="ver v10t">ver.1.0</span></td><td>★ 신규</td></tr>
+                <tr class="row-new"><td>A-4-02</td><td>지점 상세 통계 화면</td><td>관리자 앱/웹</td><td><span class="ver v10t">ver.1.0</span></td><td>★ 신규</td></tr>
+                <tr class="row-new"><td>A-4-03</td><td>혈압 추이 차트 화면</td><td>관리자 앱/웹</td><td><span class="ver v10t">ver.1.0</span></td><td>★ 신규</td></tr>
+                <tr class="row-new"><td>A-4-04</td><td>데이터 내보내기 화면</td><td>관리자 앱/웹</td><td><span class="ver v10t">ver.1.0</span></td><td>★ 신규</td></tr>
+                <tr class="row-v11"><td>A-4-05</td><td>통계 이상 지표 알림 화면</td><td>관리자 앱/웹</td><td><span class="ver v11">ver.1.1</span></td><td>다음 버전</td></tr>
+                <tr class="row-v12"><td>A-4-06</td><td>이익 공유 정산 대시보드</td><td>관리자 앱/웹</td><td><span class="ver v12">ver.1.2</span></td><td>장기</td></tr>
+                <tr><td>A-5-01</td><td>로그인 화면</td><td>관리자 앱/웹</td><td><span class="ver v10">ver.1.0</span></td><td>✓ 확정</td></tr>
+                <tr><td>A-5-02</td><td>알림 설정 화면</td><td>관리자 앱/웹</td><td><span class="ver v10">ver.1.0</span></td><td>✓ 확정</td></tr>
+                <tr class="row-v11"><td>A-5-03</td><td>다중 권한 계정 관리 화면</td><td>관리자 앱/웹</td><td><span class="ver v11">ver.1.1</span></td><td>다음 버전</td></tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+</main>
+
+<script>
+    function showTab(id, btn) {
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById('page-' + id).classList.add('active');
+        btn.classList.add('active');
+    }
+    function toggleTheme() {
+        const isLight = document.body.classList.toggle('light');
+        document.getElementById('themeBtn').textContent = isLight ? '🌙 다크' : '☀️ 라이트';
+    }
+    function toggleIA(head) {
+        const body = head.nextElementSibling;
+        const chevron = head.querySelector('.ia-chevron');
+        body.classList.toggle('open');
+        chevron.classList.toggle('open');
+    }
+</script>
+
+</body>
+</html>
