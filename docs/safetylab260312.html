@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>생체인식 키오스크 프로젝트 대시보드</title>
+    <style>
+        :root {
+            --bg: #0f1117;
+            --s1: #1a1f2e;
+            --t1: #e8eaf0;
+            --t3: #8c95aa;
+            --bd: #232b3e;
+            --blue: #4f80ff;
+            --green: #10b981;
+            --orange: #f59e0b;
+            --red: #ef4444;
+            --purple: #a78bfa;
+            --teal: #14b8a6;
+            --transition: background 0.2s, color 0.2s, border-color 0.2s;
+        }
+
+        body.light {
+            --bg: #f5f7fa;
+            --s1: #ffffff;
+            --t1: #1a1f2e;
+            --t3: #5a6478;
+            --bd: #d1d9e6;
+        }
+
+        html {
+            overflow-y: scroll;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--t1);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            font-size: 14px;
+            line-height: 1.6;
+            transition: var(--transition);
+        }
+
+        .inner-container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 24px;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+        }
+
+        header {
+            background: var(--s1);
+            border-bottom: 1px solid var(--bd);
+            height: 56px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            transition: var(--transition);
+        }
+
+        .header-inner {
+            justify-content: space-between;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo {
+            width: 32px;
+            height: 32px;
+            background: var(--blue);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            color: #fff;
+            flex-shrink: 0;
+        }
+
+        .title-wrap h1 {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--t1);
+        }
+
+        .title-wrap p {
+            font-size: 11px;
+            color: var(--t3);
+        }
+
+        .badges {
+            display: flex;
+            gap: 6px;
+        }
+
+        .badge {
+            font-size: 11px;
+            font-weight: 600;
+            padding: 3px 8px;
+            border-radius: 20px;
+            border: 1px solid var(--bd);
+            color: var(--t3);
+            transition: var(--transition);
+        }
+
+        .badge.blue { background: rgba(79, 128, 255, 0.12); color: var(--blue); border-color: rgba(79, 128, 255, 0.3); }
+        .badge.green { background: rgba(16, 185, 129, 0.12); color: var(--green); border-color: rgba(16, 185, 129, 0.3); }
+        .badge.orange { background: rgba(245, 158, 11, 0.12); color: var(--orange); border-color: rgba(245, 158, 11, 0.3); }
+
+        .toggle-btn {
+            background: var(--bg);
+            border: 1px solid var(--bd);
+            color: var(--t1);
+            padding: 6px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 13px;
+            transition: var(--transition);
+            white-space: nowrap;
+        }
+
+        .toggle-btn:hover {
+            border-color: var(--blue);
+        }
+
+        nav {
+            background: var(--s1);
+            border-bottom: 1px solid var(--bd);
+            transition: var(--transition);
+        }
+
+        .nav-inner {
+            overflow-x: auto;
+            height: 100%;
+        }
+
+        .nav-inner::-webkit-scrollbar { display: none; }
+        nav::-webkit-scrollbar { display: none; }
+
+        .tab-btn {
+            background: none;
+            border: none;
+            border-bottom: 2px solid transparent;
+            color: var(--t3);
+            padding: 12px 16px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 500;
+            white-space: nowrap;
+            transition: color 0.15s, border-color 0.15s;
+        }
+
+        .tab-btn:hover { color: var(--t1); }
+        .tab-btn.active { color: var(--blue); border-bottom: 2px solid var(--blue); }
+
+        main {
+            padding: 24px;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .page { display: none; }
+        .page.active { display: block; }
+
+        .card {
+            background: var(--s1);
+            border-radius: 12px;
+            padding: 18px;
+            border: 1px solid var(--bd);
+            transition: var(--transition);
+        }
+
+        .card-title {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--t3);
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            margin-bottom: 14px;
+        }
+
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+        .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+        .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+
+        .mb16 { margin-bottom: 16px; }
+        .mb8 { margin-bottom: 8px; }
+
+        .stat-num { font-size: 28px; font-weight: 800; color: var(--t1); line-height: 1.1; }
+        .stat-label { font-size: 12px; color: var(--t3); margin-top: 4px; }
+        .stat-sub { font-size: 11px; color: var(--t3); margin-top: 8px; padding-top: 8px; border-top: 1px solid var(--bd); }
+
+        .item-list { list-style: none; }
+        .item-list li {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--bd);
+            font-size: 13px;
+            color: var(--t1);
+        }
+        .item-list li:last-child { border-bottom: none; }
+
+        .dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            margin-top: 6px;
+            flex-shrink: 0;
+        }
+
+        .dot-blue { background: var(--blue); }
+        .dot-green { background: var(--green); }
+        .dot-orange { background: var(--orange); }
+        .dot-red { background: var(--red); }
+        .dot-purple { background: var(--purple); }
+        .dot-teal { background: var(--teal); }
+
+        .section-label {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--blue);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin-bottom: 6px;
+        }
+
+        .section-desc {
+            font-size: 13px;
+            color: var(--t3);
+            margin-bottom: 16px;
+            line-height: 1.7;
+        }
+
+        .phase-list { display: flex; flex-direction: column; gap: 10px; }
+        .phase-item { display: grid; grid-template-columns: 80px 28px 1fr; align-items: center; gap: 12px; }
+        .phase-label { font-size: 12px; color: var(--t3); text-align: right; font-weight: 600; }
+        .phase-dot-wrap { display: flex; flex-direction: column; align-items: center; }
+        .phase-dot {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: var(--blue);
+            color: #fff;
+            font-size: 11px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        .phase-line { width: 2px; height: 16px; background: var(--bd); margin: 4px 0; }
+        .phase-content {
+            background: var(--bg);
+            border: 1px solid var(--bd);
+            border-radius: 10px;
+            padding: 10px 14px;
+            transition: var(--transition);
+        }
+        .phase-content-title { font-size: 13px; font-weight: 700; color: var(--t1); }
+        .phase-content-sub { font-size: 12px; color: var(--t3); margin-top: 2px; }
+
+        .action-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            background: var(--bg);
+            border: 1px solid var(--bd);
+            border-radius: 10px;
+            padding: 12px 14px;
+            margin-bottom: 8px;
+            transition: var(--transition);
+        }
+        .action-item:last-child { margin-bottom: 0; }
+        
+        .action-num {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            font-size: 11px;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        .action-num.blue { background: rgba(79, 128, 255, 0.15); color: var(--blue); }
+        .action-num.orange { background: rgba(245, 158, 11, 0.15); color: var(--orange); }
+        .action-num.red { background: rgba(239, 68, 68, 0.15); color: var(--red); }
+
+        .action-text { font-size: 13px; color: var(--t1); line-height: 1.6; }
+        .action-tag {
+            display: inline-block;
+            font-size: 10px;
+            font-weight: 700;
+            padding: 1px 6px;
+            border-radius: 4px;
+            margin-right: 4px;
+        }
+        .tag-urgent { background: rgba(239, 68, 68, 0.15); color: var(--red); }
+        .tag-new { background: rgba(167, 139, 250, 0.15); color: var(--purple); }
+        .tag-update { background: rgba(79, 128, 255, 0.15); color: var(--blue); }
+
+        .expand-card {
+            border: 1px solid var(--bd);
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 8px;
+        }
+        .expand-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 16px;
+            background: var(--bg);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        .expand-header:hover { background: rgba(79, 128, 255, 0.06); }
+        .expand-header-left { display: flex; align-items: center; gap: 10px; font-size: 13px; font-weight: 700; color: var(--t1); }
+        .expand-body { padding: 14px 16px; background: var(--s1); border-top: 1px solid var(--bd); display: none; }
+        .expand-body.open { display: block; }
+        .chevron { font-size: 11px; color: var(--t3); transition: transform 0.2s; }
+        .chevron.open { transform: rotate(180deg); }
+
+        @media(max-width:720px) {
+            .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+            .badges { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="inner-container header-inner">
+            <div class="header-left">
+                <div class="logo">👁️</div>
+                <div class="title-wrap">
+                    <h1>생체인식 키오스크 프로젝트</h1>
+                    <p>근무 투입전 적합성 심사 시스템 구축 논의</p>
+                </div>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;">
+                <div class="badges">
+                    <span class="badge blue">v1.0 준비</span>
+                    <span class="badge green">가온병원 납품</span>
+                    <span class="badge orange">하드웨어 최적화</span>
+                </div>
+                <button class="toggle-btn" id="themeBtn" onclick="toggleTheme()">☀️ 라이트</button>
+            </div>
+        </div>
+    </header>
+
+    <nav>
+        <div class="inner-container nav-inner">
+            <button class="tab-btn active" onclick="showTab('overview',this)">📋 현황 요약</button>
+            <button class="tab-btn" onclick="showTab('confirmed',this)">✅ 확정 사항</button>
+            <button class="tab-btn" onclick="showTab('scope',this)">📦 개발 범위</button>
+            <button class="tab-btn" onclick="showTab('schedule',this)">📅 일정</button>
+            <button class="tab-btn" onclick="showTab('actions',this)">🚀 액션 아이템</button>
+        </div>
+    </nav>
+
+    <main>
+        <div class="page active" id="page-overview">
+            <div class="section-label">Project Overview</div>
+            <p class="section-desc">현재 진행 중인 생체인식 키오스크의 1차 테스트 결과 피드백 및 납품 준비 현황입니다.</p>
+
+            <div class="grid-3 mb16">
+                <div class="card">
+                    <div class="card-title">1차 납품 타겟</div>
+                    <div class="stat-num" style="color:var(--green)">가온병원</div>
+                    <div class="stat-label">우선 설치 및 현장 테스트</div>
+                    <div class="stat-sub">다음 주 납품 목표</div>
+                </div>
+                <div class="card">
+                    <div class="card-title">현재 주요 이슈</div>
+                    <div class="stat-num" style="color:var(--orange)">센서 최적화</div>
+                    <div class="stat-label">얼굴 범위 및 체온 통신</div>
+                    <div class="stat-sub">하드웨어/소프트웨어 보정 필요</div>
+                </div>
+                <div class="card">
+                    <div class="card-title">향후 목표 인증</div>
+                    <div class="stat-num" style="color:var(--purple)">디지털 의료기기</div>
+                    <div class="stat-label">1~2등급 취득 예정</div>
+                    <div class="stat-sub">현재는 '의료기기 아님' 고지 필수</div>
+                </div>
+            </div>
+
+            <div class="grid-2 mb16">
+                <div class="card">
+                    <div class="card-title">기능별 피드백 현황</div>
+                    <ul class="item-list">
+                        <li><span class="dot dot-red"></span><span><strong>얼굴 인식:</strong> 측면 모델 적용 시 오작동 우려로 정면 인식만 유지. 주변 배경/타인 인식을 막기 위한 측정 범위(ROI) 박스 조정 필요.</span></li>
+                        <li><span class="dot dot-red"></span><span><strong>체온 센서:</strong> 측정값이 들어오지 않거나 멈추는 현상 발생. 기존 값 유지 대신 재진입 유도 로직 필요.</span></li>
+                        <li><span class="dot dot-orange"></span><span><strong>디스플레이:</strong> 터치감 저하 및 측정 단계 인지 부족. 대기화면(홍보 영상)과 측정화면 간의 명확한 전환 UI 요구됨.</span></li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <div class="card-title">하드웨어 단가 절감 계획</div>
+                    <ul class="item-list">
+                        <li><span class="dot dot-blue"></span><span>현재 사용 중인 고가의 완제품 대신 모듈(기성품) 단위 구매로 전환 검토.</span></li>
+                        <li><span class="dot dot-blue"></span><span>카메라 모듈 변경을 통해 원가를 50만원대에서 10만원대로 대폭 절감 목표.</span></li>
+                        <li><span class="dot dot-green"></span><span>추후 코레일 납품을 고려하여 비접촉식 반도체식 음주측정기 통합안 논의 중.</span></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="page" id="page-confirmed">
+            <div class="section-label">Confirmed Decisions</div>
+            <p class="section-desc">회의를 통해 최종 확정된 기획 및 정책 사항입니다.</p>
+
+            <div class="mb16">
+                <div class="expand-card">
+                    <div class="expand-header" onclick="toggleExpand(this)">
+                        <div class="expand-header-left">🖥️ UI/UX 및 대기화면 정책</div>
+                        <span class="chevron open">▼</span>
+                    </div>
+                    <div class="expand-body open">
+                        <ul class="item-list">
+                            <li><span class="dot dot-blue"></span><span><strong>영상 대기화면:</strong> 대기 상태에서는 가온병원 등 홍보 영상을 전체 화면으로 송출.</span></li>
+                            <li><span class="dot dot-blue"></span><span><strong>화면 전환:</strong> 화면 터치 시 또는 "근무 투입전 적합성 심사" 안내 슬라이드 노출 후 실제 측정 UI로 전환되도록 플로우 확정.</span></li>
+                            <li><span class="dot dot-blue"></span><span><strong>재측정 유도:</strong> 체온 측정 실패(데이터 누락) 시, 화면 밖으로 나갔다가 다시 들어오도록 안내 멘트 노출 후 열만 재측정.</span></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="expand-card">
+                    <div class="expand-header" onclick="toggleExpand(this)">
+                        <div class="expand-header-left">⚙️ 측정 로직 (얼굴/체온)</div>
+                        <span class="chevron open">▼</span>
+                    </div>
+                    <div class="expand-body open">
+                        <ul class="item-list">
+                            <li><span class="dot dot-orange"></span><span><strong>정면 얼굴 인식:</strong> 측면 모델 배제. 정면만 인식하며, 뒷사람이 잡히지 않도록 특정 네모 박스(라벨링 영역) 안에 들어올 때만 인식.</span></li>
+                            <li><span class="dot dot-orange"></span><span><strong>커스텀 환경 설정:</strong> 현장마다 조명이나 배경이 다르므로 설치 시 최적화된 초기 설정값(표준 범위) 세팅 기능 제공.</span></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="expand-card">
+                    <div class="expand-header" onclick="toggleExpand(this)">
+                        <div class="expand-header-left">⚖️ 법적 고지 및 기타</div>
+                        <span class="chevron open">▼</span>
+                    </div>
+                    <div class="expand-body open">
+                        <ul class="item-list">
+                            <li><span class="dot dot-purple"></span><span><strong>의료기기 면책 조항:</strong> 디지털 의료기기 정식 허가 전이므로, 하단에 반드시 "본 기기는 전문 진단/치료 목적의 의료기기가 아닙니다" 텍스트 상시 노출.</span></li>
+                            <li><span class="dot dot-purple"></span><span><strong>윈도우 라이선스:</strong> 원격 관리 지원 및 단속 대비를 위해 Windows 11 Pro 정품 라이선스 도입 확정.</span></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="page" id="page-scope">
+            <div class="section-label">Development Scope</div>
+            <p class="section-desc">버전별(단기 및 중장기) 개발 목표 범위입니다.</p>
+
+            <div class="grid-2 mb16">
+                <div class="card">
+                    <div class="card-title">v1.0 단기 목표 (가온병원 납품용)</div>
+                    <ul class="item-list">
+                        <li><span class="dot dot-blue"></span><span><strong>체온 센서 오류 대응:</strong> 값 미수신 시 재측정(이탈 후 재진입) 로직 추가</span></li>
+                        <li><span class="dot dot-blue"></span><span><strong>얼굴 인식 범위 제한:</strong> 지정된 ROI 박스 내에서만 얼굴 인식 활성화</span></li>
+                        <li><span class="dot dot-blue"></span><span><strong>홍보 영상 송출 모드:</strong> 대기 상태에서 동영상 루프 재생 및 터치 시 UI 전환</span></li>
+                        <li><span class="dot dot-blue"></span><span><strong>법적 문구 삽입:</strong> 화면 하단 의료기기 면책 텍스트 영구 노출</span></li>
+                        <li><span class="dot dot-blue"></span><span><strong>설치용 .exe 빌드 안정화:</strong> 다수 PC 환경에서 동일 작동 확인</span></li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <div class="card-title">v2.0 중장기 목표 (하드웨어 교체 및 고도화)</div>
+                    <ul class="item-list">
+                        <li><span class="dot dot-green"></span><span><strong>저가형 모듈 연동:</strong> 기성품 카메라 모듈 구매 후 신규 인터페이스 연동</span></li>
+                        <li><span class="dot dot-green"></span><span><strong>음주측정기 연동:</strong> 반도체식 음주측정기(기성품)를 키오스크 파이프라인에 통합 (스무스한 스크리닝 용도)</span></li>
+                        <li><span class="dot dot-orange"></span><span><strong>관리자 대시보드:</strong> 개인별 심박수, 측정 이력 등 월간 리포팅 기능 및 그래프 시각화</span></li>
+                        <li><span class="dot dot-orange"></span><span><strong>커스텀 설문 기능:</strong> 구글 폼 형태의 사전 진료/문진표 응답 기능 (측정 완료 후 노출)</span></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="page" id="page-schedule">
+            <div class="section-label">Project Schedule</div>
+            <p class="section-desc">납품 및 연구 개발 진행 타임라인입니다.</p>
+
+            <div class="card mb16">
+                <div class="phase-list">
+                    <div class="phase-item">
+                        <div class="phase-label">다음 주 이내</div>
+                        <div class="phase-dot-wrap">
+                            <div class="phase-dot" style="background:var(--red)">1</div>
+                            <div class="phase-line"></div>
+                        </div>
+                        <div class="phase-content">
+                            <div class="phase-content-title">v1.0 SW 안정화 및 패키징</div>
+                            <div class="phase-content-sub">체온 재측정 로직, 얼굴 인식 박스 설정, 영상 대기화면 처리 완료 후 .exe 파일 전달</div>
+                        </div>
+                    </div>
+                    <div class="phase-item">
+                        <div class="phase-label">단기</div>
+                        <div class="phase-dot-wrap">
+                            <div class="phase-dot" style="background:var(--orange)">2</div>
+                            <div class="phase-line"></div>
+                        </div>
+                        <div class="phase-content">
+                            <div class="phase-content-title">가온병원 1차 납품 및 현장 적용</div>
+                            <div class="phase-content-sub">테스트 기기 병원 설치 후 데이터 수집. 필요시 출력물(프린터) 연동 점검.</div>
+                        </div>
+                    </div>
+                    <div class="phase-item">
+                        <div class="phase-label">중기 (1~2개월)</div>
+                        <div class="phase-dot-wrap">
+                            <div class="phase-dot" style="background:var(--blue)">3</div>
+                            <div class="phase-line"></div>
+                        </div>
+                        <div class="phase-content">
+                            <div class="phase-content-title">하드웨어 단가 절감 및 음주측정기 연동</div>
+                            <div class="phase-content-sub">기성품 카메라 센서 및 반도체식 음주측정기 소싱 완료, SW 파이프라인 통합 개발.</div>
+                        </div>
+                    </div>
+                    <div class="phase-item">
+                        <div class="phase-label">장기 (연내)</div>
+                        <div class="phase-dot-wrap">
+                            <div class="phase-dot" style="background:var(--purple)">4</div>
+                        </div>
+                        <div class="phase-content">
+                            <div class="phase-content-title">디지털 의료기기 인증 및 관리자 페이지 구축</div>
+                            <div class="phase-content-sub">보건복지부 의료기기 인증 취득 진행 및 코레일 등 대형 고객사용 통계/설문 관리자 대시보드 오픈.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="page" id="page-actions">
+            <div class="section-label">Action Items</div>
+            <p class="section-desc">담당자별 긴급/우선 처리해야 할 업무 목록입니다.</p>
+
+            <div class="mb16">
+                <div class="action-item">
+                    <div class="action-num red">1</div>
+                    <div class="action-text"><span class="action-tag tag-urgent">긴급</span><strong>SW 오류 수정 및 빌드:</strong> 체온 미수신 시 재측정 로직 반영, 영상 UI 추가 개발 후 빌드 전달 (담당: 코드아이디어)</div>
+                </div>
+                <div class="action-item">
+                    <div class="action-num red">2</div>
+                    <div class="action-text"><span class="action-tag tag-urgent">긴급</span><strong>샘플 영상 전달:</strong> 가온병원 대기화면 용도로 사용할 짤막한 샘플 영상 확보 및 전달 (담당: 발주처)</div>
+                </div>
+                <div class="action-item">
+                    <div class="action-num blue">3</div>
+                    <div class="action-text"><span class="action-tag tag-update">협의</span><strong>표준 라벨링 범위 확정:</strong> 현장 설치 시 얼굴이 인식되는 최적의 카메라 화각/박스 크기(ROI) 수치 확정 및 공유</div>
+                </div>
+                <div class="action-item">
+                    <div class="action-num orange">4</div>
+                    <div class="action-text"><span class="action-tag tag-new">신규</span><strong>기성품 하드웨어 모델 서치:</strong> 10만원대 저가형 카메라 모듈 및 반도체식 음주측정기 소싱 후 모델명/단가 리스트업 (담당: 코드아이디어)</div>
+                </div>
+                <div class="action-item">
+                    <div class="action-num orange">5</div>
+                    <div class="action-text"><span class="action-tag tag-update">준비</span><strong>Windows 라이선스 구매:</strong> 현장 기기에 설치될 Windows 11 Pro 정품 라이선스 준비</div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        function showTab(id, btn) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById('page-' + id).classList.add('active');
+            btn.classList.add('active');
+        }
+        function toggleTheme() {
+            const isLight = document.body.classList.toggle('light');
+            document.getElementById('themeBtn').textContent = isLight ? '🌙 다크' : '☀️ 라이트';
+        }
+        function toggleExpand(header) {
+            const body = header.nextElementSibling;
+            const chevron = header.querySelector('.chevron');
+            body.classList.toggle('open');
+            chevron.classList.toggle('open');
+        }
+    </script>
+</body>
+</html>
