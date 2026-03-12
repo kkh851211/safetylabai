@@ -301,6 +301,7 @@
         .action-num.blue { background: rgba(79, 128, 255, 0.15); color: var(--blue); }
         .action-num.orange { background: rgba(245, 158, 11, 0.15); color: var(--orange); }
         .action-num.red { background: rgba(239, 68, 68, 0.15); color: var(--red); }
+        .action-num.teal { background: rgba(20, 184, 166, 0.15); color: var(--teal); }
 
         .action-text { font-size: 13px; color: var(--t1); line-height: 1.6; }
         .action-tag {
@@ -348,17 +349,17 @@
     <header>
         <div class="inner-container header-inner">
             <div class="header-left">
-                <div class="logo">👁️</div>
+                <div class="logo">🧬</div>
                 <div class="title-wrap">
                     <h1>생체인식 키오스크 프로젝트</h1>
-                    <p>근무 투입전 적합성 심사 시스템 구축 논의</p>
+                    <p>생체인식 키오스크 1차 버전(v1.0) 마무리를 위한 주요 기능 확정 (2026.03.12)</p>
                 </div>
             </div>
             <div style="display:flex;align-items:center;gap:10px;">
                 <div class="badges">
-                    <span class="badge blue">v1.0 준비</span>
-                    <span class="badge green">가온병원 납품</span>
-                    <span class="badge orange">하드웨어 최적화</span>
+                    <span class="badge blue">v1.0 확정</span>
+                    <span class="badge orange">HW 최적화</span>
+                    <span class="badge green">UI/UX 정책</span>
                 </div>
                 <button class="toggle-btn" id="themeBtn" onclick="toggleTheme()">☀️ 라이트</button>
             </div>
@@ -377,91 +378,104 @@
 
     <main>
         <div class="page active" id="page-overview">
-            <div class="section-label">Project Overview</div>
-            <p class="section-desc">현재 진행 중인 생체인식 키오스크의 1차 테스트 결과 피드백 및 납품 준비 현황입니다.</p>
+            <div class="section-label">Overview</div>
+            <p class="section-desc">2026년 3월 12일 진행된 v1.0 마무리 및 하드웨어 개선 관련 주요 논의 사항 요약입니다.</p>
 
             <div class="grid-3 mb16">
                 <div class="card">
-                    <div class="card-title">1차 납품 타겟</div>
-                    <div class="stat-num" style="color:var(--green)">가온병원</div>
-                    <div class="stat-label">우선 설치 및 현장 테스트</div>
-                    <div class="stat-sub">다음 주 납품 목표</div>
+                    <div class="card-title">목표 버전</div>
+                    <div class="stat-num" style="color:var(--blue)">v1.0</div>
+                    <div class="stat-label">1차 납품 버전 확정</div>
+                    <div class="stat-sub">측정 로직 개선 최우선 반영</div>
                 </div>
                 <div class="card">
-                    <div class="card-title">현재 주요 이슈</div>
-                    <div class="stat-num" style="color:var(--orange)">센서 최적화</div>
-                    <div class="stat-label">얼굴 범위 및 체온 통신</div>
-                    <div class="stat-sub">하드웨어/소프트웨어 보정 필요</div>
+                    <div class="card-title">원가 절감 (목표)</div>
+                    <div class="stat-num" style="color:var(--green)">-80%</div>
+                    <div class="stat-label">카메라 모듈 기성품 도입</div>
+                    <div class="stat-sub">50만원대 → 10만원대 소싱</div>
                 </div>
                 <div class="card">
-                    <div class="card-title">향후 목표 인증</div>
-                    <div class="stat-num" style="color:var(--purple)">디지털 의료기기</div>
-                    <div class="stat-label">1~2등급 취득 예정</div>
-                    <div class="stat-sub">현재는 '의료기기 아님' 고지 필수</div>
+                    <div class="card-title">연동 확장</div>
+                    <div class="stat-num" style="color:var(--orange)">음주측정</div>
+                    <div class="stat-label">코레일/택시조합 대비</div>
+                    <div class="stat-sub">반도체식 기성품 스크리닝 도입</div>
                 </div>
             </div>
 
             <div class="grid-2 mb16">
                 <div class="card">
-                    <div class="card-title">기능별 피드백 현황</div>
+                    <div class="card-title">핵심 개선 목표</div>
                     <ul class="item-list">
-                        <li><span class="dot dot-red"></span><span><strong>얼굴 인식:</strong> 측면 모델 적용 시 오작동 우려로 정면 인식만 유지. 주변 배경/타인 인식을 막기 위한 측정 범위(ROI) 박스 조정 필요.</span></li>
-                        <li><span class="dot dot-red"></span><span><strong>체온 센서:</strong> 측정값이 들어오지 않거나 멈추는 현상 발생. 기존 값 유지 대신 재진입 유도 로직 필요.</span></li>
-                        <li><span class="dot dot-orange"></span><span><strong>디스플레이:</strong> 터치감 저하 및 측정 단계 인지 부족. 대기화면(홍보 영상)과 측정화면 간의 명확한 전환 UI 요구됨.</span></li>
+                        <li><span class="dot dot-red"></span><span>측면 얼굴 인식 오작동 방지 및 ROI 기준 강화</span></li>
+                        <li><span class="dot dot-red"></span><span>체온 센서 누락에 따른 예외 처리 및 재측정 플로우 정립</span></li>
+                        <li><span class="dot dot-blue"></span><span>대기 화면과 측정 화면을 구분하여 사용자 인지력 강화</span></li>
                     </ul>
                 </div>
                 <div class="card">
-                    <div class="card-title">하드웨어 단가 절감 계획</div>
+                    <div class="card-title">유지보수 및 리스크 관리</div>
                     <ul class="item-list">
-                        <li><span class="dot dot-blue"></span><span>현재 사용 중인 고가의 완제품 대신 모듈(기성품) 단위 구매로 전환 검토.</span></li>
-                        <li><span class="dot dot-blue"></span><span>카메라 모듈 변경을 통해 원가를 50만원대에서 10만원대로 대폭 절감 목표.</span></li>
-                        <li><span class="dot dot-green"></span><span>추후 코레일 납품을 고려하여 비접촉식 반도체식 음주측정기 통합안 논의 중.</span></li>
+                        <li><span class="dot dot-orange"></span><span>의료기기 오인 방지를 위한 법적 면책 문구 필수 삽입</span></li>
+                        <li><span class="dot dot-orange"></span><span>원활한 원격 관리를 위한 Windows 11 Pro 적용 필수화</span></li>
                     </ul>
                 </div>
             </div>
         </div>
 
         <div class="page" id="page-confirmed">
-            <div class="section-label">Confirmed Decisions</div>
-            <p class="section-desc">회의를 통해 최종 확정된 기획 및 정책 사항입니다.</p>
+            <div class="section-label">Confirmed Details</div>
+            <p class="section-desc">회의를 통해 최종 합의된 기능 및 하드웨어/정책 상세 내역입니다.</p>
 
             <div class="mb16">
                 <div class="expand-card">
                     <div class="expand-header" onclick="toggleExpand(this)">
-                        <div class="expand-header-left">🖥️ UI/UX 및 대기화면 정책</div>
+                        <div class="expand-header-left">🎯 측정 로직 개선 (얼굴 인식 및 체온)</div>
                         <span class="chevron open">▼</span>
                     </div>
                     <div class="expand-body open">
                         <ul class="item-list">
-                            <li><span class="dot dot-blue"></span><span><strong>영상 대기화면:</strong> 대기 상태에서는 가온병원 등 홍보 영상을 전체 화면으로 송출.</span></li>
-                            <li><span class="dot dot-blue"></span><span><strong>화면 전환:</strong> 화면 터치 시 또는 "근무 투입전 적합성 심사" 안내 슬라이드 노출 후 실제 측정 UI로 전환되도록 플로우 확정.</span></li>
-                            <li><span class="dot dot-blue"></span><span><strong>재측정 유도:</strong> 체온 측정 실패(데이터 누락) 시, 화면 밖으로 나갔다가 다시 들어오도록 안내 멘트 노출 후 열만 재측정.</span></li>
+                            <li><span class="dot dot-blue"></span><span><strong>얼굴 인식:</strong> 지나가는 타인 인식 방지를 위해 측면 인식 배제, 정면 인식만 활성화.</span></li>
+                            <li><span class="dot dot-blue"></span><span><strong>인식 범위(ROI) 제한:</strong> 화면 내 지정된 네모 박스(라벨링 영역) 안에서만 얼굴을 인식하도록 표준 범위 설정.</span></li>
+                            <li><span class="dot dot-blue"></span><span><strong>체온 측정 오류 대응:</strong> 센서 값 누락 시 전체 실패 처리 배제. 화면 이탈 후 재진입 안내 멘트 노출 및 체온만 재측정.</span></li>
                         </ul>
                     </div>
                 </div>
 
                 <div class="expand-card">
                     <div class="expand-header" onclick="toggleExpand(this)">
-                        <div class="expand-header-left">⚙️ 측정 로직 (얼굴/체온)</div>
+                        <div class="expand-header-left">🛠️ 하드웨어 단가 절감 및 음주측정기 연동</div>
                         <span class="chevron open">▼</span>
                     </div>
                     <div class="expand-body open">
                         <ul class="item-list">
-                            <li><span class="dot dot-orange"></span><span><strong>정면 얼굴 인식:</strong> 측면 모델 배제. 정면만 인식하며, 뒷사람이 잡히지 않도록 특정 네모 박스(라벨링 영역) 안에 들어올 때만 인식.</span></li>
-                            <li><span class="dot dot-orange"></span><span><strong>커스텀 환경 설정:</strong> 현장마다 조명이나 배경이 다르므로 설치 시 최적화된 초기 설정값(표준 범위) 세팅 기능 제공.</span></li>
+                            <li><span class="dot dot-green"></span><span><strong>카메라 모듈 교체:</strong> 기존 50만 원대 완제품 대체용으로 10만 원대 기성품 카메라 소싱 및 연동 합의.</span></li>
+                            <li><span class="dot dot-green"></span><span><strong>음주측정기 도입:</strong> 코레일, 택시조합 등 대비 목적. 유지비가 높은 전기화학식 대신 반도체식 기성품 채택.</span></li>
                         </ul>
                     </div>
                 </div>
 
                 <div class="expand-card">
                     <div class="expand-header" onclick="toggleExpand(this)">
-                        <div class="expand-header-left">⚖️ 법적 고지 및 기타</div>
+                        <div class="expand-header-left">🎨 UI/UX 및 디스플레이 정책</div>
                         <span class="chevron open">▼</span>
                     </div>
                     <div class="expand-body open">
                         <ul class="item-list">
-                            <li><span class="dot dot-purple"></span><span><strong>의료기기 면책 조항:</strong> 디지털 의료기기 정식 허가 전이므로, 하단에 반드시 "본 기기는 전문 진단/치료 목적의 의료기기가 아닙니다" 텍스트 상시 노출.</span></li>
-                            <li><span class="dot dot-purple"></span><span><strong>윈도우 라이선스:</strong> 원격 관리 지원 및 단속 대비를 위해 Windows 11 Pro 정품 라이선스 도입 확정.</span></li>
+                            <li><span class="dot dot-orange"></span><span><strong>대기 화면 송출:</strong> 대기 상태에서 가온병원 등의 홍보 영상 무한 재생.</span></li>
+                            <li><span class="dot dot-orange"></span><span><strong>화면 전환 로직:</strong> "근무 투입전 적합성 심사" 안내 문구 명확화, 터치 시 실제 측정 UI로 부드러운 전환.</span></li>
+                            <li><span class="dot dot-orange"></span><span><strong>법적 면책 문구:</strong> 디지털 의료기기 정식 허가 전이므로 하단에 "전문 진단 및 치료 목적의 의료기기가 아님" 상시 노출.</span></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="expand-card">
+                    <div class="expand-header" onclick="toggleExpand(this)">
+                        <div class="expand-header-left">🔒 기타 시스템 이슈</div>
+                        <span class="chevron">▼</span>
+                    </div>
+                    <div class="expand-body">
+                        <ul class="item-list">
+                            <li><span class="dot dot-purple"></span><span><strong>OS 라이선스:</strong> 현장 기기 RDP 접근 등 원활한 유지보수를 위해 Windows 11 Pro 정품 라이선스 사용.</span></li>
+                            <li><span class="dot dot-purple"></span><span><strong>관리자 기능 보류:</strong> 설문조사 폼, 지점별 대시보드, 리포트 출력은 v1.0 납품 후 중장기 과제로 이관.</span></li>
                         </ul>
                     </div>
                 </div>
@@ -470,78 +484,77 @@
 
         <div class="page" id="page-scope">
             <div class="section-label">Development Scope</div>
-            <p class="section-desc">버전별(단기 및 중장기) 개발 목표 범위입니다.</p>
+            <p class="section-desc">논의된 사항을 바탕으로 도출된 버전별 개발 및 적용 범위입니다.</p>
 
             <div class="grid-2 mb16">
                 <div class="card">
-                    <div class="card-title">v1.0 단기 목표 (가온병원 납품용)</div>
+                    <div class="card-title">v1.0 (최우선 적용 범위)</div>
                     <ul class="item-list">
-                        <li><span class="dot dot-blue"></span><span><strong>체온 센서 오류 대응:</strong> 값 미수신 시 재측정(이탈 후 재진입) 로직 추가</span></li>
-                        <li><span class="dot dot-blue"></span><span><strong>얼굴 인식 범위 제한:</strong> 지정된 ROI 박스 내에서만 얼굴 인식 활성화</span></li>
-                        <li><span class="dot dot-blue"></span><span><strong>홍보 영상 송출 모드:</strong> 대기 상태에서 동영상 루프 재생 및 터치 시 UI 전환</span></li>
-                        <li><span class="dot dot-blue"></span><span><strong>법적 문구 삽입:</strong> 화면 하단 의료기기 면책 텍스트 영구 노출</span></li>
-                        <li><span class="dot dot-blue"></span><span><strong>설치용 .exe 빌드 안정화:</strong> 다수 PC 환경에서 동일 작동 확인</span></li>
+                        <li><span class="dot dot-red"></span><span>정면 한정 얼굴 인식 및 ROI 박스 제한 로직</span></li>
+                        <li><span class="dot dot-red"></span><span>체온 센서 오류 시 화면 이탈/재진입 재측정 플로우</span></li>
+                        <li><span class="dot dot-blue"></span><span>대기화면 홍보 영상 재생 기능 및 터치 전환 UI</span></li>
+                        <li><span class="dot dot-blue"></span><span>화면 하단 의료기기 면책 문구 고정 노출 영역</span></li>
                     </ul>
                 </div>
                 <div class="card">
-                    <div class="card-title">v2.0 중장기 목표 (하드웨어 교체 및 고도화)</div>
+                    <div class="card-title">차기 및 중장기 과제 (v2.0)</div>
                     <ul class="item-list">
-                        <li><span class="dot dot-green"></span><span><strong>저가형 모듈 연동:</strong> 기성품 카메라 모듈 구매 후 신규 인터페이스 연동</span></li>
-                        <li><span class="dot dot-green"></span><span><strong>음주측정기 연동:</strong> 반도체식 음주측정기(기성품)를 키오스크 파이프라인에 통합 (스무스한 스크리닝 용도)</span></li>
-                        <li><span class="dot dot-orange"></span><span><strong>관리자 대시보드:</strong> 개인별 심박수, 측정 이력 등 월간 리포팅 기능 및 그래프 시각화</span></li>
-                        <li><span class="dot dot-orange"></span><span><strong>커스텀 설문 기능:</strong> 구글 폼 형태의 사전 진료/문진표 응답 기능 (측정 완료 후 노출)</span></li>
+                        <li><span class="dot dot-green"></span><span>기성품 저가형 카메라 인터페이스 연동 및 최적화</span></li>
+                        <li><span class="dot dot-green"></span><span>스크리닝용 반도체식 음주측정기 파이프라인 통합</span></li>
+                        <li><span class="dot dot-purple"></span><span>설문조사 폼 연동 (사전 진료/문진 데이터 수집용)</span></li>
+                        <li><span class="dot dot-purple"></span><span>지점별 데이터 확인용 관리자 대시보드 및 리포트 출력</span></li>
                     </ul>
                 </div>
             </div>
         </div>
 
         <div class="page" id="page-schedule">
-            <div class="section-label">Project Schedule</div>
-            <p class="section-desc">납품 및 연구 개발 진행 타임라인입니다.</p>
+            <div class="section-label">Schedule & Milestones</div>
+            <p class="section-desc">v1.0 납품 및 향후 고도화 단계를 위한 진행 타임라인입니다.</p>
 
             <div class="card mb16">
                 <div class="phase-list">
                     <div class="phase-item">
-                        <div class="phase-label">다음 주 이내</div>
+                        <div class="phase-label">즉시</div>
                         <div class="phase-dot-wrap">
-                            <div class="phase-dot" style="background:var(--red)">1</div>
+                            <div class="phase-dot" style="background:var(--orange)">1</div>
                             <div class="phase-line"></div>
                         </div>
                         <div class="phase-content">
-                            <div class="phase-content-title">v1.0 SW 안정화 및 패키징</div>
-                            <div class="phase-content-sub">체온 재측정 로직, 얼굴 인식 박스 설정, 영상 대기화면 처리 완료 후 .exe 파일 전달</div>
+                            <div class="phase-content-title">필요 리소스 확보</div>
+                            <div class="phase-content-sub">가온병원 대기 화면용 샘플 영상 수급 및 Windows 11 Pro 라이선스 준비</div>
                         </div>
                     </div>
                     <div class="phase-item">
-                        <div class="phase-label">단기</div>
+                        <div class="phase-label">단기 (최우선)</div>
                         <div class="phase-dot-wrap">
-                            <div class="phase-dot" style="background:var(--orange)">2</div>
+                            <div class="phase-dot" style="background:var(--red)">2</div>
                             <div class="phase-line"></div>
                         </div>
                         <div class="phase-content">
-                            <div class="phase-content-title">가온병원 1차 납품 및 현장 적용</div>
-                            <div class="phase-content-sub">테스트 기기 병원 설치 후 데이터 수집. 필요시 출력물(프린터) 연동 점검.</div>
+                            <div class="phase-content-title">v1.0 로직 및 UI 개발 완료</div>
+                            <div class="phase-content-sub">정면 인식, ROI 제한, 체온 재측정, 대기화면 적용 후 가온병원 1차 납품 진행</div>
                         </div>
                     </div>
                     <div class="phase-item">
-                        <div class="phase-label">중기 (1~2개월)</div>
+                        <div class="phase-label">중기 (차기)</div>
                         <div class="phase-dot-wrap">
-                            <div class="phase-dot" style="background:var(--blue)">3</div>
+                            <div class="phase-dot" style="background:var(--green)">3</div>
                             <div class="phase-line"></div>
                         </div>
                         <div class="phase-content">
-                            <div class="phase-content-title">하드웨어 단가 절감 및 음주측정기 연동</div>
-                            <div class="phase-content-sub">기성품 카메라 센서 및 반도체식 음주측정기 소싱 완료, SW 파이프라인 통합 개발.</div>
+                            <div class="phase-content-title">하드웨어 소싱 및 연동</div>
+                            <div class="phase-content-sub">10만 원대 카메라 모듈 및 반도체식 음주측정기 기성품 발굴 후 솔루션 통합 적용</div>
                         </div>
                     </div>
                     <div class="phase-item">
-                        <div class="phase-label">장기 (연내)</div>
+                        <div class="phase-label">장기</div>
                         <div class="phase-dot-wrap">
                             <div class="phase-dot" style="background:var(--purple)">4</div>
                         </div>
                         <div class="phase-content">
-                            <div class="phase-content-title">디지털 의료기기 인증 및 관리자 페이지 구축</div>
-                            <div class="phase-content-sub">보건복지부 의료기기 인증 취득 진행 및 코레일 등 대형 고객사용 통계/설문 관리자 대시보드 오픈.</div>
+                            <div class="phase-content-title">시스템 고도화</div>
+                            <div class="phase-content-sub">관리자 전용 대시보드 구축, 커스텀 설문 폼 연동 및 리포트 출력 시스템 적용</div>
                         </div>
                     </div>
                 </div>
@@ -550,31 +563,32 @@
 
         <div class="page" id="page-actions">
             <div class="section-label">Action Items</div>
-            <p class="section-desc">담당자별 긴급/우선 처리해야 할 업무 목록입니다.</p>
+            <p class="section-desc">부서 및 담당자별 즉각적인 조치가 필요한 업무 리스트입니다.</p>
 
             <div class="mb16">
                 <div class="action-item">
                     <div class="action-num red">1</div>
-                    <div class="action-text"><span class="action-tag tag-urgent">긴급</span><strong>SW 오류 수정 및 빌드:</strong> 체온 미수신 시 재측정 로직 반영, 영상 UI 추가 개발 후 빌드 전달 (담당: 코드아이디어)</div>
+                    <div class="action-text"><span class="action-tag tag-urgent">v1.0 (최우선)</span><strong>개발팀:</strong> 얼굴 인식(정면/박스 제한) 및 체온 전용 재측정 로직 개발 반영</div>
                 </div>
                 <div class="action-item">
                     <div class="action-num red">2</div>
-                    <div class="action-text"><span class="action-tag tag-urgent">긴급</span><strong>샘플 영상 전달:</strong> 가온병원 대기화면 용도로 사용할 짤막한 샘플 영상 확보 및 전달 (담당: 발주처)</div>
+                    <div class="action-text"><span class="action-tag tag-urgent">v1.0 (최우선)</span><strong>개발팀:</strong> 대기 화면 영상 UI 적용 및 법적 면책 문구 하단 상시 노출 처리</div>
                 </div>
                 <div class="action-item">
                     <div class="action-num blue">3</div>
-                    <div class="action-text"><span class="action-tag tag-update">협의</span><strong>표준 라벨링 범위 확정:</strong> 현장 설치 시 얼굴이 인식되는 최적의 카메라 화각/박스 크기(ROI) 수치 확정 및 공유</div>
+                    <div class="action-text"><span class="action-tag tag-update">즉시</span><strong>운영/기획:</strong> 가온병원 대기 화면에 적용할 테스트용 짧은 샘플 영상 확보 및 개발팀 전달</div>
                 </div>
                 <div class="action-item">
                     <div class="action-num orange">4</div>
-                    <div class="action-text"><span class="action-tag tag-new">신규</span><strong>기성품 하드웨어 모델 서치:</strong> 10만원대 저가형 카메라 모듈 및 반도체식 음주측정기 소싱 후 모델명/단가 리스트업 (담당: 코드아이디어)</div>
+                    <div class="action-text"><span class="action-tag tag-new">차기 우선</span><strong>개발팀:</strong> 저가형 기성품 카메라 모듈 및 반도체식 음주측정기 소싱 후 모델/단가 제안</div>
                 </div>
                 <div class="action-item">
-                    <div class="action-num orange">5</div>
-                    <div class="action-text"><span class="action-tag tag-update">준비</span><strong>Windows 라이선스 구매:</strong> 현장 기기에 설치될 Windows 11 Pro 정품 라이선스 준비</div>
+                    <div class="action-num teal">5</div>
+                    <div class="action-text"><span class="action-tag tag-update">상시</span><strong>운영/기획:</strong> 원격 유지보수를 위한 Windows 11 Pro 라이선스 준비 및 적용</div>
                 </div>
             </div>
         </div>
+
     </main>
 
     <script>
