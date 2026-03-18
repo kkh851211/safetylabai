@@ -1,5 +1,6 @@
 import { VolumeX, Hand } from "lucide-react";
 import { useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 
 function GreenParticles() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -80,8 +81,17 @@ function GreenParticles() {
 }
 
 export function KioskIdleScreen() {
+  const navigate = useNavigate();
+
+  const handleStart = () => {
+    navigate("/KioskConsentPage");
+  };
+
   return (
-    <div className="relative w-[1080px] h-[1920px] bg-white overflow-hidden shadow-2xl">
+    <div 
+      className="relative w-[1080px] h-[1920px] bg-white overflow-hidden shadow-2xl cursor-pointer"
+      onClick={handleStart}
+    >
       <GreenParticles />
 
       {/* Top Area - y=0 to y=200 */}
@@ -111,7 +121,7 @@ export function KioskIdleScreen() {
         style={{ top: '1400px', backgroundColor: 'rgba(255, 255, 255, 0.9)', backdropFilter: 'blur(8px)' }}
       >
         <p className="text-[28pt] text-center text-slate-800 font-bold">
-          화면을 터치하면 시작됩니다
+          새로운 대화를 시작하려면 화면을 터치하세요
         </p>
         
         {/* Finger Tap Icon */}
