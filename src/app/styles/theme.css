@@ -14,6 +14,10 @@
   --card-foreground: #111827;
   
   --border: #E5E7EB;
+
+  /* Figma Specific Variables */
+  --color-bg-overlay: rgba(0, 0, 0, 0.4);
+  --color-text-on-dark: #FFFFFF;
 }
 
 @media (prefers-color-scheme: dark) {
