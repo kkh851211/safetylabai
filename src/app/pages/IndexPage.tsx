@@ -25,13 +25,14 @@ const IndexPage: React.FC = () => {
       const category = categoryParts.length > 0 ? categoryParts[categoryParts.length - 1] : 'Main';
       
       // Get the exported title or fallback to fileName
-      const displayName = pages[path]?.title || fileName;
+      const pageTitle = pages[path]?.title || fileName; // Renamed to pageTitle to avoid conflict with property name
       
       return {
-        name: displayName,
+        name: pageTitle, // Use pageTitle for name
         path: `/${fileName}`,
         fullUrl: `${base}/${fileName}`.replace(/\/+/g, '/'),
-        category: category
+        category: category,
+        title: pageTitle // Add title property
       };
     })
     .filter(page => {
@@ -39,7 +40,8 @@ const IndexPage: React.FC = () => {
       const isComponent = page.category.toLowerCase().includes('component') || 
                           page.path.toLowerCase().includes('component');
       return !isSystemPage && !isComponent;
-    });
+    })
+    .sort((a, b) => a.title.localeCompare(b.title, undefined, { numeric: true, sensitivity: 'base' }));
 
   // Group pages by category
   const groupedPages = allPages.reduce((acc, page) => {
