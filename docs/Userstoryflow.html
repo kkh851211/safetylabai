@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>생체인식 키오스크 유저 스토리 / 유저 플로우 v1.0</title>
+    <style>
+        :root {
+            --bg: #0f1117;
+            --s1: #1a1f2e;
+            --t1: #e8eaf0;
+            --t3: #8c95aa;
+            --bd: #232b3e;
+            --blue: #4f80ff;
+            --green: #10b981;
+            --orange: #f59e0b;
+            --red: #ef4444;
+            --purple: #a78bfa;
+            --teal: #14b8a6;
+            --transition: background 0.2s, color 0.2s, border-color 0.2s;
+        }
+
+        body.light {
+            --bg: #f5f7fa;
+            --s1: #ffffff;
+            --t1: #1a1f2e;
+            --t3: #5a6478;
+            --bd: #d1d9e6;
+        }
+
+        html { overflow-y: scroll; }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            background: var(--bg);
+            color: var(--t1);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            font-size: 14px;
+            line-height: 1.6;
+            transition: var(--transition);
+        }
+
+        .inner-container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 24px;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+        }
+
+        header {
+            background: var(--s1);
+            border-bottom: 1px solid var(--bd);
+            height: 56px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            transition: var(--transition);
+        }
+
+        .header-inner { justify-content: space-between; }
+
+        .header-left { display: flex; align-items: center; gap: 12px; }
+
+        .logo {
+            width: 32px; height: 32px;
+            background: var(--blue);
+            border-radius: 8px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 16px; color: #fff; flex-shrink: 0;
+        }
+
+        .title-wrap h1 { font-size: 15px; font-weight: 700; color: var(--t1); }
+        .title-wrap p  { font-size: 11px; color: var(--t3); }
+
+        .badges { display: flex; gap: 6px; }
+
+        .badge {
+            font-size: 11px; font-weight: 600;
+            padding: 3px 8px; border-radius: 20px;
+            border: 1px solid var(--bd); color: var(--t3);
+            transition: var(--transition);
+        }
+        .badge.blue   { background: rgba(79,128,255,0.12);  color: var(--blue);   border-color: rgba(79,128,255,0.3); }
+        .badge.green  { background: rgba(16,185,129,0.12);  color: var(--green);  border-color: rgba(16,185,129,0.3); }
+        .badge.orange { background: rgba(245,158,11,0.12);  color: var(--orange); border-color: rgba(245,158,11,0.3); }
+        .badge.teal   { background: rgba(20,184,166,0.12);  color: var(--teal);   border-color: rgba(20,184,166,0.3); }
+        .badge.purple { background: rgba(167,139,250,0.12); color: var(--purple); border-color: rgba(167,139,250,0.3); }
+
+        .toggle-btn {
+            background: var(--bg); border: 1px solid var(--bd); color: var(--t1);
+            padding: 6px 12px; border-radius: 8px; cursor: pointer;
+            font-size: 13px; transition: var(--transition); white-space: nowrap;
+        }
+        .toggle-btn:hover { border-color: var(--blue); }
+
+        nav { background: var(--s1); border-bottom: 1px solid var(--bd); transition: var(--transition); }
+        .nav-inner { overflow-x: auto; height: 100%; }
+        .nav-inner::-webkit-scrollbar { display: none; }
+        nav::-webkit-scrollbar { display: none; }
+
+        .tab-btn {
+            background: none; border: none;
+            border-bottom: 2px solid transparent;
+            color: var(--t3); padding: 12px 16px;
+            cursor: pointer; font-size: 13px; font-weight: 500;
+            white-space: nowrap; transition: color 0.15s, border-color 0.15s;
+        }
+        .tab-btn:hover { color: var(--t1); }
+        .tab-btn.active { color: var(--blue); border-bottom: 2px solid var(--blue); }
+
+        main { padding: 24px; max-width: 1100px; margin: 0 auto; }
+
+        .page { display: none; }
+        .page.active { display: block; }
+
+        .card {
+            background: var(--s1); border-radius: 12px;
+            padding: 18px; border: 1px solid var(--bd);
+            transition: var(--transition);
+        }
+
+        .card-title {
+            font-size: 11px; font-weight: 700; color: var(--t3);
+            text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 14px;
+        }
+
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+        .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+        .grid-4 { display: grid; grid-template-columns: repeat(4,1fr); gap: 16px; }
+        .mb16 { margin-bottom: 16px; }
+        .mb8  { margin-bottom: 8px; }
+
+        .stat-num   { font-size: 28px; font-weight: 800; color: var(--t1); line-height: 1.1; }
+        .stat-label { font-size: 12px; color: var(--t3); margin-top: 4px; }
+        .stat-sub   { font-size: 11px; color: var(--t3); margin-top: 8px; padding-top: 8px; border-top: 1px solid var(--bd); }
+
+        table { width: 100%; border-collapse: collapse; }
+        th {
+            text-align: left; font-size: 11px; font-weight: 600; color: var(--t3);
+            padding: 8px 10px; border-bottom: 1px solid var(--bd);
+            text-transform: uppercase; letter-spacing: 0.05em;
+        }
+        td { padding: 10px; border-bottom: 1px solid var(--bd); font-size: 13px; color: var(--t1); vertical-align: top; }
+        tr:last-child td { border-bottom: none; }
+        tr:hover td { background: rgba(79,128,255,0.04); }
+
+        tr.row-new td { background: rgba(20,184,166,0.06); }
+        tr.row-new:hover td { background: rgba(20,184,166,0.11); }
+        tr.row-new td:first-child { border-left: 3px solid var(--teal); padding-left: 8px; }
+
+        .pri {
+            display: inline-block; font-size: 11px; font-weight: 700;
+            padding: 2px 8px; border-radius: 20px;
+        }
+        .pri.p1 { background: rgba(79,128,255,0.12);   color: var(--blue); }
+        .pri.p2 { background: rgba(139,147,170,0.12);  color: var(--t3); }
+
+        .item-list { list-style: none; }
+        .item-list li {
+            display: flex; align-items: flex-start; gap: 10px;
+            padding: 10px 0; border-bottom: 1px solid var(--bd);
+            font-size: 13px; color: var(--t1);
+        }
+        .item-list li:last-child { border-bottom: none; }
+
+        .dot { width: 6px; height: 6px; border-radius: 50%; margin-top: 6px; flex-shrink: 0; }
+        .dot-blue   { background: var(--blue); }
+        .dot-green  { background: var(--green); }
+        .dot-orange { background: var(--orange); }
+        .dot-red    { background: var(--red); }
+        .dot-purple { background: var(--purple); }
+        .dot-teal   { background: var(--teal); }
+
+        .section-label {
+            font-size: 11px; font-weight: 700; color: var(--blue);
+            text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 6px;
+        }
+        .section-desc { font-size: 13px; color: var(--t3); margin-bottom: 16px; line-height: 1.7; }
+
+        .notice-banner {
+            display: flex; align-items: center; gap: 10px;
+            background: rgba(20,184,166,0.08); border: 1px solid rgba(20,184,166,0.3);
+            border-radius: 10px; padding: 10px 16px; margin-bottom: 16px;
+            font-size: 12px; color: var(--teal); font-weight: 600;
+        }
+
+        /* ── 유저 스토리 카드 ── */
+        .story-card {
+            background: var(--bg);
+            border: 1px solid var(--bd);
+            border-radius: 10px;
+            padding: 16px 18px;
+            margin-bottom: 10px;
+            transition: var(--transition);
+        }
+        .story-card:last-child { margin-bottom: 0; }
+        .story-card.story-teal  { border-color: rgba(20,184,166,0.4);  background: rgba(20,184,166,0.04); }
+        .story-card.story-blue  { border-color: rgba(79,128,255,0.3);  background: rgba(79,128,255,0.04); }
+        .story-card.story-green { border-color: rgba(16,185,129,0.3);  background: rgba(16,185,129,0.04); }
+        .story-card.story-orange{ border-color: rgba(245,158,11,0.3);  background: rgba(245,158,11,0.04); }
+        .story-card.story-purple{ border-color: rgba(167,139,250,0.3); background: rgba(167,139,250,0.04); }
+        .story-card.story-red   { border-color: rgba(239,68,68,0.3);   background: rgba(239,68,68,0.04); }
+
+        .story-header {
+            display: flex; align-items: center; gap: 10px;
+            margin-bottom: 10px; flex-wrap: wrap;
+        }
+        .story-id {
+            font-size: 10px; font-weight: 800;
+            padding: 2px 7px; border-radius: 4px;
+            background: rgba(79,128,255,0.15); color: var(--blue);
+            flex-shrink: 0; letter-spacing: 0.04em;
+        }
+        .story-id.teal   { background: rgba(20,184,166,0.15);  color: var(--teal); }
+        .story-id.green  { background: rgba(16,185,129,0.15);  color: var(--green); }
+        .story-id.orange { background: rgba(245,158,11,0.15);  color: var(--orange); }
+        .story-id.purple { background: rgba(167,139,250,0.15); color: var(--purple); }
+        .story-id.red    { background: rgba(239,68,68,0.15);   color: var(--red); }
+
+        .story-actor {
+            font-size: 12px; font-weight: 700; color: var(--t1);
+        }
+        .story-formula {
+            font-size: 13px; color: var(--t1); line-height: 1.75;
+            padding: 10px 14px;
+            background: var(--s1);
+            border-radius: 8px;
+            border-left: 3px solid var(--bd);
+            margin-bottom: 10px;
+        }
+        .story-formula.teal   { border-left-color: var(--teal); }
+        .story-formula.blue   { border-left-color: var(--blue); }
+        .story-formula.green  { border-left-color: var(--green); }
+        .story-formula.orange { border-left-color: var(--orange); }
+        .story-formula.purple { border-left-color: var(--purple); }
+        .story-formula.red    { border-left-color: var(--red); }
+
+        .story-formula .as   { color: var(--blue); font-weight: 700; }
+        .story-formula .in   { color: var(--teal); font-weight: 700; }
+        .story-formula .teal-text  { color: var(--teal);   font-weight: 700; }
+        .story-formula .green-text { color: var(--green);  font-weight: 700; }
+        .story-formula .orange-text{ color: var(--orange); font-weight: 700; }
+        .story-formula .purple-text{ color: var(--purple); font-weight: 700; }
+        .story-formula .red-text   { color: var(--red);    font-weight: 700; }
+
+        /* ── 플로우 스텝 ── */
+        .flow-wrap {
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+        .flow-step {
+            display: grid;
+            grid-template-columns: 40px 1fr;
+            gap: 14px;
+            align-items: stretch;
+        }
+        .flow-left {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .flow-num {
+            width: 28px; height: 28px;
+            border-radius: 50%;
+            background: var(--blue);
+            color: #fff;
+            font-size: 11px; font-weight: 700;
+            display: flex; align-items: center; justify-content: center;
+            flex-shrink: 0;
+            z-index: 1;
+        }
+        .flow-num.teal   { background: var(--teal); }
+        .flow-num.green  { background: var(--green); }
+        .flow-num.orange { background: var(--orange); }
+        .flow-num.purple { background: var(--purple); }
+        .flow-num.red    { background: var(--red); }
+        .flow-num.gray   { background: var(--t3); }
+
+        .flow-line {
+            width: 2px; flex: 1;
+            background: var(--bd);
+            margin: 4px 0;
+            min-height: 16px;
+        }
+
+        .flow-content {
+            background: var(--bg);
+            border: 1px solid var(--bd);
+            border-radius: 10px;
+            padding: 10px 14px;
+            margin-bottom: 8px;
+            transition: var(--transition);
+        }
+        .flow-content.fc-teal   { border-color: rgba(20,184,166,0.4);  background: rgba(20,184,166,0.05); }
+        .flow-content.fc-green  { border-color: rgba(16,185,129,0.3);  background: rgba(16,185,129,0.04); }
+        .flow-content.fc-orange { border-color: rgba(245,158,11,0.3);  background: rgba(245,158,11,0.04); }
+        .flow-content.fc-red    { border-color: rgba(239,68,68,0.3);   background: rgba(239,68,68,0.04); }
+        .flow-content.fc-purple { border-color: rgba(167,139,250,0.3); background: rgba(167,139,250,0.04); }
+
+        .flow-title { font-size: 13px; font-weight: 700; color: var(--t1); }
+        .flow-sub   { font-size: 12px; color: var(--t3); margin-top: 3px; line-height: 1.6; }
+        .flow-branch {
+            display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px;
+        }
+        .flow-branch-item {
+            font-size: 11px; font-weight: 600;
+            padding: 3px 10px; border-radius: 20px;
+            border: 1px solid var(--bd); color: var(--t3);
+            background: var(--s1);
+        }
+        .flow-branch-item.ok  { border-color: rgba(16,185,129,0.4);  color: var(--green);  background: rgba(16,185,129,0.08); }
+        .flow-branch-item.ng  { border-color: rgba(239,68,68,0.4);   color: var(--red);    background: rgba(239,68,68,0.08); }
+        .flow-branch-item.alt { border-color: rgba(245,158,11,0.4);  color: var(--orange); background: rgba(245,158,11,0.08); }
+
+        /* ── 액션 아이템 ── */
+        .action-item {
+            display: flex; align-items: flex-start; gap: 12px;
+            background: var(--bg); border: 1px solid var(--bd);
+            border-radius: 10px; padding: 12px 14px; margin-bottom: 8px;
+            transition: var(--transition);
+        }
+        .action-item:last-child { margin-bottom: 0; }
+        .action-item.action-new { border-color: rgba(20,184,166,0.35); background: rgba(20,184,166,0.05); }
+        .action-num {
+            width: 24px; height: 24px; border-radius: 50%;
+            font-size: 11px; font-weight: 800;
+            display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+        }
+        .action-num.blue   { background: rgba(79,128,255,0.15);  color: var(--blue); }
+        .action-num.orange { background: rgba(245,158,11,0.15);  color: var(--orange); }
+        .action-num.red    { background: rgba(239,68,68,0.15);   color: var(--red); }
+        .action-num.teal   { background: rgba(20,184,166,0.15);  color: var(--teal); }
+        .action-num.green  { background: rgba(16,185,129,0.15);  color: var(--green); }
+        .action-num.purple { background: rgba(167,139,250,0.15); color: var(--purple); }
+        .action-text { font-size: 13px; color: var(--t1); line-height: 1.6; }
+
+        .action-tag {
+            display: inline-block; font-size: 10px; font-weight: 700;
+            padding: 1px 6px; border-radius: 4px; margin-right: 4px;
+        }
+        .tag-urgent { background: rgba(239,68,68,0.15);   color: var(--red); }
+        .tag-new    { background: rgba(167,139,250,0.15); color: var(--purple); }
+        .tag-update { background: rgba(79,128,255,0.15);  color: var(--blue); }
+        .tag-0304   { background: rgba(20,184,166,0.15);  color: var(--teal); }
+
+        .expand-card { border: 1px solid var(--bd); border-radius: 10px; overflow: hidden; margin-bottom: 8px; }
+        .expand-card.expand-new { border-color: rgba(20,184,166,0.4); }
+        .expand-header {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 12px 16px; background: var(--bg); cursor: pointer; transition: var(--transition);
+        }
+        .expand-header:hover { background: rgba(79,128,255,0.06); }
+        .expand-card.expand-new .expand-header { background: rgba(20,184,166,0.05); }
+        .expand-card.expand-new .expand-header:hover { background: rgba(20,184,166,0.1); }
+        .expand-header-left {
+            display: flex; align-items: center; gap: 10px;
+            font-size: 13px; font-weight: 700; color: var(--t1);
+        }
+        .expand-body { padding: 14px 16px; background: var(--s1); border-top: 1px solid var(--bd); display: none; }
+        .expand-body.open { display: block; }
+        .chevron { font-size: 11px; color: var(--t3); transition: transform 0.2s; }
+        .chevron.open { transform: rotate(180deg); }
+
+        @media(max-width:720px)  { .grid-3, .grid-4 { grid-template-columns: 1fr 1fr; } }
+        @media(max-width:560px)  {
+            main { padding: 12px; }
+            .inner-container { padding: 0 12px; }
+            .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+            .badges { display: none; }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <div class="inner-container header-inner">
+            <div class="header-left">
+                <div class="logo">🗺️</div>
+                <div class="title-wrap">
+                    <h1>생체인식 키오스크 유저 스토리 / 유저 플로우</h1>
+                    <p>코드아이디어 → 세이프티랩 | PRD v1.0 기반 · 03.04 추가 확정 반영</p>
+                </div>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;">
+                <div class="badges">
+                    <span class="badge blue">ver.1.0</span>
+                    <span class="badge teal">03.04 반영</span>
+                    <span class="badge orange">5개 역할</span>
+                    <span class="badge green">플로우 6종</span>
+                </div>
+                <button class="toggle-btn" id="themeBtn" onclick="toggleTheme()">☀️ 라이트</button>
+            </div>
+        </div>
+    </header>
+
+    <nav>
+        <div class="inner-container nav-inner">
+            <button class="tab-btn active" onclick="showTab('overview',this)">📋 개요</button>
+            <button class="tab-btn" onclick="showTab('user',this)">🙋 일반 사용자</button>
+            <button class="tab-btn" onclick="showTab('admin',this)">🔐 현장 관리자</button>
+            <button class="tab-btn" onclick="showTab('remote',this)">📱 원격 관리자</button>
+            <button class="tab-btn" onclick="showTab('researcher',this)">🤖 AI 연구자</button>
+            <button class="tab-btn" onclick="showTab('pm',this)">📊 PM / 세이프티랩</button>
+        </div>
+    </nav>
+
+    <main>
+
+        <div class="page active" id="page-overview">
+            <div class="section-label">User Story & Flow Overview</div>
+            <p class="section-desc">시스템에 등장하는 5개 역할(Actor)과 유저 스토리 전체 목록입니다. "OO로서, OO를 하기 위해, OO를 한다" 형식으로 작성되었습니다.</p>
+
+            <div class="notice-banner">
+                📅 03.04 추가 확정 반영 — 원격 관리자 역할(US-R) · 지점별 통계 관리자 역할(US-P) 포함
+            </div>
+
+            <div class="grid-4 mb16">
+                <div class="card">
+                    <div class="card-title">전체 유저 스토리</div>
+                    <div class="stat-num" style="color:var(--blue)">21</div>
+                    <div class="stat-label">유저 스토리</div>
+                    <div class="stat-sub">5개 역할 / 6개 플로우</div>
+                </div>
+                <div class="card">
+                    <div class="card-title">핵심 플로우</div>
+                    <div class="stat-num" style="color:var(--green)">6</div>
+                    <div class="stat-label">유저 플로우</div>
+                    <div class="stat-sub">측정·인증·관리·통계 등</div>
+                </div>
+                <div class="card">
+                    <div class="card-title">등장 역할</div>
+                    <div class="stat-num" style="color:var(--orange)">5</div>
+                    <div class="stat-label">Actor</div>
+                    <div class="stat-sub">사용자·관리자·원격·AI·PM</div>
+                </div>
+                <div class="card">
+                    <div class="card-title">03.04 신규</div>
+                    <div class="stat-num" style="color:var(--teal)">5</div>
+                    <div class="stat-label">추가 스토리</div>
+                    <div class="stat-sub">원격 관리 + 통계 관련</div>
+                </div>
+            </div>
+
+            <div class="card mb16">
+                <div class="card-title">등장 역할 (Actor) 정의</div>
+                <table>
+                    <thead>
+                        <tr><th>역할</th><th>정의</th><th>주요 관심사</th><th>관련 탭</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>🙋 일반 사용자</strong></td>
+                            <td>키오스크를 이용해 혈압·심박을 측정하는 직원 또는 방문객</td>
+                            <td>빠르고 정확한 측정, 결과 확인, 개인정보 보호</td>
+                            <td><span class="pri p1">일반 사용자 탭</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>🔐 현장 관리자</strong></td>
+                            <td>납품처(병원·철도사)에서 키오스크를 직접 운영·설정하는 담당자</td>
+                            <td>헬스케어 범위 설정, 출입 판단 보조, 현장 이상 대응</td>
+                            <td><span class="pri p1">현장 관리자 탭</span></td>
+                        </tr>
+                        <tr class="row-new">
+                            <td><strong>📱 원격 관리자</strong></td>
+                            <td>여러 기기를 원격으로 제어·모니터링하는 운영자</td>
+                            <td>기기 상태 확인, 원격 리셋·SW 배포, 이상 알림 수신</td>
+                            <td><span class="pri p1" style="background:rgba(20,184,166,0.12);color:var(--teal);">원격 관리자 탭</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>🤖 AI 연구자</strong></td>
+                            <td>rPPG 알고리즘 학습·고도화를 담당하는 개발팀</td>
+                            <td>고품질 캘리브레이션 데이터 수집, 모델 정확도 향상</td>
+                            <td><span class="pri p1">AI 연구자 탭</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>📊 PM / 세이프티랩</strong></td>
+                            <td>프로젝트를 총괄하며 납품처별 운영 현황과 통계를 관리하는 담당자</td>
+                            <td>지점별 통계 리포트, 데이터 내보내기, 프로젝트 의사결정</td>
+                            <td><span class="pri p1">PM / 세이프티랩 탭</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="grid-3 mb16">
+                <div class="card" style="border-top: 4px solid var(--blue);">
+                    <div class="card-title" style="color:var(--blue)">🔵 ver.1.0 — 가온병원 납품</div>
+                    <div class="stat-num" style="font-size: 18px;">핵심 기능 구축</div>
+                    <div class="stat-sub">rPPG 측정, Quality Gate, 관리자 설정, 기초 통계</div>
+                </div>
+                <div class="card" style="border-top: 4px solid var(--t3);">
+                    <div class="card-title" style="color:var(--t3)">⚪ ver.1.1 — 안정화 및 확장</div>
+                    <div class="stat-num" style="font-size: 18px;">SRT·코레일 대응</div>
+                    <div class="stat-sub">RFID/지문 연동, 자동 복구, 다중 권한, 다국어</div>
+                </div>
+                <div class="card" style="border-top: 4px solid var(--purple);">
+                    <div class="card-title" style="color:var(--purple)">🟣 ver.1.2 — 장기 로드맵</div>
+                    <div class="stat-num" style="font-size: 18px;">헬스케어 생태계</div>
+                    <div class="stat-sub">음주·폐활량 연동, 모바일 앱, 스마트폰 rPPG</div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="page" id="page-user">
+            <div class="section-label">User Stories & Flow — 🙋 일반 사용자</div>
+            <p class="section-desc">키오스크를 직접 이용해 혈압·심박을 측정하는 사용자의 메인 플로우입니다. </p>
+
+            <div class="mb16">
+                <div class="story-card story-blue">
+                    <div class="story-header">
+                        <span class="story-id">US-U01</span>
+                        <span class="story-actor">🙋 일반 사용자 — 얼굴 인식 측정</span>
+                        <span class="pri p1">ver.1.0</span>
+                    </div>
+                    <div class="story-formula blue">
+                        <span class="as">일반 사용자로서,</span> 출근 시 빠르게 혈압과 심박을 확인하기 위해,<br>
+                        키오스크 화면 앞에 서서 <strong>얼굴 인식으로 본인을 확인하고 측정을 시작한다.</strong>
+                    </div>
+                </div>
+
+                <div class="story-card story-red">
+                    <div class="story-header">
+                        <span class="story-id red">US-U03</span>
+                        <span class="story-actor">🙋 일반 사용자 — Quality Gate 탈락 재측정</span>
+                    </div>
+                    <div class="story-formula red">
+                        <span class="as">일반 사용자로서,</span> 측정 환경 문제로 부정확한 결과가 나오는 것을 방지하기 위해,<br>
+                        <strong>Quality Gate 탈락 안내 화면</strong>을 확인하고 자세를 바로잡아 재측정을 시도한다.
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">유저 플로우 — 일반 사용자 측정 플로우 (UF-01)</div>
+                <div class="flow-wrap">
+                    <div class="flow-step">
+                        <div class="flow-left"><div class="flow-num">1</div><div class="flow-line"></div></div>
+                        <div class="flow-content">
+                            <div class="flow-title">대기 화면 진입 및 동의</div>
+                            <div class="flow-sub">개인정보 및 민감정보 수집 이용 동의 선택</div>
+                        </div>
+                    </div>
+                    <div class="flow-step">
+                        <div class="flow-left"><div class="flow-num">2</div><div class="flow-line"></div></div>
+                        <div class="flow-content">
+                            <div class="flow-title">본인 인증 (얼굴/이름)</div>
+                            <div class="flow-sub">카메라 인증 시도 → 실패 시 수동 입력</div>
+                        </div>
+                    </div>
+                    <div class="flow-step">
+                        <div class="flow-left"><div class="flow-num">3</div><div class="flow-line"></div></div>
+                        <div class="flow-content fc-orange">
+                            <div class="flow-title">안정화 및 Quality Gate 체크</div>
+                            <div class="flow-sub">30초 대기 중 조도·움직임·화질 자동 판정</div>
+                        </div>
+                    </div>
+                    <div class="flow-step">
+                        <div class="flow-left"><div class="flow-num">4</div><div class="flow-line"></div></div>
+                        <div class="flow-content fc-green">
+                            <div class="flow-title">rPPG 측정 및 결과 표시</div>
+                            <div class="flow-sub">AI 모델 수치 추정 → 정상/주의/위험 판정 색상 노출</div>
+                        </div>
+                    </div>
+                    <div class="flow-step">
+                        <div class="flow-left"><div class="flow-num">5</div></div>
+                        <div class="flow-content fc-teal">
+                            <div class="flow-title">데이터 저장 및 종료</div>
+                            <div class="flow-sub">비식별 암호화 저장 후 대기 화면 복귀</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="page" id="page-admin">
+            <div class="section-label">User Stories & Flow — 🔐 현장 관리자</div>
+            <p class="section-desc">납품처 현장에서 운영을 담당하는 관리자의 스토리입니다.</p>
+
+            <div class="mb16">
+                <div class="story-card story-blue">
+                    <div class="story-header">
+                        <span class="story-id">US-A01</span>
+                        <span class="story-actor">🔐 현장 관리자 — 관리자 페이지 설정</span>
+                        <span class="pri p1">ver.1.0</span>
+                    </div>
+                    <div class="story-formula blue">
+                        <span class="as">현장 관리자로서,</span> 현장 기준에 맞는 혈압 허용 범위를 설정하기 위해,<br>
+                        <strong>관리자 페이지에서</strong> 헬스케어 범위와 화면 설정을 직접 관리한다.
+                    </div>
+                </div>
+
+                <div class="story-card story-teal">
+                    <div class="story-header">
+                        <span class="story-id teal">US-A03</span>
+                        <span class="story-actor">🔐 현장 관리자 — 커프 2차 검증</span>
+                    </div>
+                    <div class="story-formula teal">
+                        <span class="as">현장 관리자로서,</span> AI 측정값이 불확실할 때 더 정확한 판단을 내리기 위해,<br>
+                        <strong>커프 혈압계로 2차 검증을 수행하고</strong> 최종 출입 여부를 결정한다.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="page" id="page-remote">
+            <div class="section-label">User Stories & Flow — 📱 원격 관리자</div>
+            <p class="section-desc">원격 기기 제어 및 모니터링 시나리오입니다. <span class="action-tag tag-0304">ver.1.0 추가 확정</span></p>
+
+            <div class="mb16">
+                <div class="story-card story-teal">
+                    <div class="story-header">
+                        <span class="story-id teal">US-R01</span>
+                        <span class="story-actor">📱 원격 관리자 — 원격 리셋</span>
+                        <span class="action-tag tag-0304">03.04 추가</span>
+                    </div>
+                    <div class="story-formula teal">
+                        <span class="as">원격 관리자로서,</span> 현장 방문 없이 응답 없는 기기를 복구하기 위해,<br>
+                        <strong>관리자 앱에서 원격 리셋 명령을 전송한다.</strong>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-title">원격 대응 플로우 요약</div>
+                <div class="action-item action-new">
+                    <div class="action-num teal">1</div>
+                    <div class="action-text">오프라인/오류 알림 수신 (Push/Email)</div>
+                </div>
+                <div class="action-item action-new">
+                    <div class="action-num teal">2</div>
+                    <div class="action-text">기기 상태 상세 확인 (온라인 여부, 로그)</div>
+                </div>
+                <div class="action-item action-new">
+                    <div class="action-num teal">3</div>
+                    <div class="action-text">원격 리셋 명령 전송 및 로그 기록</div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="page" id="page-researcher">
+            <div class="section-label">User Stories & Flow — 🤖 AI 연구자</div>
+            <p class="section-desc">알고리즘 고도화를 위한 연구자의 스토리입니다. </p>
+
+            <div class="mb16">
+                <div class="story-card story-orange">
+                    <div class="story-header">
+                        <span class="story-id orange">US-I02</span>
+                        <span class="story-actor">🤖 AI 연구자 — 3개월 단위 모델 업데이트</span>
+                        <span class="pri p1">ver.1.0</span>
+                    </div>
+                    <div class="story-formula orange">
+                        <span class="as">AI 연구자로서,</span> 지속적으로 모델 정확도를 개선하기 위해,<br>
+                        <strong>3개월마다 캘리브레이션 데이터로 재학습을 수행하고</strong> 새 버전을 배포한다.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="page" id="page-pm">
+            <div class="section-label">User Stories & Flow — 📊 PM / 세이프티랩</div>
+            <p class="section-desc">프로젝트 운영 및 통계 관리 스토리입니다.</p>
+
+            <div class="mb16">
+                <div class="story-card story-teal">
+                    <div class="story-header">
+                        <span class="story-id teal">US-P01</span>
+                        <span class="story-actor">📊 PM — 지점별 통계 현황 비교</span>
+                        <span class="pri p1">ver.1.0</span>
+                    </div>
+                    <div class="story-formula teal">
+                        <span class="as">PM으로서,</span> 납품처의 운영 현황을 파악하기 위해,<br>
+                        <strong>지점별 통계 대시보드에서</strong> 측정 건수와 출입 허가율을 비교 분석한다.
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">전체 프로젝트 운영 플로우 (UF-06)</div>
+                <div class="flow-wrap">
+                    <div class="flow-step">
+                        <div class="flow-left"><div class="flow-num red">1</div><div class="flow-line"></div></div>
+                        <div class="flow-content fc-red">
+                            <div class="flow-title">즉시 처리 (버그 수정 및 테스트)</div>
+                            <div class="flow-sub">가온병원 현장 피드백 대응 및 .exe 빌드 검증</div>
+                        </div>
+                    </div>
+                    <div class="flow-step">
+                        <div class="flow-left"><div class="flow-num">2</div><div class="flow-line"></div></div>
+                        <div class="flow-content">
+                            <div class="flow-title">ver.1.0 핵심 개발 (1~10주)</div>
+                            <div class="flow-sub">Quality Gate, 통계, 원격 관리 등 모듈 개발</div>
+                        </div>
+                    </div>
+                    <div class="flow-step">
+                        <div class="flow-left"><div class="flow-num green">3</div><div class="flow-line"></div></div>
+                        <div class="flow-content fc-green">
+                            <div class="flow-title">ver.1.0 납품 및 안정 운영</div>
+                            <div class="flow-sub">가온병원 납품 완료 후 실사용 데이터 기반 안정화</div>
+                        </div>
+                    </div>
+                    <div class="flow-step">
+                        <div class="flow-left"><div class="flow-num gray">4</div><div class="flow-line"></div></div>
+                        <div class="flow-content">
+                            <div class="flow-title">ver.1.1 차기 버전 확장</div>
+                            <div class="flow-sub">SRT·코레일 대응을 위한 RFID/지문 인식 연동</div>
+                        </div>
+                    </div>
+                    <div class="flow-step">
+                        <div class="flow-left"><div class="flow-num purple">5</div></div>
+                        <div class="flow-content fc-purple">
+                            <div class="flow-title">ver.1.2 장기 로드맵 진입</div>
+                            <div class="flow-sub">Total Healthcare 생태계 구축 (음주·폐활량·모바일)</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <script>
+        function showTab(id, btn) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById('page-' + id).classList.add('active');
+            btn.classList.add('active');
+        }
+        function toggleTheme() {
+            const isLight = document.body.classList.toggle('light');
+            document.getElementById('themeBtn').textContent = isLight ? '🌙 다크' : '☀️ 라이트';
+        }
+    </script>
+</body>
+</html>
