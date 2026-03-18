@@ -53,7 +53,7 @@ export function KioskConsentScreen() {
 
       {/* Title Section - y=200 to y=500 */}
       <div className="absolute left-0 w-[1080px] flex flex-col items-center justify-center gap-4" style={{ top: '200px', height: '300px' }}>
-        <h1 className="text-[48pt] font-bold text-center">
+        <h1 className="text-[48pt] font-black text-center text-[#111827]">
           개인정보 수집·이용 동의
         </h1>
         <p className="text-[24pt] text-center text-gray-700 px-[60px]">
@@ -66,7 +66,7 @@ export function KioskConsentScreen() {
         className="absolute left-[60px] overflow-y-auto bg-gray-50 rounded-lg p-8"
         style={{ top: '500px', width: '960px', height: '700px' }}
       >
-        <div className="text-[20pt] leading-relaxed whitespace-pre-line text-gray-800">
+        <div className="text-[20pt] leading-relaxed whitespace-pre-line text-[#111827]">
           {consentText}
         </div>
 
@@ -74,15 +74,15 @@ export function KioskConsentScreen() {
         <div className="flex items-center gap-4 mt-8 pt-6 border-t-2 border-gray-300">
           <button
             onClick={() => setIsChecked(!isChecked)}
-            className="w-[60px] h-[60px] border-2 border-gray-400 rounded flex items-center justify-center flex-shrink-0"
+            className="w-[70px] h-[70px] border-2 border-gray-400 rounded flex items-center justify-center flex-shrink-0"
             style={{
               backgroundColor: isChecked ? 'var(--color-primary, #6366f1)' : 'white',
               borderColor: isChecked ? 'var(--color-primary, #6366f1)' : '#9ca3af',
             }}
           >
-            {isChecked && <Check className="w-10 h-10 text-white" strokeWidth={3} />}
+            {isChecked && <Check className="w-12 h-12 text-white" strokeWidth={4} />}
           </button>
-          <label className="text-[24pt] font-medium cursor-pointer" onClick={() => setIsChecked(!isChecked)}>
+          <label className="text-[30pt] font-bold text-[#111827] cursor-pointer" onClick={() => setIsChecked(!isChecked)}>
             생체정보(얼굴 특징점) 수집·이용에 동의합니다
           </label>
         </div>
