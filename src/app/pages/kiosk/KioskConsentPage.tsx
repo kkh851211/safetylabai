@@ -1,4 +1,4 @@
-import { KioskConsentScreen } from "./components/kiosk-consent-screen";
+import { KioskConsentScreen } from "../components/kiosk-consent-screen";
 
 export const title = "K-1-02 개인정보 동의";
 

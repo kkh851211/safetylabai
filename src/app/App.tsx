@@ -3,7 +3,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import IndexPage from './pages/IndexPage';
 
 // Dynamically import all pages
-const pages = import.meta.glob('./pages/*.tsx');
+const pages = import.meta.glob('./pages/**/*.tsx');
 
 const App: React.FC = () => {
   return (
