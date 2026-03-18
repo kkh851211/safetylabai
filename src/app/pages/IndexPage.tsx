@@ -17,8 +17,12 @@ const IndexPage: React.FC = () => {
     .map((path) => {
       const parts = path.split('/');
       const fileName = parts.pop()?.replace('.tsx', '') || '';
-      // Category is the last directory name before the file, excluding '.' and '..'
-      const category = parts.filter(p => p !== '.' && p !== '..').pop() || 'Main';
+      
+      // Get category: look for the directory containing the file
+      // Paths from glob look like "../pages/components/file.tsx"
+      // After pop(), parts is ["..", "pages", "components"]
+      const categoryParts = parts.filter(p => p !== '.' && p !== '..' && p !== 'pages');
+      const category = categoryParts.length > 0 ? categoryParts[categoryParts.length - 1] : 'Main';
       
       // Get the exported title or fallback to fileName
       const displayName = pages[path]?.title || fileName;
@@ -30,12 +34,12 @@ const IndexPage: React.FC = () => {
         category: category
       };
     })
-    .filter(page => 
-      page.name !== 'IndexPage' && 
-      page.name !== 'index' && 
-      page.category.toLowerCase() !== 'components' &&
-      !page.path.toLowerCase().includes('component')
-    );
+    .filter(page => {
+      const isSystemPage = page.name === 'IndexPage' || page.name === 'index';
+      const isComponent = page.category.toLowerCase().includes('component') || 
+                          page.path.toLowerCase().includes('component');
+      return !isSystemPage && !isComponent;
+    });
 
   // Group pages by category
   const groupedPages = allPages.reduce((acc, page) => {
