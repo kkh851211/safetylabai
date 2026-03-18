@@ -61,31 +61,34 @@ export function KioskConsentScreen() {
         </p>
       </div>
 
-      {/* Scrollable Content Area - y=500 to y=1200 */}
+      {/* Scrollable Content Area - y=500 to y=1100 */}
       <div 
         className="absolute left-[60px] overflow-y-auto bg-gray-50 rounded-lg p-8"
-        style={{ top: '500px', width: '960px', height: '700px' }}
+        style={{ top: '500px', width: '960px', height: '600px' }}
       >
         <div className="text-[20pt] leading-relaxed whitespace-pre-line text-[#111827]">
           {consentText}
         </div>
+      </div>
 
-        {/* Checkbox with Label at bottom of scrollable area */}
-        <div className="flex items-center gap-4 mt-8 pt-6 border-t-2 border-gray-300">
-          <button
-            onClick={() => setIsChecked(!isChecked)}
-            className="w-[70px] h-[70px] border-2 border-gray-400 rounded flex items-center justify-center flex-shrink-0"
-            style={{
-              backgroundColor: isChecked ? 'var(--color-primary, #6366f1)' : 'white',
-              borderColor: isChecked ? 'var(--color-primary, #6366f1)' : '#9ca3af',
-            }}
-          >
-            {isChecked && <Check className="w-12 h-12 text-white" strokeWidth={4} />}
-          </button>
-          <label className="text-[30pt] font-bold text-[#111827] cursor-pointer" onClick={() => setIsChecked(!isChecked)}>
-            생체정보(얼굴 특징점) 수집·이용에 동의합니다
-          </label>
-        </div>
+      {/* Checkbox with Label - y=1100 to y=1200 - Outside scroll area */}
+      <div 
+        className="absolute left-[60px] flex items-center gap-4 py-6 border-t-2 border-transparent w-[960px]"
+        style={{ top: '1100px', height: '100px' }}
+      >
+        <button
+          onClick={() => setIsChecked(!isChecked)}
+          className="w-[70px] h-[70px] border-2 border-gray-400 rounded flex items-center justify-center flex-shrink-0"
+          style={{
+            backgroundColor: isChecked ? 'var(--color-primary, #6366f1)' : 'white',
+            borderColor: isChecked ? 'var(--color-primary, #6366f1)' : '#9ca3af',
+          }}
+        >
+          {isChecked && <Check className="w-12 h-12 text-white" strokeWidth={4} />}
+        </button>
+        <label className="text-[30pt] font-bold text-[#111827] cursor-pointer" onClick={() => setIsChecked(!isChecked)}>
+          생체정보(얼굴 특징점) 수집·이용에 동의합니다
+        </label>
       </div>
 
       {/* Button Area - y=1200 to y=1600 */}
