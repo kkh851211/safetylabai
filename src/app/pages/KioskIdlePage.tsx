@@ -1,5 +1,5 @@
 import { KioskIdleScreen } from "./components/kiosk-idle-screen";
-export const title = "키오스크 대기 화면";
+export const title = "K-1-01 상태 1 — 영상 재생 중";
 
 export default function KioskIdlePage() {
   return (
