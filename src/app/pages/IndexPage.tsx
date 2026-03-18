@@ -1,61 +1,96 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
+interface PageItem {
+  name: string;
+  path: string;
+  fullUrl: string;
+  category: string;
+}
+
 const IndexPage: React.FC = () => {
-  // Logic to get all files in src/app/pages
-  // In a real scenario, this would be dynamic. 
-  // For now, we'll use Vite's import.meta.glob to find files in ../pages/
-  const pages = import.meta.glob('../pages/*.tsx');
+  // Scan all files in pages including subdirectories (eager to get exports like 'title')
+  const pages = import.meta.glob<{ title?: string }>('../pages/**/*.tsx', { eager: true });
   const base = import.meta.env.BASE_URL.replace(/\/$/, '');
-  const pageNames = Object.keys(pages)
+  
+  const allPages: PageItem[] = Object.keys(pages)
     .map((path) => {
-      const name = path.split('/').pop()?.replace('.tsx', '') || '';
+      const parts = path.split('/');
+      const fileName = parts.pop()?.replace('.tsx', '') || '';
+      // Category is the directory name, or 'General' if in root
+      const category = parts.length > 2 ? parts[parts.length - 1] : 'Main';
+      
+      // Get the exported title or fallback to fileName
+      const displayName = pages[path]?.title || fileName;
+      
       return {
-        name,
-        path: `/${name}`,
-        fullUrl: `${base}/${name}`.replace(/\/+/g, '/'),
+        name: displayName,
+        path: `/${fileName}`,
+        fullUrl: `${base}/${fileName}`.replace(/\/+/g, '/'),
+        category: category
       };
     })
-    .filter(page => page.name !== 'IndexPage');
+    .filter(page => page.name !== 'IndexPage' && page.name !== 'index');
+
+  // Group pages by category
+  const groupedPages = allPages.reduce((acc, page) => {
+    if (!acc[page.category]) acc[page.category] = [];
+    acc[page.category].push(page);
+    return acc;
+  }, {} as Record<string, PageItem[]>);
+
+  const categories = Object.keys(groupedPages);
 
   return (
-    <div className="p-8 max-w-7xl mx-auto">
-      <header className="mb-12 text-center">
-        <h1 className="text-4xl font-bold bg-gradient-to-r from-primary to-primary-dark bg-clip-text text-transparent mb-4">
-          Safety Lab AI Kiosk
-        </h1>
-        <p className="text-secondary-dark text-lg">Screen Navigation Index</p>
+    <div className="p-12 min-h-screen bg-[#F8FAFC]">
+      <header className="mb-16">
+        <h1 className="text-3xl font-bold text-slate-800 mb-2">Project Sitemap</h1>
+        <div className="h-1 w-20 bg-primary rounded-full" />
       </header>
 
-      {pageNames.length === 0 ? (
-        <div className="text-center py-20 glass-card">
-          <p className="text-secondary-dark mb-4">No screens found in src/app/pages/</p>
-          <p className="text-sm text-secondary">Add .tsx files to the pages directory to see them here.</p>
-        </div>
-      ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {pageNames.map((page) => (
-            <Link 
-              key={page.path} 
-              to={page.path}
-              className="glass-card p-6 group hover:translate-y-[-4px] hover:shadow-2xl transition-all border-l-4 border-l-primary"
-            >
-              <h3 className="text-xl font-bold mb-2 group-hover:text-primary transition-colors">
-                {page.name}
-              </h3>
-              <p className="text-xs font-mono text-secondary mb-4">
-                Internal: {page.path}<br/>
-                URL: {page.fullUrl}
-              </p>
-              <div className="flex justify-end">
-                <span className="text-sm font-semibold text-primary group-hover:underline">
-                  View Screen →
-                </span>
-              </div>
-            </Link>
-          ))}
-        </div>
-      )}
+      <div className="flex flex-col gap-12 relative">
+        {categories.map((category, idx) => (
+          <div key={category} className="flex items-start group">
+            {/* Category Node */}
+            <div className="flex-shrink-0 w-48 h-12 flex items-center justify-center bg-slate-800 text-white rounded-md font-bold shadow-lg z-10">
+              {category}
+            </div>
+
+            {/* Horizontal Line and Nodes */}
+            <div className="flex flex-wrap items-center gap-x-12 gap-y-6 ml-12 relative before:content-[''] before:absolute before:left-[-48px] before:top-6 before:w-12 before:h-[2px] before:bg-slate-300">
+              {groupedPages[category].map((page) => (
+                <Link
+                  key={page.path}
+                  to={page.path}
+                  className="relative flex flex-col min-w-[200px] p-4 bg-white border border-slate-200 rounded shadow-sm hover:shadow-md hover:border-primary transition-all group/node"
+                >
+                  {/* Small circle connector */}
+                  <div className="absolute left-[-25px] top-1/2 -translate-y-1/2 w-4 h-4 rounded-full bg-white border-2 border-slate-300 group-hover/node:border-primary z-10" />
+                  {/* Line to the circle */}
+                  <div className="absolute left-[-20px] top-1/2 -translate-y-1/2 w-5 h-[2px] bg-slate-300 group-hover/node:bg-primary" />
+                  
+                  <span className="text-[13px] font-bold text-slate-700 group-hover/node:text-primary mb-1">
+                    {page.name}
+                  </span>
+                  <span className="text-[11px] font-mono text-slate-400">
+                    {page.fullUrl}
+                  </span>
+                </Link>
+              ))}
+            </div>
+            
+            {/* Vertical Line for grouping (only if not last) */}
+            {idx < categories.length - 1 && (
+              <div className="absolute left-24 top-12 w-[2px] h-12 bg-slate-300 -z-0" />
+            )}
+          </div>
+        ))}
+      </div>
+
+      {/* Background Decor */}
+      <div className="fixed inset-0 pointer-events-none opacity-[0.03] overflow-hidden">
+        <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(#0066FF_1px,transparent_1px)] [background-size:40px_40px]" />
+      </div>
     </div>
   );
 };
