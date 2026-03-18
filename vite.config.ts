@@ -6,7 +6,7 @@ import path from 'path'
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react()],
-  base: './', // For GitHub Pages
+  base: '/safetylabai/', // Specific repository path for GitHub Pages
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
