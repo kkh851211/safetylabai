@@ -7,7 +7,7 @@ const pages = import.meta.glob('./pages/*.tsx');
 
 const App: React.FC = () => {
   return (
-    <BrowserRouter>
+    <BrowserRouter basename={import.meta.env.BASE_URL}>
       <div className="min-h-screen bg-[var(--background)]">
         <Routes>
           <Route path="/" element={<IndexPage />} />

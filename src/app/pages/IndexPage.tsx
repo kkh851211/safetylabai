@@ -6,13 +6,17 @@ const IndexPage: React.FC = () => {
   // In a real scenario, this would be dynamic. 
   // For now, we'll use Vite's import.meta.glob to find files in ../pages/
   const pages = import.meta.glob('../pages/*.tsx');
-  const pageNames = Object.keys(pages).map((path) => {
-    const name = path.split('/').pop()?.replace('.tsx', '') || '';
-    return {
-      name,
-      path: `/${name}`,
-    };
-  });
+  const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+  const pageNames = Object.keys(pages)
+    .map((path) => {
+      const name = path.split('/').pop()?.replace('.tsx', '') || '';
+      return {
+        name,
+        path: `/${name}`,
+        fullUrl: `${base}/${name}`.replace(/\/+/g, '/'),
+      };
+    })
+    .filter(page => page.name !== 'IndexPage');
 
   return (
     <div className="p-8 max-w-7xl mx-auto">
@@ -39,7 +43,10 @@ const IndexPage: React.FC = () => {
               <h3 className="text-xl font-bold mb-2 group-hover:text-primary transition-colors">
                 {page.name}
               </h3>
-              <p className="text-xs font-mono text-secondary mb-4">{page.path}</p>
+              <p className="text-xs font-mono text-secondary mb-4">
+                Internal: {page.path}<br/>
+                URL: {page.fullUrl}
+              </p>
               <div className="flex justify-end">
                 <span className="text-sm font-semibold text-primary group-hover:underline">
                   View Screen →
