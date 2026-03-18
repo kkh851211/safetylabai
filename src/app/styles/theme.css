@@ -1,0 +1,29 @@
+:root {
+  --primary: #0066FF;
+  --primary-dark: #0052CC;
+  --primary-light: #E6F0FF;
+  
+  --secondary: #6B7280;
+  --secondary-dark: #374151;
+  --secondary-light: #F3F4F6;
+  
+  --background: #FFFFFF;
+  --foreground: #111827;
+  
+  --card: #FFFFFF;
+  --card-foreground: #111827;
+  
+  --border: #E5E7EB;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0F172A;
+    --foreground: #F8FAFC;
+    
+    --card: #1E293B;
+    --card-foreground: #F8FAFC;
+    
+    --border: #334155;
+  }
+}
