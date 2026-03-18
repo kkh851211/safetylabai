@@ -81,51 +81,41 @@ function GreenParticles() {
 
 export function KioskIdleScreen() {
   return (
-    <div className="relative w-[1080px] h-[1920px] bg-black overflow-hidden shadow-2xl">
+    <div className="relative w-[1080px] h-[1920px] bg-white overflow-hidden shadow-2xl">
+      <GreenParticles />
+
       {/* Top Area - y=0 to y=200 */}
-      <div className="absolute top-0 left-0 w-[1080px] h-[200px]">
+      <div className="absolute top-0 left-0 w-[1080px] h-[200px] z-20">
         {/* Version Text - Bottom-Right of Top Area */}
-        <div className="absolute bottom-4 right-4 text-[14pt] text-gray-500 opacity-40">
+        <div className="absolute bottom-4 right-4 text-[14pt] text-slate-400 font-medium">
           v1.1.0
         </div>
       </div>
 
-      {/* Video Player Area - from y=200 to y=1920 (1720px tall) */}
+      {/* Middle Area - y=200 to y=1720 (Video content placeholder) */}
       <div 
-        className="absolute left-0 w-[1080px] h-[1720px]"
+        className="absolute left-0 w-[1080px] h-[1520px] flex items-center justify-center bg-slate-50 border-y border-slate-100" 
         style={{ top: '200px' }}
       >
-        {/* Video placeholder with green particle effect */}
-        <GreenParticles />
-
-        {/* Mute Icon - Top Right of Video */}
-        <div className="absolute top-4 right-4 z-10">
-          <VolumeX 
-            className="w-[40px] h-[40px]" 
-            style={{ color: 'var(--color-text-on-dark)' }}
-            strokeWidth={1.5}
-          />
+        <div className="text-slate-200 text-6xl font-bold tracking-widest uppercase">Video Content</div>
+        
+        {/* Mute Icon Overlay - Top-Right of Middle Area */}
+        <div className="absolute top-8 right-8 p-4 bg-white/80 backdrop-blur-sm rounded-full shadow-sm border border-slate-100">
+          <VolumeX className="w-10 h-10 text-slate-800" strokeWidth={1.5} />
         </div>
       </div>
 
-      {/* Semi-transparent overlay bar - y=1400 to y=1650 */}
+      {/* Semi-transparent overlay bar - y=1400 to y=1650 (within middle area) */}
       <div 
-        className="absolute left-0 w-[1080px] h-[250px] flex flex-col items-center justify-center gap-3 z-20"
-        style={{ top: '1400px', backgroundColor: 'var(--color-bg-overlay)' }}
+        className="absolute left-0 w-[1080px] h-[250px] flex flex-col items-center justify-center gap-3 z-30"
+        style={{ top: '1400px', backgroundColor: 'rgba(255, 255, 255, 0.9)', backdropFilter: 'blur(8px)' }}
       >
-        <p 
-          className="text-[28pt] text-center"
-          style={{ color: 'var(--color-text-on-dark)' }}
-        >
+        <p className="text-[28pt] text-center text-slate-800 font-bold">
           화면을 터치하면 시작됩니다
         </p>
         
         {/* Finger Tap Icon */}
-        <Hand 
-          className="w-12 h-12" 
-          style={{ color: 'var(--color-text-on-dark)' }}
-          strokeWidth={1.5}
-        />
+        <Hand className="w-12 h-12 text-slate-800" strokeWidth={1.5} />
       </div>
     </div>
   );

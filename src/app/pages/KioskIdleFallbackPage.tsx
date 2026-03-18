@@ -4,7 +4,7 @@ export const title = "K-1-01 상태 2 — 폴백 (영상 없음 / 캐시 없음)
 
 export default function KioskIdleFallbackPage() {
   return (
-    <div className="min-h-screen w-full flex items-center justify-center bg-[#0a0a0a] overflow-auto py-10">
+    <div className="min-h-screen w-full flex items-center justify-center bg-slate-100 overflow-auto py-10">
       <div className="transform origin-top scale-[0.4] sm:scale-[0.5] md:scale-[0.6] lg:scale-[0.8] xl:scale-100 transition-transform duration-300">
         <KioskIdleFallbackScreen />
       </div>
