@@ -17,8 +17,8 @@ const IndexPage: React.FC = () => {
     .map((path) => {
       const parts = path.split('/');
       const fileName = parts.pop()?.replace('.tsx', '') || '';
-      // Category is the directory name, or 'General' if in root
-      const category = parts.length > 2 ? parts[parts.length - 1] : 'Main';
+      // Category is the last directory name before the file, excluding '.' and '..'
+      const category = parts.filter(p => p !== '.' && p !== '..').pop() || 'Main';
       
       // Get the exported title or fallback to fileName
       const displayName = pages[path]?.title || fileName;
@@ -30,7 +30,12 @@ const IndexPage: React.FC = () => {
         category: category
       };
     })
-    .filter(page => page.name !== 'IndexPage' && page.name !== 'index');
+    .filter(page => 
+      page.name !== 'IndexPage' && 
+      page.name !== 'index' && 
+      page.category.toLowerCase() !== 'components' &&
+      !page.path.toLowerCase().includes('component')
+    );
 
   // Group pages by category
   const groupedPages = allPages.reduce((acc, page) => {
@@ -44,7 +49,7 @@ const IndexPage: React.FC = () => {
   return (
     <div className="p-12 min-h-screen bg-[#F8FAFC]">
       <header className="mb-16">
-        <h1 className="text-3xl font-bold text-slate-800 mb-2">Project Sitemap</h1>
+        <h1 className="text-3xl font-bold text-slate-800 mb-2">세이프티랩 키오스크 프로젝트 사이트맵</h1>
         <div className="h-1 w-20 bg-primary rounded-full" />
       </header>
 
@@ -62,6 +67,8 @@ const IndexPage: React.FC = () => {
                 <Link
                   key={page.path}
                   to={page.path}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="relative flex flex-col min-w-[200px] p-4 bg-white border border-slate-200 rounded shadow-sm hover:shadow-md hover:border-primary transition-all group/node"
                 >
                   {/* Small circle connector */}
