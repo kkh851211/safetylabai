@@ -70,8 +70,11 @@ export function KioskFaceRecognitionFailureScreen() {
       >
         {/* 이름 직접 입력 Button */}
         <button
-          className="w-[880px] h-[160px] text-[36pt] font-bold rounded-3xl transition-all active:scale-95 shadow-xl shadow-blue-900/10 flex items-center justify-center"
+          className="font-bold rounded-3xl transition-all active:scale-95 shadow-xl shadow-blue-900/10 flex items-center justify-center"
           style={{
+            width: '880px',
+            height: '160px',
+            fontSize: '48px',
             backgroundColor: "var(--color-action-primary)",
             color: "white",
           }}
@@ -81,8 +84,11 @@ export function KioskFaceRecognitionFailureScreen() {
 
         {/* 처음으로 Button */}
         <button
-          className="w-[880px] h-[160px] text-[36pt] font-bold rounded-3xl transition-all active:scale-95 shadow-lg flex items-center justify-center"
+          className="font-bold rounded-3xl transition-all active:scale-95 shadow-lg flex items-center justify-center"
           style={{
+            width: '880px',
+            height: '160px',
+            fontSize: '48px',
             backgroundColor: "var(--color-action-secondary)",
             color: "#4B5563",
           }}
@@ -93,7 +99,8 @@ export function KioskFaceRecognitionFailureScreen() {
 
       {/* Bottom Info Area */}
       <div
-        className="absolute bottom-[80px] left-0 w-[1080px] flex items-center justify-center"
+        className="absolute left-0 w-[1080px] flex items-center justify-center"
+        style={{ top: "1780px" }}
       >
         <p className="text-[20pt] text-gray-400">
           인식 실패가 반복되면 담당자에게 문의해 주세요

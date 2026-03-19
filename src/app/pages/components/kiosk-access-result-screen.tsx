@@ -36,8 +36,10 @@ export function KioskAccessResultScreen() {
         <div className="relative">
           <div className="absolute inset-0 bg-white/20 rounded-full scale-150 blur-2xl animate-pulse"></div>
           <CircleCheckBig
-            className="w-[280px] h-[280px] relative z-10"
+            className="relative z-10"
             style={{
+              width: '280px',
+              height: '280px',
               color: "var(--color-status-allow-text)",
               strokeWidth: 1.5,
             }}

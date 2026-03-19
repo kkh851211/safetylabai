@@ -36,8 +36,10 @@ export function KioskAccessDenyScreen() {
         <div className="relative">
           <div className="absolute inset-0 bg-red-500/10 rounded-full scale-150 blur-2xl animate-pulse"></div>
           <CircleX
-            className="w-[280px] h-[280px] relative z-10"
+            className="relative z-10"
             style={{
+              width: '280px',
+              height: '280px',
               color: "var(--color-status-deny-text)",
               strokeWidth: 1.5,
             }}
