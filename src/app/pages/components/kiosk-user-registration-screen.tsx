@@ -4,11 +4,13 @@ import { ArrowLeft, Camera, CheckCircle } from "lucide-react";
 interface KioskUserRegistrationScreenProps {
   photoTaken?: boolean;
   captureError?: boolean;
+  showSuccess?: boolean;
 }
 
 export function KioskUserRegistrationScreen({ 
   photoTaken: initialPhotoTaken = false,
-  captureError = false
+  captureError = false,
+  showSuccess = false
 }: KioskUserRegistrationScreenProps) {
   const [name, setName] = useState(initialPhotoTaken ? "홍길동" : "");
   const [photoTaken, setPhotoTaken] = useState(initialPhotoTaken);
@@ -311,6 +313,58 @@ export function KioskUserRegistrationScreen({
           저장하기
         </button>
       </div>
+
+      {/* Success Modal Overlay */}
+      {showSuccess && (
+        <div
+          className="absolute inset-0 flex items-center justify-center"
+          style={{
+            backgroundColor: "rgba(0, 0, 0, 0.6)",
+            zIndex: 50,
+            display: 'flex'
+          }}
+        >
+          {/* Modal Card */}
+          <div
+            className="bg-white flex flex-col items-center justify-center gap-6 shadow-2xl"
+            style={{
+              width: "700px",
+              height: "320px",
+              borderRadius: "48px",
+              display: 'flex',
+              flexDirection: 'column'
+            }}
+          >
+            {/* Green Checkmark Icon */}
+            <div 
+              className="flex items-center justify-center"
+              style={{
+                width: '120px',
+                height: '120px',
+                borderRadius: '50%',
+                backgroundColor: 'rgba(21, 128, 61, 0.1)'
+              }}
+            >
+              <CheckCircle
+                style={{
+                  width: "80px",
+                  height: "80px",
+                  color: "var(--color-status-allow-text)",
+                  fill: "rgba(21, 128, 61, 0.2)",
+                }}
+              />
+            </div>
+
+            {/* Success Message */}
+            <p 
+              className="font-black tracking-tight"
+              style={{ fontSize: '36px', color: '#111827' }}
+            >
+              사용자가 등록되었습니다
+            </p>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
