@@ -88,8 +88,11 @@ const IndexPage: React.FC = () => {
     if (!acc[superCat][cat]) acc[superCat][cat] = {};
     
     const code = page.code || page.name;
-    if (!acc[superCat][cat][code]) acc[superCat][cat][code] = [];
-    acc[superCat][cat][code].push(page);
+    // Group by base code (prefix before the last sub-index hyphen, e.g., K-2-02-1 -> K-2-02)
+    const groupCode = code.match(/^(K-\d+-\d+)(-\d+)?$/) ? code.match(/^(K-\d+-\d+)/)?.[1] || code : code;
+    
+    if (!acc[superCat][cat][groupCode]) acc[superCat][cat][groupCode] = [];
+    acc[superCat][cat][groupCode].push(page);
     return acc;
   }, {} as Record<string, Record<string, Record<string, PageItem[]>>>);
 
@@ -138,7 +141,12 @@ const IndexPage: React.FC = () => {
                             className={`sitemap-node ${page.type} ${isGroup ? 'state-node' : ''}`}
                           >
                             <div className="node-header">
-                              {page.code && <span className="node-code">{page.code}{isGroup && `-${idx+1}`}</span>}
+                            {page.code && (
+                              <span className="node-code">
+                                {page.code}
+                                {isGroup && !page.code.match(/-\d+$/) && `-${idx+1}`}
+                              </span>
+                            )}
                               <span className="node-title">{page.name}</span>
                             </div>
                             <div className="node-path">{page.path}.tsx</div>
