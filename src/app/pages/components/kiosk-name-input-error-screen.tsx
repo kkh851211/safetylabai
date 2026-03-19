@@ -160,21 +160,30 @@ export function KioskNameInputErrorScreen() {
         </div>
       </div>
 
-      {/* Bottom Buttons */}
-      <div
-        className="absolute bottom-[80px] left-0 w-[1080px] flex items-center justify-center px-[60px]"
+      {/* Bottom Action Area */}
+      <div 
+        className="absolute left-0 bg-white border-t border-gray-100 flex items-center justify-center px-[60px] z-20"
+        style={{ top: "1520px", width: '1080px', height: '400px' }}
       >
-        <div className="flex gap-[30px] w-full">
+        <div className="flex gap-[40px] items-center">
           <button
-            className="flex-1 h-[140px] text-[32pt] font-bold text-gray-600 bg-gray-200/80 rounded-2xl transition-all active:scale-95"
+            className="flex-shrink-0 font-bold rounded-2xl transition-all active:scale-95 shadow-lg flex items-center justify-center bg-gray-200 text-gray-600"
+            style={{
+              width: '460px',
+              height: '160px',
+              fontSize: '52px',
+            }}
           >
             취소
           </button>
           <button
             disabled={nameInput.trim() === ""}
-            className="flex-1 h-[140px] text-[32pt] font-bold text-white rounded-2xl transition-all active:scale-95 disabled:opacity-40 disabled:scale-100"
+            className="flex-shrink-0 font-bold rounded-2xl transition-all active:scale-95 shadow-lg flex items-center justify-center text-white disabled:opacity-40 disabled:scale-100"
             style={{
-              backgroundColor: "#0066FF", // Vibrant primary color
+              width: '460px',
+              height: '160px',
+              fontSize: '52px',
+              backgroundColor: "#0066FF",
             }}
           >
             확인
