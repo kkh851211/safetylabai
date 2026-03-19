@@ -1,7 +1,11 @@
-import { ChevronDown, ChevronLeft, ChevronRight, Search } from "lucide-react";
+import { ChevronDown, ChevronLeft, ChevronRight, Search, FileX } from "lucide-react";
 
-export function AdminAccessHistoryScreen() {
-  const historyData = Array.from({ length: 50 }, (_, i) => {
+interface AdminAccessHistoryScreenProps {
+  isEmpty?: boolean;
+}
+
+export function AdminAccessHistoryScreen({ isEmpty = false }: AdminAccessHistoryScreenProps) {
+  const historyData = isEmpty ? [] : Array.from({ length: 50 }, (_, i) => {
     const results = ["allow", "allow", "allow", "deny", "allow"];
     const names = ["김민준", "이서연", "박지호", "최수진", "정우영", "강예은", "윤도현", "임하늘"];
     const kiosks = ["KSK-001", "KSK-002", "KSK-003", "KSK-004"];
@@ -139,13 +143,13 @@ export function AdminAccessHistoryScreen() {
               >
                 <input
                   type="date"
-                  defaultValue="2026-03-19"
+                  defaultValue={isEmpty ? "2026-03-01" : "2026-03-19"}
                   style={{ border: 'none', outline: 'none', fontSize: '14px', fontWeight: 500, color: '#111827', backgroundColor: 'transparent' }}
                 />
                 <span style={{ color: '#9CA3AF' }}>~</span>
                 <input
                   type="date"
-                  defaultValue="2026-03-19"
+                  defaultValue={isEmpty ? "2026-03-10" : "2026-03-19"}
                   style={{ border: 'none', outline: 'none', fontSize: '14px', fontWeight: 500, color: '#111827', backgroundColor: 'transparent' }}
                 />
               </div>
@@ -245,70 +249,96 @@ export function AdminAccessHistoryScreen() {
             className="bg-white rounded-2xl border flex-1 flex flex-col shadow-sm overflow-hidden"
             style={{ borderColor: "#E5E7EB" }}
           >
-            {/* Scrollable Table Area */}
-            <div className="flex-1 overflow-y-auto" style={{ flex: 1, overflowY: 'auto' }}>
-              <table style={{ width: "100%", borderCollapse: 'collapse' }}>
-                <thead className="sticky top-0 z-10">
-                  <tr style={{ backgroundColor: "#F9FAFB", borderBottom: "1px solid #E5E7EB" }}>
-                    {["출입 시각", "사용자 이름", "결과", "키오스크 ID", "지점명"].map((head) => (
-                      <th 
-                        key={head}
-                        style={{ 
-                          textAlign: 'left', 
-                          padding: '16px 24px', 
-                          fontSize: '13px', 
-                          fontWeight: 700,
-                          color: '#4B5563',
-                          textTransform: 'uppercase',
-                          letterSpacing: '0.05em'
-                        }}
-                      >
-                        {head}
-                      </th>
-                    ))}
-                  </tr>
-                </thead>
-                <tbody>
-                  {historyData.map((row, index) => (
-                    <tr 
-                      key={index} 
-                      className="hover:bg-gray-50/50 transition-colors"
-                      style={{ borderBottom: index === historyData.length - 1 ? 'none' : '1px solid #F3F4F6' }}
-                    >
-                      <td style={{ padding: '16px 24px', fontSize: '14px', color: '#6B7280', fontWeight: 500 }}>
-                        {row.time}
-                      </td>
-                      <td style={{ padding: '16px 24px', fontSize: '15px', color: '#111827', fontWeight: 700 }}>
-                        {row.name}
-                      </td>
-                      <td style={{ padding: '16px 24px' }}>
-                        <span
-                          style={{
-                            display: 'inline-flex',
-                            alignItems: 'center',
-                            height: '28px',
-                            padding: '0 12px',
-                            borderRadius: '14px',
-                            fontSize: '12px',
+            {isEmpty ? (
+              /* Empty State UI */
+              <div 
+                className="flex-1 flex flex-col items-center justify-center p-20"
+                style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}
+              >
+                <div 
+                  className="mb-6 flex items-center justify-center rounded-3xl"
+                  style={{ 
+                    width: '100px', 
+                    height: '100px', 
+                    backgroundColor: '#F3F4F6',
+                    color: '#9CA3AF'
+                  }}
+                >
+                  <FileX style={{ width: '48px', height: '48px' }} />
+                </div>
+                <p style={{ fontSize: '20px', fontWeight: 700, color: '#111827', marginBottom: '8px' }}>
+                  조회된 출입 이력이 없습니다
+                </p>
+                <p style={{ fontSize: '15px', fontWeight: 500, color: '#6B7280' }}>
+                  조건을 변경하여 다시 조회해 주세요
+                </p>
+              </div>
+            ) : (
+              /* Scrollable Table Area */
+              <div className="flex-1 overflow-y-auto" style={{ flex: 1, overflowY: 'auto' }}>
+                <table style={{ width: "100%", borderCollapse: 'collapse' }}>
+                  <thead className="sticky top-0 z-10">
+                    <tr style={{ backgroundColor: "#F9FAFB", borderBottom: "1px solid #E5E7EB" }}>
+                      {["출입 시각", "사용자 이름", "결과", "키오스크 ID", "지점명"].map((head) => (
+                        <th 
+                          key={head}
+                          style={{ 
+                            textAlign: 'left', 
+                            padding: '16px 24px', 
+                            fontSize: '13px', 
                             fontWeight: 700,
-                            backgroundColor: row.result === "allow" ? "var(--color-bg-result-allow)" : "var(--color-bg-result-deny)",
-                            color: row.result === "allow" ? "var(--color-status-allow-text)" : "var(--color-status-deny-text)",
+                            color: '#4B5563',
+                            textTransform: 'uppercase',
+                            letterSpacing: '0.05em'
                           }}
                         >
-                          {row.result === "allow" ? "허용" : "차단"}
-                        </span>
-                      </td>
-                      <td style={{ padding: '16px 24px', fontSize: '14px', color: '#4B5563', fontWeight: 600 }}>
-                        {row.kioskId}
-                      </td>
-                      <td style={{ padding: '16px 24px', fontSize: '14px', color: '#4B5563', fontWeight: 600 }}>
-                        {row.branch}
-                      </td>
+                          {head}
+                        </th>
+                      ))}
                     </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+                  </thead>
+                  <tbody>
+                    {historyData.map((row, index) => (
+                      <tr 
+                        key={index} 
+                        className="hover:bg-gray-50/50 transition-colors"
+                        style={{ borderBottom: index === historyData.length - 1 ? 'none' : '1px solid #F3F4F6' }}
+                      >
+                        <td style={{ padding: '16px 24px', fontSize: '14px', color: '#6B7280', fontWeight: 500 }}>
+                          {row.time}
+                        </td>
+                        <td style={{ padding: '16px 24px', fontSize: '15px', color: '#111827', fontWeight: 700 }}>
+                          {row.name}
+                        </td>
+                        <td style={{ padding: '16px 24px' }}>
+                          <span
+                            style={{
+                              display: 'inline-flex',
+                              alignItems: 'center',
+                              height: '28px',
+                              padding: '0 12px',
+                              borderRadius: '14px',
+                              fontSize: '12px',
+                              fontWeight: 700,
+                              backgroundColor: row.result === "allow" ? "var(--color-bg-result-allow)" : "var(--color-bg-result-deny)",
+                              color: row.result === "allow" ? "var(--color-status-allow-text)" : "var(--color-status-deny-text)",
+                            }}
+                          >
+                            {row.result === "allow" ? "허용" : "차단"}
+                          </span>
+                        </td>
+                        <td style={{ padding: '16px 24px', fontSize: '14px', color: '#4B5563', fontWeight: 600 }}>
+                          {row.kioskId}
+                        </td>
+                        <td style={{ padding: '16px 24px', fontSize: '14px', color: '#4B5563', fontWeight: 600 }}>
+                          {row.branch}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
 
             {/* Pagination and Export Footer */}
             <div 
@@ -316,7 +346,14 @@ export function AdminAccessHistoryScreen() {
               style={{ height: '80px', borderColor: '#E5E7EB', backgroundColor: '#F9FAFB' }}
             >
               {/* Pagination Controls */}
-              <div className="flex items-center gap-2" style={{ display: 'flex', gap: '8px' }}>
+              <div 
+                className="flex items-center gap-2" 
+                style={{ 
+                  display: 'flex', 
+                  gap: '8px',
+                  visibility: isEmpty ? 'hidden' : 'visible'
+                }}
+              >
                 <button 
                   className="flex items-center justify-center border bg-white rounded-lg hover:bg-gray-50 transition-colors"
                   style={{ width: '40px', height: '40px', borderColor: '#E5E7EB' }}
@@ -349,14 +386,17 @@ export function AdminAccessHistoryScreen() {
 
               {/* CSV Export */}
               <button
-                className="font-bold border rounded-xl hover:bg-white transition-all active:scale-95"
+                disabled={isEmpty}
+                className="font-bold border rounded-xl transition-all active:scale-95"
                 style={{ 
                   height: '44px',
                   padding: '0 20px',
-                  backgroundColor: "white",
+                  backgroundColor: isEmpty ? "#F3F4F6" : "white",
                   borderColor: '#E5E7EB',
-                  color: "#374151",
-                  fontSize: '14px'
+                  color: isEmpty ? "#9CA3AF" : "#374151",
+                  fontSize: '14px',
+                  cursor: isEmpty ? 'not-allowed' : 'pointer',
+                  opacity: isEmpty ? 0.6 : 1
                 }}
               >
                 CSV 내보내기
