@@ -1,6 +1,10 @@
 import { ArrowLeft } from "lucide-react";
 
-export function KioskDeviceInfoScreen() {
+interface KioskDeviceInfoScreenProps {
+  isOnline?: boolean;
+}
+
+export function KioskDeviceInfoScreen({ isOnline = true }: KioskDeviceInfoScreenProps) {
   const handleClose = () => {
     console.log("Close clicked");
   };
@@ -8,7 +12,7 @@ export function KioskDeviceInfoScreen() {
   const infoRows = [
     { label: "소프트웨어 버전", value: "v1.0.2" },
     { label: "기기 ID", value: "KSK-001" },
-    { label: "네트워크 상태", value: "온라인", showDot: true },
+    { label: "네트워크 상태", value: isOnline ? "온라인" : "오프라인", showDot: true },
     { label: "최근 동기화", value: "2026-03-19 09:31" },
   ];
 
@@ -91,9 +95,11 @@ export function KioskDeviceInfoScreen() {
                       style={{
                         width: "20px",
                         height: "20px",
-                        backgroundColor: "#16A34A",
+                        backgroundColor: isOnline ? "#16A34A" : "#DC2626",
                         borderRadius: "50%",
-                        boxShadow: '0 0 12px rgba(22, 163, 74, 0.4)'
+                        boxShadow: isOnline 
+                          ? '0 0 12px rgba(22, 163, 74, 0.4)'
+                          : '0 0 12px rgba(220, 38, 38, 0.4)'
                       }}
                     />
                   )}

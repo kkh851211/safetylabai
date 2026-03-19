@@ -1,12 +1,12 @@
 import { KioskDeviceInfoScreen } from "../components/kiosk-device-info-screen";
 import { KioskPageLayout } from "../components/KioskPageLayout";
 
-export const title = "K-4-03-1 기기 정보 - 온라인";
+export const title = "K-4-03-2 기기 정보 - 오프라인";
 
-export default function KioskDeviceInfoPage() {
+export default function KioskDeviceInfoOfflinePage() {
   return (
     <KioskPageLayout>
-      <KioskDeviceInfoScreen />
+      <KioskDeviceInfoScreen isOnline={false} />
     </KioskPageLayout>
   );
 }
