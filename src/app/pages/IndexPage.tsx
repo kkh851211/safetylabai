@@ -1,15 +1,18 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import '../styles/sitemap.css';
 
 interface PageItem {
   name: string;
   path: string;
   fullUrl: string;
   category: string;
+  code: string;
+  type: 'primary' | 'secondary' | 'caution';
 }
 
 const IndexPage: React.FC = () => {
-  // Scan all files in pages including subdirectories (eager to get exports like 'title')
+  // Scan all files in pages including subdirectories
   const pages = import.meta.glob<{ title?: string }>('../pages/**/*.tsx', { eager: true });
   const base = import.meta.env.BASE_URL.replace(/\/$/, '');
   
@@ -18,91 +21,110 @@ const IndexPage: React.FC = () => {
       const parts = path.split('/');
       const fileName = parts.pop()?.replace('.tsx', '') || '';
       
-      // Get category: look for the directory containing the file
-      // Paths from glob look like "../pages/components/file.tsx"
-      // After pop(), parts is ["..", "pages", "components"]
       const categoryParts = parts.filter(p => p !== '.' && p !== '..' && p !== 'pages');
       const category = categoryParts.length > 0 ? categoryParts[categoryParts.length - 1] : 'Main';
       
-      // Get the exported title or fallback to fileName
-      const pageTitle = pages[path]?.title || fileName; // Renamed to pageTitle to avoid conflict with property name
+      const fullTitle = pages[path]?.title || fileName;
+      
+      // Extract code and clean name (e.g., "K-1-02 개인정보 동의" -> "K-1-02", "개인정보 동의")
+      const codeMatch = fullTitle.match(/^([A-Z0-9-]+)\s+(.*)$/);
+      const code = codeMatch ? codeMatch[1] : '';
+      const name = codeMatch ? codeMatch[2] : fullTitle;
+
+      // Assign type based on category or code for styling variety
+      let type: 'primary' | 'secondary' | 'caution' = 'secondary';
+      if (category.toLowerCase() === 'kiosk' || code.startsWith('K')) type = 'primary';
+      if (fileName.toLowerCase().includes('notice') || fileName.toLowerCase().includes('error')) type = 'caution';
       
       return {
-        name: pageTitle, // Use pageTitle for name
+        name,
+        code,
         path: `/${fileName}`,
         fullUrl: `${base}/${fileName}`.replace(/\/+/g, '/'),
         category: category,
-        title: pageTitle // Add title property
+        type
       };
     })
     .filter(page => {
-      const isSystemPage = page.name === 'IndexPage' || page.name === 'index';
+      const isSystemPage = page.name === 'IndexPage' || page.name === 'index' || page.path === '/IndexPage';
       const isComponent = page.category.toLowerCase().includes('component') || 
                           page.path.toLowerCase().includes('component');
       return !isSystemPage && !isComponent;
     })
-    .sort((a, b) => a.title.localeCompare(b.title, undefined, { numeric: true, sensitivity: 'base' }));
+    .sort((a, b) => {
+      if (a.code && b.code) return a.code.localeCompare(b.code, undefined, { numeric: true });
+      return a.name.localeCompare(b.name);
+    });
 
-  // Group pages by category
-  const groupedPages = allPages.reduce((acc, page) => {
-    if (!acc[page.category]) acc[page.category] = [];
-    acc[page.category].push(page);
+  // Group pages by category AND then by code
+  const groupedByCategory = allPages.reduce((acc, page) => {
+    const cat = page.category === 'Main' ? '기본 페이지' : page.category;
+    if (!acc[cat]) acc[cat] = {};
+    
+    const code = page.code || page.name;
+    if (!acc[cat][code]) acc[cat][code] = [];
+    acc[cat][code].push(page);
     return acc;
-  }, {} as Record<string, PageItem[]>);
+  }, {} as Record<string, Record<string, PageItem[]>>);
 
-  const categories = Object.keys(groupedPages);
+  const categories = Object.keys(groupedByCategory);
 
   return (
-    <div className="p-12 min-h-screen bg-[#F8FAFC]">
-      <header className="mb-16">
-        <h1 className="text-3xl font-bold text-slate-800 mb-2">세이프티랩 키오스크 프로젝트 사이트맵</h1>
-        <div className="h-1 w-20 bg-primary rounded-full" />
+    <div className="sitemap-container">
+      <header className="sitemap-header">
+        <h1 className="sitemap-title">세이프티랩 키오스크 프로젝트 사이트맵</h1>
+        <p className="text-slate-500 mt-2 font-medium">SafetyLab Kiosk System Architecture & Sitemap</p>
       </header>
 
-      <div className="flex flex-col gap-12 relative">
-        {categories.map((category, idx) => (
-          <div key={category} className="flex items-start group">
-            {/* Category Node */}
-            <div className="flex-shrink-0 w-48 h-12 flex items-center justify-center bg-slate-800 text-white rounded-md font-bold shadow-lg z-10">
-              {category}
+      <div className="sitemap-grid">
+        {categories.map((category) => (
+          <div key={category} className="sitemap-row">
+            {/* Category Header */}
+            <div className="sitemap-category">
+              {category.toUpperCase()}
             </div>
 
-            {/* Horizontal Line and Nodes */}
-            <div className="flex flex-wrap items-center gap-x-12 gap-y-6 ml-12 relative before:content-[''] before:absolute before:left-[-48px] before:top-6 before:w-12 before:h-[2px] before:bg-slate-300">
-              {groupedPages[category].map((page) => (
-                <Link
-                  key={page.path}
-                  to={page.path}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="relative flex flex-col min-w-[200px] p-4 bg-white border border-slate-200 rounded shadow-sm hover:shadow-md hover:border-primary transition-all group/node"
-                >
-                  {/* Small circle connector */}
-                  <div className="absolute left-[-25px] top-1/2 -translate-y-1/2 w-4 h-4 rounded-full bg-white border-2 border-slate-300 group-hover/node:border-primary z-10" />
-                  {/* Line to the circle */}
-                  <div className="absolute left-[-20px] top-1/2 -translate-y-1/2 w-5 h-[2px] bg-slate-300 group-hover/node:bg-primary" />
-                  
-                  <span className="text-[13px] font-bold text-slate-700 group-hover/node:text-primary mb-1">
-                    {page.name}
-                  </span>
-                  <span className="text-[11px] font-mono text-slate-400">
-                    {page.fullUrl}
-                  </span>
-                </Link>
-              ))}
+            {/* Page Nodes Tree */}
+            <div className="sitemap-tree">
+              {Object.keys(groupedByCategory[category]).map((code) => {
+                const group = groupedByCategory[category][code];
+                const isGroup = group.length > 1;
+
+                return (
+                  <div key={code} className={`sitemap-group ${isGroup ? 'multi-state' : ''}`}>
+                    {group.map((page, idx) => (
+                      <Link
+                        key={page.path}
+                        to={page.path}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className={`sitemap-node ${page.type} ${isGroup ? 'state-node' : ''}`}
+                      >
+                        <div className="node-header">
+                          {page.code && <span className="node-code">{page.code}{isGroup && `-${idx+1}`}</span>}
+                          <span className="node-title">{page.name}</span>
+                        </div>
+                        <div className="node-path">{page.path}.tsx</div>
+                        {isGroup && idx < group.length - 1 && <div className="state-connector" />}
+                      </Link>
+                    ))}
+                  </div>
+                );
+              })}
             </div>
-            
-            {/* Vertical Line for grouping (only if not last) */}
-            {idx < categories.length - 1 && (
-              <div className="absolute left-24 top-12 w-[2px] h-12 bg-slate-300 -z-0" />
-            )}
           </div>
         ))}
       </div>
 
-      {/* Background Decor */}
-      <div className="fixed inset-0 pointer-events-none opacity-[0.03] overflow-hidden">
-        <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(#0066FF_1px,transparent_1px)] [background-size:40px_40px]" />
+      {/* Decorative dots background */}
+      <div className="fixed inset-0 pointer-events-none opacity-[0.05] -z-10">
+        <div 
+          className="absolute inset-0" 
+          style={{ 
+            backgroundImage: 'radial-gradient(#1E293B 1px, transparent 1px)', 
+            backgroundSize: '32px 32px' 
+          }} 
+        />
       </div>
     </div>
   );
