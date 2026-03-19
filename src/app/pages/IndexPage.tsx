@@ -74,7 +74,7 @@ const IndexPage: React.FC = () => {
   // Define super-categories grouping
   const superCategoryMap: Record<string, string[]> = {
     '키오스크 화면': ['K-1', 'K-2', 'K-3', 'K-4'],
-    '관리자 화면': ['ADMIN'],
+    '관리자': ['ADMIN', 'A-1', 'A-2'],
     '기타 페이지': ['기본 페이지']
   };
 
