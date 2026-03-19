@@ -22,7 +22,7 @@ const IndexPage: React.FC = () => {
       const fileName = parts.pop()?.replace('.tsx', '') || '';
       
       const categoryParts = parts.filter(p => p !== '.' && p !== '..' && p !== 'pages');
-      const category = categoryParts.length > 0 ? categoryParts[categoryParts.length - 1] : 'Main';
+      let category = categoryParts.length > 0 ? categoryParts[categoryParts.length - 1] : 'Main';
       
       const fullTitle = pages[path]?.title || fileName;
       
@@ -31,9 +31,18 @@ const IndexPage: React.FC = () => {
       const code = codeMatch ? codeMatch[1] : '';
       const name = codeMatch ? codeMatch[2] : fullTitle;
 
+      // Special categorization for K-1 and K-2
+      if (code.startsWith('K-1-')) {
+        category = 'K-1';
+      } else if (code.startsWith('K-2-')) {
+        category = 'K-2';
+      } else if (category.toLowerCase() === 'kiosk') {
+        category = 'K-1';
+      }
+
       // Assign type based on category or code for styling variety
       let type: 'primary' | 'secondary' | 'caution' = 'secondary';
-      if (category.toLowerCase() === 'kiosk' || code.startsWith('K')) type = 'primary';
+      if (category.startsWith('K-') || category.toLowerCase() === 'kiosk' || code.startsWith('K')) type = 'primary';
       if (fileName.toLowerCase().includes('notice') || fileName.toLowerCase().includes('error')) type = 'caution';
       
       return {
@@ -41,7 +50,7 @@ const IndexPage: React.FC = () => {
         code,
         path: `/${fileName}`,
         fullUrl: `${base}/${fileName}`.replace(/\/+/g, '/'),
-        category: category,
+        category: category.toUpperCase() === 'MAIN' ? '기본 페이지' : category,
         type
       };
     })
@@ -56,18 +65,39 @@ const IndexPage: React.FC = () => {
       return a.name.localeCompare(b.name);
     });
 
-  // Group pages by category AND then by code
-  const groupedByCategory = allPages.reduce((acc, page) => {
-    const cat = page.category === 'Main' ? '기본 페이지' : page.category;
-    if (!acc[cat]) acc[cat] = {};
+  // Define super-categories grouping
+  const superCategoryMap: Record<string, string[]> = {
+    '키오스크 화면': ['K-1', 'K-2'],
+    '기타 페이지': ['기본 페이지']
+  };
+
+  // Helper to get super-category for a given category
+  const getSuperCategory = (cat: string) => {
+    for (const [superCat, cats] of Object.entries(superCategoryMap)) {
+      if (cats.includes(cat)) return superCat;
+    }
+    return '기타';
+  };
+
+  // Group pages by super-category, then category, then code
+  const groupedStructure = allPages.reduce((acc, page) => {
+    const superCat = getSuperCategory(page.category);
+    if (!acc[superCat]) acc[superCat] = {};
+    
+    const cat = page.category;
+    if (!acc[superCat][cat]) acc[superCat][cat] = {};
     
     const code = page.code || page.name;
-    if (!acc[cat][code]) acc[cat][code] = [];
-    acc[cat][code].push(page);
+    if (!acc[superCat][cat][code]) acc[superCat][cat][code] = [];
+    acc[superCat][cat][code].push(page);
     return acc;
-  }, {} as Record<string, Record<string, PageItem[]>>);
+  }, {} as Record<string, Record<string, Record<string, PageItem[]>>>);
 
-  const categories = Object.keys(groupedByCategory);
+  const superCategories = Object.keys(groupedStructure).sort((a, b) => {
+    if (a === '키오스크 화면') return -1;
+    if (b === '키오스크 화면') return 1;
+    return a.localeCompare(b);
+  });
 
   return (
     <div className="sitemap-container">
@@ -77,41 +107,50 @@ const IndexPage: React.FC = () => {
       </header>
 
       <div className="sitemap-grid">
-        {categories.map((category) => (
-          <div key={category} className="sitemap-row">
-            {/* Category Header */}
-            <div className="sitemap-category">
-              {category.toUpperCase()}
+        {superCategories.map((superCat) => (
+          <div key={superCat} className="super-category-section">
+            <div className="super-category-header">
+              <span className="super-category-tag">Group</span>
+              <h2 className="super-category-title">{superCat}</h2>
             </div>
+            
+            {Object.keys(groupedStructure[superCat]).map((category) => (
+              <div key={category} className="sitemap-row">
+                {/* Category Header */}
+                <div className="sitemap-category">
+                  {category.toUpperCase()}
+                </div>
 
-            {/* Page Nodes Tree */}
-            <div className="sitemap-tree">
-              {Object.keys(groupedByCategory[category]).map((code) => {
-                const group = groupedByCategory[category][code];
-                const isGroup = group.length > 1;
+                {/* Page Nodes Tree */}
+                <div className="sitemap-tree">
+                  {Object.keys(groupedStructure[superCat][category]).map((code) => {
+                    const group = groupedStructure[superCat][category][code];
+                    const isGroup = group.length > 1;
 
-                return (
-                  <div key={code} className={`sitemap-group ${isGroup ? 'multi-state' : ''}`}>
-                    {group.map((page, idx) => (
-                      <Link
-                        key={page.path}
-                        to={page.path}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className={`sitemap-node ${page.type} ${isGroup ? 'state-node' : ''}`}
-                      >
-                        <div className="node-header">
-                          {page.code && <span className="node-code">{page.code}{isGroup && `-${idx+1}`}</span>}
-                          <span className="node-title">{page.name}</span>
-                        </div>
-                        <div className="node-path">{page.path}.tsx</div>
-                        {isGroup && idx < group.length - 1 && <div className="state-connector" />}
-                      </Link>
-                    ))}
-                  </div>
-                );
-              })}
-            </div>
+                    return (
+                      <div key={code} className={`sitemap-group ${isGroup ? 'multi-state' : ''}`}>
+                        {group.map((page, idx) => (
+                          <Link
+                            key={page.path}
+                            to={page.path}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className={`sitemap-node ${page.type} ${isGroup ? 'state-node' : ''}`}
+                          >
+                            <div className="node-header">
+                              {page.code && <span className="node-code">{page.code}{isGroup && `-${idx+1}`}</span>}
+                              <span className="node-title">{page.name}</span>
+                            </div>
+                            <div className="node-path">{page.path}.tsx</div>
+                            {isGroup && idx < group.length - 1 && <div className="state-connector" />}
+                          </Link>
+                        ))}
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            ))}
           </div>
         ))}
       </div>
