@@ -38,6 +38,8 @@ const IndexPage: React.FC = () => {
         category = 'K-2';
       } else if (code.startsWith('K-3-')) {
         category = 'K-3';
+      } else if (code.startsWith('K-4-')) {
+        category = 'K-4';
       } else if (category.toLowerCase() === 'kiosk') {
         category = 'K-1';
       }
@@ -69,7 +71,7 @@ const IndexPage: React.FC = () => {
 
   // Define super-categories grouping
   const superCategoryMap: Record<string, string[]> = {
-    '키오스크 화면': ['K-1', 'K-2', 'K-3'],
+    '키오스크 화면': ['K-1', 'K-2', 'K-3', 'K-4'],
     '기타 페이지': ['기본 페이지']
   };
 
