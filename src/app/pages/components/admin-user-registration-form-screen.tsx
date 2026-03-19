@@ -2,9 +2,13 @@ import { ArrowLeft, Camera, Check } from "lucide-react";
 
 interface AdminUserRegistrationFormScreenProps {
   hasFaceImage?: boolean;
+  isEditMode?: boolean;
 }
 
-export function AdminUserRegistrationFormScreen({ hasFaceImage = false }: AdminUserRegistrationFormScreenProps) {
+export function AdminUserRegistrationFormScreen({ 
+  hasFaceImage = false, 
+  isEditMode = false 
+}: AdminUserRegistrationFormScreenProps) {
   return (
     <div 
       className="relative overflow-hidden flex"
@@ -128,13 +132,29 @@ export function AdminUserRegistrationFormScreen({ hasFaceImage = false }: AdminU
               transform: 'translateX(-50%)'
             }}
           >
-            사용자 등록
+            {isEditMode ? "사용자 수정" : "사용자 등록"}
           </h1>
         </div>
 
         {/* Main Content Form */}
         <div className="flex-1 p-12 overflow-y-auto flex flex-col items-center" style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', overflowY: 'auto' }}>
           <div className="w-[600px] flex flex-col" style={{ width: '600px', display: 'flex', flexDirection: 'column' }}>
+            {/* Info Banner for Edit Mode */}
+            {isEditMode && (
+              <div
+                className="mb-8 rounded-2xl flex items-center px-6"
+                style={{ 
+                  height: '56px',
+                  backgroundColor: "rgba(59, 130, 246, 0.1)",
+                  border: '1px solid rgba(59, 130, 246, 0.2)'
+                }}
+              >
+                <p style={{ fontSize: '15px', fontWeight: 700, color: "#2563EB" }}>
+                  기존 사용자 정보를 수정합니다.
+                </p>
+              </div>
+            )}
+
             {/* Name Input Group */}
             <div className="mb-8" style={{ marginBottom: '32px' }}>
               <label 
@@ -180,6 +200,7 @@ export function AdminUserRegistrationFormScreen({ hasFaceImage = false }: AdminU
               <input
                 type="text"
                 placeholder="소속 또는 부서를 입력하세요"
+                defaultValue={isEditMode ? "안전관리팀" : ""}
                 className="w-full border rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all font-medium"
                 style={{ 
                   height: '56px',
