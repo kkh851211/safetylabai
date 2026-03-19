@@ -96,7 +96,7 @@ const IndexPage: React.FC = () => {
     
     const code = page.code || page.name;
     // Group by base code (prefix before the last sub-index hyphen, e.g., K-2-02-1 -> K-2-02)
-    const groupCode = code.match(/^(K-\d+-\d+)(-\d+)?$/) ? code.match(/^(K-\d+-\d+)/)?.[1] || code : code;
+    const groupCode = code.match(/^([A-Z]-\d+-\d+)(-\d+)?$/) ? code.match(/^([A-Z]-\d+-\d+)/)?.[1] || code : code;
     
     if (!acc[superCat][cat][groupCode]) acc[superCat][cat][groupCode] = [];
     acc[superCat][cat][groupCode].push(page);

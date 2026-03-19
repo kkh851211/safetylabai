@@ -1,10 +1,14 @@
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, AlertCircle } from "lucide-react";
 
-export function AdminMonitorScreen() {
+interface AdminMonitorScreenProps {
+  hasOfflineDevice?: boolean;
+}
+
+export function AdminMonitorScreen({ hasOfflineDevice = false }: AdminMonitorScreenProps) {
   const summaryData = [
     { label: "금일 허용", value: "127", color: "var(--color-status-allow-text)" },
     { label: "금일 차단", value: "8", color: "var(--color-status-deny-text)" },
-    { label: "온라인 기기", value: "12", color: "#3B82F6" },
+    { label: "온라인 기기", value: hasOfflineDevice ? "11" : "12", color: "#3B82F6" },
   ];
 
   const eventData = [
@@ -20,7 +24,7 @@ export function AdminMonitorScreen() {
 
   const deviceData = [
     { id: "KSK-001", location: "본사 1층 출입구", status: "온라인" },
-    { id: "KSK-002", location: "본사 2층 사무실", status: "온라인" },
+    { id: "KSK-002", location: "본사 2층 사무실", status: hasOfflineDevice ? "오프라인" : "온라인" },
     { id: "KSK-003", location: "본사 지하 주차장", status: "온라인" },
     { id: "KSK-004", location: "본사 3층 회의실", status: "온라인" },
   ];
@@ -142,6 +146,29 @@ export function AdminMonitorScreen() {
             className="flex-1 p-8 overflow-y-auto"
             style={{ flex: 1, overflowY: 'auto' }}
           >
+            {/* Warning Banner */}
+            {hasOfflineDevice && (
+              <div
+                className="flex items-center gap-3 px-6 rounded-2xl mb-8 border transition-all animate-pulse"
+                style={{
+                  height: '60px',
+                  backgroundColor: "rgba(245, 158, 11, 0.1)",
+                  borderColor: "#EF4444",
+                  display: 'flex',
+                  alignItems: 'center'
+                }}
+              >
+                <AlertCircle
+                  style={{ width: "24px", height: "24px", color: "#DC2626" }}
+                />
+                <span
+                  style={{ fontSize: "16px", fontWeight: 700, color: "#DC2626" }}
+                >
+                  오프라인 기기가 감지되었습니다
+                </span>
+              </div>
+            )}
+
             {/* Summary Grid */}
             <div 
               className="grid grid-cols-3 mb-8"
@@ -258,49 +285,54 @@ export function AdminMonitorScreen() {
           >
             <h2 style={{ fontSize: '16px', fontWeight: 800 }}>기기 상태</h2>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-              {deviceData.map((device, index) => (
-                <div
-                  key={index}
-                  className="rounded-2xl p-5 border transition-all"
-                  style={{
-                    borderColor: "var(--color-status-allow-text)",
-                    backgroundColor: "rgba(22, 163, 74, 0.02)",
-                    display: 'flex',
-                    flexDirection: 'column',
-                    gap: '8px',
-                    boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.03)'
-                  }}
-                >
-                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                    <span style={{ fontSize: '15px', fontWeight: 800, color: '#111827' }}>
-                      {device.id}
-                    </span>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                      <div
-                        style={{
-                          width: "8px",
-                          height: "8px",
-                          borderRadius: "50%",
-                          backgroundColor: "#16A34A",
-                          boxShadow: '0 0 8px rgba(22, 163, 74, 0.4)'
-                        }}
-                      />
-                      <span
-                        style={{ 
-                          fontSize: '12px', 
-                          fontWeight: 700, 
-                          color: "#16A34A" 
-                        }}
-                      >
-                        {device.status}
+              {deviceData.map((device, index) => {
+                const isOffline = device.status === "오프라인";
+                return (
+                  <div
+                    key={index}
+                    className="rounded-2xl p-5 border transition-all"
+                    style={{
+                      borderColor: isOffline ? "#DC2626" : "var(--color-status-allow-text)",
+                      backgroundColor: isOffline ? "rgba(220, 38, 38, 0.02)" : "rgba(22, 163, 74, 0.02)",
+                      display: 'flex',
+                      flexDirection: 'column',
+                      gap: '8px',
+                      boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.03)'
+                    }}
+                  >
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                      <span style={{ fontSize: '15px', fontWeight: 800, color: '#111827' }}>
+                        {device.id}
                       </span>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <div
+                          style={{
+                            width: "8px",
+                            height: "8px",
+                            borderRadius: "50%",
+                            backgroundColor: isOffline ? "#DC2626" : "#16A34A",
+                            boxShadow: isOffline 
+                              ? '0 0 8px rgba(220, 38, 38, 0.4)'
+                              : '0 0 8px rgba(22, 163, 74, 0.4)'
+                          }}
+                        />
+                        <span
+                          style={{ 
+                            fontSize: '12px', 
+                            fontWeight: 700, 
+                            color: isOffline ? "#DC2626" : "#16A34A" 
+                          }}
+                        >
+                          {device.status}
+                        </span>
+                      </div>
+                    </div>
+                    <div style={{ fontSize: '13px', color: "#6B7280", fontWeight: 500 }}>
+                      {device.location}
                     </div>
                   </div>
-                  <div style={{ fontSize: '13px', color: "#6B7280", fontWeight: 500 }}>
-                    {device.location}
-                  </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </div>
         </div>

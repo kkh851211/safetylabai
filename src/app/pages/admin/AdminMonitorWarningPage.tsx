@@ -1,12 +1,12 @@
 import { AdminMonitorScreen } from "../components/admin-monitor-screen";
 import { AdminPageLayout } from "../components/AdminPageLayout";
 
-export const title = "A-1-01-1 실시간 모니터 - 전체 온라인 (정상)";
+export const title = "A-1-01-2 실시간 모니터 - 오프라인 기기 있음";
 
-export default function AdminMonitorPage() {
+export default function AdminMonitorWarningPage() {
   return (
     <AdminPageLayout>
-      <AdminMonitorScreen />
+      <AdminMonitorScreen hasOfflineDevice={true} />
     </AdminPageLayout>
   );
 }
