@@ -18,6 +18,10 @@
   /* Figma Specific Variables */
   --color-bg-overlay: rgba(0, 0, 0, 0.4);
   --color-text-on-dark: #FFFFFF;
+  --color-text-primary: #111827;
+  --color-text-secondary: #6B7280;
+  --color-action-primary: #0066FF;
+  --color-action-secondary: #F3F4F6;
 }
 
 @media (prefers-color-scheme: dark) {
