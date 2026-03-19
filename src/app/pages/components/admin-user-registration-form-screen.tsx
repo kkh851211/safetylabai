@@ -1,6 +1,10 @@
-import { ArrowLeft, Camera } from "lucide-react";
+import { ArrowLeft, Camera, Check } from "lucide-react";
 
-export function AdminUserRegistrationFormScreen() {
+interface AdminUserRegistrationFormScreenProps {
+  hasFaceImage?: boolean;
+}
+
+export function AdminUserRegistrationFormScreen({ hasFaceImage = false }: AdminUserRegistrationFormScreenProps) {
   return (
     <div 
       className="relative overflow-hidden flex"
@@ -147,6 +151,7 @@ export function AdminUserRegistrationFormScreen() {
               <input
                 type="text"
                 placeholder="이름을 입력하세요"
+                defaultValue={hasFaceImage ? "홍길동" : ""}
                 className="w-full border rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all font-medium"
                 style={{ 
                   height: '56px',
@@ -187,7 +192,7 @@ export function AdminUserRegistrationFormScreen() {
               />
             </div>
 
-            {/* Face Registration Placeholder */}
+            {/* Face Registration Area */}
             <div className="mb-12" style={{ marginBottom: '48px' }}>
               <label 
                 style={{ 
@@ -200,32 +205,66 @@ export function AdminUserRegistrationFormScreen() {
               >
                 안면 데이터 등록
               </label>
-              <div
-                className="w-full border-2 border-dashed rounded-3xl flex flex-col items-center justify-center cursor-pointer hover:bg-gray-50 transition-all group"
-                style={{ 
-                  height: '320px',
-                  borderColor: "#E5E7EB",
-                  backgroundColor: 'white'
-                }}
-              >
-                <div 
-                  className="mb-4 flex items-center justify-center rounded-3xl group-hover:scale-110 transition-transform"
+              
+              {hasFaceImage ? (
+                <div className="flex flex-col items-center">
+                  <div className="relative w-full overflow-hidden rounded-3xl group" style={{ height: '320px', backgroundColor: '#F3F4F6' }}>
+                    <img
+                      src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800&h=600&fit=crop"
+                      alt="Captured face"
+                      className="w-full h-full object-cover"
+                    />
+                    {/* Checkmark Badge */}
+                    <div
+                      className="absolute shadow-xl flex items-center justify-center rounded-2xl"
+                      style={{
+                        top: '24px',
+                        right: '24px',
+                        width: '56px',
+                        height: '56px',
+                        backgroundColor: "var(--color-bg-result-allow)",
+                      }}
+                    >
+                      <Check
+                        style={{ width: '32px', height: '32px', color: "var(--color-status-allow-text)" }}
+                      />
+                    </div>
+                  </div>
+                  <button
+                    className="mt-4 text-sm font-bold underline transition-colors hover:text-primary/70"
+                    style={{ color: "var(--primary)" }}
+                  >
+                    재등록
+                  </button>
+                </div>
+              ) : (
+                <div
+                  className="w-full border-2 border-dashed rounded-3xl flex flex-col items-center justify-center cursor-pointer hover:bg-gray-50 transition-all group"
                   style={{ 
-                    width: '72px', 
-                    height: '72px', 
-                    backgroundColor: '#F3F4F6',
-                    color: '#9CA3AF'
+                    height: '320px',
+                    borderColor: "#E5E7EB",
+                    backgroundColor: 'white'
                   }}
                 >
-                  <Camera style={{ width: '32px', height: '32px' }} />
+                  <div 
+                    className="mb-4 flex items-center justify-center rounded-3xl group-hover:scale-110 transition-transform"
+                    style={{ 
+                      width: '72px', 
+                      height: '72px', 
+                      backgroundColor: '#F3F4F6',
+                      color: '#9CA3AF'
+                    }}
+                  >
+                    <Camera style={{ width: '32px', height: '32px' }} />
+                  </div>
+                  <p style={{ fontSize: '18px', fontWeight: 700, color: '#4B5563', marginBottom: '4px' }}>
+                    촬영 또는 파일 업로드
+                  </p>
+                  <p style={{ fontSize: '14px', fontWeight: 500, color: '#9CA3AF' }}>
+                    정면 얼굴이 잘 보이도록 촬영해 주세요
+                  </p>
                 </div>
-                <p style={{ fontSize: '18px', fontWeight: 700, color: '#4B5563', marginBottom: '4px' }}>
-                  촬영 또는 파일 업로드
-                </p>
-                <p style={{ fontSize: '14px', fontWeight: 500, color: '#9CA3AF' }}>
-                  정면 얼굴이 잘 보이도록 촬영해 주세요
-                </p>
-              </div>
+              )}
             </div>
 
             {/* Footer Buttons */}
@@ -244,15 +283,15 @@ export function AdminUserRegistrationFormScreen() {
                 취소
               </button>
               <button
-                disabled
-                className="rounded-2xl font-bold text-white transition-all"
+                disabled={!hasFaceImage}
+                className="rounded-2xl font-bold text-white transition-all active:scale-95 shadow-lg shadow-blue-500/20"
                 style={{ 
                   width: '180px',
                   height: '56px',
                   backgroundColor: "var(--primary)",
                   fontSize: '16px',
-                  opacity: 0.4,
-                  cursor: 'not-allowed'
+                  opacity: hasFaceImage ? 1 : 0.4,
+                  cursor: hasFaceImage ? 'pointer' : 'not-allowed'
                 }}
               >
                 저장
