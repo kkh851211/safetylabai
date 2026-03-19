@@ -47,9 +47,15 @@ export function KioskNameInputScreen() {
   };
 
   return (
-    <div className="relative w-[1080px] h-[1920px] bg-white overflow-hidden">
+    <div 
+      className="flex-shrink-0 relative bg-white overflow-hidden"
+      style={{ width: '1080px', height: '1920px' }}
+    >
       {/* Top Area - y=0 to y=200 */}
-      <div className="absolute top-0 left-0 w-[1080px] h-[200px] flex items-center justify-between px-[60px]">
+      <div 
+        className="absolute top-0 left-0 flex items-center justify-between px-[60px]"
+        style={{ width: '1080px', height: '200px' }}
+      >
         <div className="flex items-center gap-4">
           {/* Back Button */}
           <button
@@ -163,16 +169,19 @@ export function KioskNameInputScreen() {
         </div>
       </div>
 
-      {/* Bottom Buttons - y=1500 to y=1850 */}
-      <div
-        className="absolute left-0 w-[1080px] flex items-center justify-center"
-        style={{ top: "1500px", height: "350px", padding: "0 60px" }}
+      {/* Bottom Action Area */}
+      <div 
+        className="absolute left-0 bg-white border-t border-gray-100 flex items-center justify-center px-[60px] z-20"
+        style={{ top: "1520px", width: '1080px', height: '400px' }}
       >
-        <div className="flex gap-[20px] w-full justify-center">
+        <div className="flex gap-[40px] items-center">
           {/* 취소 Button */}
           <button
-            className="w-[470px] h-[120px] text-[32pt] font-medium rounded-xl transition-all active:scale-95"
+            className="flex-shrink-0 font-bold rounded-2xl transition-all active:scale-95 shadow-lg flex items-center justify-center"
             style={{
+              width: '460px',
+              height: '160px',
+              fontSize: '52px',
               backgroundColor: "#E5E7EB",
               color: "#4B5563",
             }}
@@ -183,8 +192,11 @@ export function KioskNameInputScreen() {
           {/* 확인 Button */}
           <button
             disabled={nameInput.trim() === ""}
-            className="w-[470px] h-[120px] text-[32pt] font-medium rounded-xl transition-all active:scale-95 disabled:opacity-40 disabled:scale-100"
+            className="flex-shrink-0 font-bold rounded-2xl transition-all active:scale-95 shadow-lg disabled:opacity-40 disabled:scale-100 disabled:shadow-none flex items-center justify-center"
             style={{
+              width: '460px',
+              height: '160px',
+              fontSize: '52px',
               backgroundColor: "#ADC4FF",
               color: "white",
             }}
