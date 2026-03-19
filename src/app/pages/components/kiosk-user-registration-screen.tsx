@@ -24,21 +24,35 @@ export function KioskUserRegistrationScreen() {
   const isSaveEnabled = name.trim() !== "" && photoTaken;
 
   return (
-    <div className="relative w-[1080px] h-[1920px] bg-white overflow-hidden text-[#111827]">
+    <div 
+      className="relative w-[1080px] h-[1920px] overflow-hidden"
+      style={{ backgroundColor: 'white', color: '#111827' }}
+    >
       {/* Top Area */}
-      <div className="absolute top-0 left-0 w-[1080px] h-[200px] flex items-center px-[60px]">
+      <div 
+        className="absolute top-0 left-0 w-[1080px] h-[200px] flex items-center px-[60px]"
+        style={{ display: 'flex', alignItems: 'center' }}
+      >
         {/* Back Button */}
         <button
-          className="w-[80px] h-[80px] flex items-center justify-center rounded-2xl hover:bg-gray-100 transition-colors active:scale-95 bg-gray-50 border border-gray-100"
+          className="flex items-center justify-center transition-colors active:scale-95 border"
+          style={{ 
+            width: "80px", 
+            height: "80px", 
+            borderRadius: "16px",
+            backgroundColor: '#F9FAFB',
+            borderColor: '#F3F4F6',
+            display: 'flex'
+          }}
           onClick={() => console.log("Back clicked")}
         >
-          <ArrowLeft className="w-[40px] h-[40px]" />
+          <ArrowLeft style={{ width: "40px", height: "40px" }} />
         </button>
 
         {/* Title - Centered */}
         <h1 
           className="absolute left-0 w-[1080px] font-black text-center tracking-tight"
-          style={{ fontSize: '48px' }}
+          style={{ fontSize: '48px', pointerEvents: 'none' }}
         >
           사용자 등록
         </h1>
@@ -46,12 +60,19 @@ export function KioskUserRegistrationScreen() {
 
       {/* Name Input Area */}
       <div
-        className="absolute left-0 w-[1080px] flex flex-col items-center gap-4"
-        style={{ top: "250px", paddingLeft: "60px", paddingRight: "60px" }}
+        className="absolute left-0 w-[1080px] flex flex-col items-center"
+        style={{ 
+          top: "250px", 
+          paddingLeft: "60px", 
+          paddingRight: "60px",
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '16px'
+        }}
       >
         <label 
-          className="w-[960px] text-gray-500 font-bold uppercase tracking-wider"
-          style={{ fontSize: '24px' }}
+          className="w-[960px] font-bold uppercase tracking-wider"
+          style={{ fontSize: '24px', color: '#6B7280' }}
         >
           이름 (필수)
         </label>
@@ -59,26 +80,59 @@ export function KioskUserRegistrationScreen() {
           type="text"
           value={name}
           onChange={(e) => setName(e.target.value)}
-          className="w-[960px] bg-gray-50 border-2 border-gray-200 rounded-[32px] focus:outline-none focus:border-blue-500 transition-all font-bold px-10 shadow-inner"
-          style={{ height: "120px", fontSize: "40px" }}
+          className="w-[960px] border-2 focus:outline-none focus:border-blue-500 transition-all font-bold px-10 shadow-inner"
+          style={{ 
+            height: "120px", 
+            fontSize: "40px", 
+            borderRadius: "32px",
+            backgroundColor: '#F9FAFB',
+            borderColor: '#E5E7EB'
+          }}
           placeholder="이름을 입력해 주세요"
         />
       </div>
 
       {/* Camera Preview Area */}
       <div
-        className="absolute left-0 w-[1080px] flex flex-col items-center gap-10"
-        style={{ top: "500px" }}
+        className="absolute left-0 w-[1080px] flex flex-col items-center"
+        style={{ 
+          top: "500px",
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '40px'
+        }}
       >
         {/* Camera Preview with Face Guideline */}
         <div 
-          className="relative bg-gray-900 overflow-hidden shadow-2xl border-4 border-white/10"
-          style={{ width: "960px", height: "720px", borderRadius: "48px" }}
+          className="relative overflow-hidden shadow-2xl"
+          style={{ 
+            width: "960px", 
+            height: "720px", 
+            borderRadius: "48px",
+            backgroundColor: '#0F172A',
+            border: '4px solid rgba(255, 255, 255, 0.1)'
+          }}
         >
           {/* Camera Preview Placeholder */}
-          <div className="absolute inset-0 flex flex-col items-center justify-center text-white/30 gap-6">
+          <div 
+            className="absolute inset-0 flex flex-col items-center justify-center"
+            style={{ 
+              display: 'flex', 
+              flexDirection: 'column', 
+              alignItems: 'center', 
+              justifyContent: 'center',
+              gap: '24px',
+              color: 'rgba(255, 255, 255, 0.3)'
+            }}
+          >
             <div 
-              className="w-24 h-24 rounded-full border-4 border-white/10 border-t-white/40 animate-spin"
+              className="rounded-full border-4 animate-spin"
+              style={{ 
+                width: '96px', 
+                height: '96px', 
+                borderColor: 'rgba(255, 255, 255, 0.1)',
+                borderTopColor: 'rgba(255, 255, 255, 0.4)'
+              }}
             />
             <span style={{ fontSize: '32px' }} className="font-medium">카메라 준비 중...</span>
           </div>
@@ -111,11 +165,14 @@ export function KioskUserRegistrationScreen() {
         {/* Capture Button */}
         <button
           onClick={handleCapture}
-          className="bg-blue-600 text-white font-black rounded-[32px] transition-all active:scale-95 shadow-xl shadow-blue-500/30 flex items-center justify-center gap-4"
+          className="text-white font-black transition-all active:scale-95 shadow-xl shadow-blue-500/30 flex items-center justify-center gap-4"
           style={{
             width: "480px",
             height: "120px",
             fontSize: "36px",
+            backgroundColor: '#2563EB',
+            borderRadius: '32px',
+            display: 'flex'
           }}
         >
           <Camera style={{ width: "48px", height: "48px" }} strokeWidth={2.5} />
@@ -131,16 +188,22 @@ export function KioskUserRegistrationScreen() {
           left: "60px",
           right: "60px",
           width: "960px",
+          display: 'flex',
+          justifyContent: 'space-between'
         }}
       >
         {/* Cancel Button */}
         <button
           onClick={handleCancel}
-          className="bg-gray-100 text-gray-400 font-bold rounded-[32px] transition-all active:scale-95 flex items-center justify-center"
+          className="font-bold transition-all active:scale-95 flex items-center justify-center"
           style={{
             width: "460px",
             height: "120px",
             fontSize: "36px",
+            backgroundColor: '#F3F4F6',
+            color: '#9CA3AF',
+            borderRadius: '32px',
+            display: 'flex'
           }}
         >
           취소
@@ -150,13 +213,17 @@ export function KioskUserRegistrationScreen() {
         <button
           onClick={handleSave}
           disabled={!isSaveEnabled}
-          className={`text-white font-black rounded-[32px] transition-all shadow-xl flex items-center justify-center ${
-            isSaveEnabled ? "bg-green-600 shadow-green-500/30 active:scale-95" : "bg-gray-200 text-gray-400 shadow-none cursor-not-allowed"
-          }`}
+          className="font-black transition-all shadow-xl flex items-center justify-center"
           style={{
             width: "460px",
             height: "120px",
             fontSize: "36px",
+            borderRadius: '32px',
+            display: 'flex',
+            backgroundColor: isSaveEnabled ? '#16A34A' : '#E5E7EB',
+            color: isSaveEnabled ? 'white' : '#9CA3AF',
+            cursor: isSaveEnabled ? 'pointer' : 'not-allowed',
+            boxShadow: isSaveEnabled ? '0 20px 25px -5px rgba(22, 163, 74, 0.3)' : 'none'
           }}
         >
           저장하기
