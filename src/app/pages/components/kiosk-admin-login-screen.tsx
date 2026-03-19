@@ -232,41 +232,41 @@ export function KioskAdminLoginScreen({ locked = false }: KioskAdminLoginScreenP
             <div
               className="bg-white flex flex-col items-center justify-center shadow-2xl border border-white/20"
               style={{
-                width: "840px",
-                height: "600px",
+                width: "800px",
+                height: "520px",
                 borderRadius: "60px",
-                gap: '48px'
+                gap: '40px'
               }}
             >
-              <div className="flex flex-col items-center gap-4">
+              <div className="flex flex-col items-center gap-3">
                 <h2 
                   className="font-black text-center text-gray-900 leading-tight"
-                  style={{ fontSize: '56px' }}
+                  style={{ fontSize: '52px' }}
                 >
                   5회 연속<br />실패하였습니다
                 </h2>
                 <p 
-                  className="font-medium text-center text-gray-500"
-                  style={{ fontSize: '32px' }}
+                  className="font-medium text-center text-gray-400"
+                  style={{ fontSize: '28px' }}
                 >
                   보안을 위해 잠시 잠금 처리됩니다
                 </p>
               </div>
 
               <div 
-                className="flex flex-col items-center justify-center bg-blue-50"
-                style={{ width: '500px', height: '220px', borderRadius: '40px', gap: '8px' }}
+                className="flex flex-col items-center justify-center bg-blue-50/50"
+                style={{ width: '440px', height: '180px', borderRadius: '40px', gap: '4px' }}
               >
                 <p 
                   className="font-bold text-blue-400 uppercase tracking-widest"
-                  style={{ fontSize: '24px' }}
+                  style={{ fontSize: '20px' }}
                 >
                   Try again in
                 </p>
                 <p
                   className="font-black tabular-nums tracking-tighter"
                   style={{
-                    fontSize: '96px',
+                    fontSize: '84px',
                     color: "var(--color-action-primary)",
                   }}
                 >
