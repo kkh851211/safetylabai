@@ -121,7 +121,7 @@ export function AdminAccessHistoryScreen() {
             display: 'flex'
           }}
         >
-          <h1 style={{ fontSize: '24px', fontWeight: 800 }}>출입 이력</h1>
+          <h1 style={{ fontSize: '24px', fontWeight: 800, color: '#111827' }}>출입 이력</h1>
         </div>
 
         {/* Main Content */}
@@ -140,13 +140,13 @@ export function AdminAccessHistoryScreen() {
                 <input
                   type="date"
                   defaultValue="2026-03-19"
-                  style={{ border: 'none', outline: 'none', fontSize: '14px', fontWeight: 500 }}
+                  style={{ border: 'none', outline: 'none', fontSize: '14px', fontWeight: 500, color: '#111827', backgroundColor: 'transparent' }}
                 />
                 <span style={{ color: '#9CA3AF' }}>~</span>
                 <input
                   type="date"
                   defaultValue="2026-03-19"
-                  style={{ border: 'none', outline: 'none', fontSize: '14px', fontWeight: 500 }}
+                  style={{ border: 'none', outline: 'none', fontSize: '14px', fontWeight: 500, color: '#111827', backgroundColor: 'transparent' }}
                 />
               </div>
 
@@ -160,7 +160,8 @@ export function AdminAccessHistoryScreen() {
                     paddingRight: '40px',
                     fontSize: '14px',
                     borderColor: '#E5E7EB',
-                    minWidth: '140px'
+                    minWidth: '140px',
+                    color: '#111827'
                   }}
                 >
                   <option>전체 지점</option>
@@ -202,7 +203,9 @@ export function AdminAccessHistoryScreen() {
                     paddingLeft: '44px',
                     paddingRight: '16px',
                     fontSize: '14px',
-                    borderColor: '#E5E7EB'
+                    borderColor: '#E5E7EB',
+                    color: '#111827',
+                    backgroundColor: 'white'
                   }}
                 />
               </div>

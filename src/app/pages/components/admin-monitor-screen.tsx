@@ -108,7 +108,7 @@ export function AdminMonitorScreen({ hasOfflineDevice = false }: AdminMonitorScr
             justifyContent: 'space-between'
           }}
         >
-          <h1 style={{ fontSize: '24px', fontWeight: 800 }}>실시간 모니터</h1>
+          <h1 style={{ fontSize: '24px', fontWeight: 800, color: '#111827' }}>실시간 모니터</h1>
           <div className="relative" style={{ position: 'relative' }}>
             <select 
               className="appearance-none bg-white border rounded-xl hover:border-gray-400 focus:outline-none transition-all cursor-pointer font-medium"
@@ -118,7 +118,8 @@ export function AdminMonitorScreen({ hasOfflineDevice = false }: AdminMonitorScr
                 paddingRight: '48px',
                 fontSize: '14px',
                 borderColor: '#E5E7EB',
-                minWidth: '160px'
+                minWidth: '160px',
+                color: '#111827'
               }}
             >
               <option>전체 지점</option>
@@ -283,7 +284,7 @@ export function AdminMonitorScreen({ hasOfflineDevice = false }: AdminMonitorScr
               gap: '24px'
             }}
           >
-            <h2 style={{ fontSize: '16px', fontWeight: 800 }}>기기 상태</h2>
+            <h2 style={{ fontSize: '16px', fontWeight: 800, color: '#111827' }}>기기 상태</h2>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
               {deviceData.map((device, index) => {
                 const isOffline = device.status === "오프라인";
