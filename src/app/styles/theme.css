@@ -24,6 +24,12 @@
   --color-action-secondary: #F3F4F6;
   --color-action-warning: #F59E0B;
   --color-action-danger: #EF4444;
+
+  /* Access Result Colors */
+  --color-bg-result-allow: #F0FDF4;
+  --color-status-allow-text: #15803D;
+  --color-bg-result-deny: #FEF2F2;
+  --color-status-deny-text: #B91C1C;
 }
 
 @media (prefers-color-scheme: dark) {
