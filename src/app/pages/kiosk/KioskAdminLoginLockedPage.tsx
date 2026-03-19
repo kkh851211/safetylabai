@@ -1,12 +1,12 @@
 import { KioskAdminLoginScreen } from "../components/kiosk-admin-login-screen";
 import { KioskPageLayout } from "../components/KioskPageLayout";
 
-export const title = "K-4-01-1 관리자 진입 - 기본 (입력 대기)";
+export const title = "K-4-01-2 관리자 진입 - 잠금 오버레이 (5회 실패)";
 
-export default function KioskAdminLoginPage() {
+export default function KioskAdminLoginLockedPage() {
   return (
     <KioskPageLayout>
-      <KioskAdminLoginScreen />
+      <KioskAdminLoginScreen locked={true} />
     </KioskPageLayout>
   );
 }

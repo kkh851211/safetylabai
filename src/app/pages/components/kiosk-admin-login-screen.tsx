@@ -1,9 +1,14 @@
 import { useState, useEffect } from "react";
 import { Delete, Check } from "lucide-react";
 
-export function KioskAdminLoginScreen() {
+interface KioskAdminLoginScreenProps {
+  locked?: boolean;
+}
+
+export function KioskAdminLoginScreen({ locked = false }: KioskAdminLoginScreenProps) {
   const [password, setPassword] = useState("");
   const [currentTime, setCurrentTime] = useState("");
+  const [countdown, setCountdown] = useState(299); // 4:59 in seconds
 
   useEffect(() => {
     const updateTime = () => {
@@ -14,26 +19,45 @@ export function KioskAdminLoginScreen() {
     };
 
     updateTime();
-    const timer = setInterval(updateTime, 1000);
-    return () => clearInterval(timer);
+    const interval = setInterval(updateTime, 1000);
+    return () => clearInterval(interval);
   }, []);
 
+  useEffect(() => {
+    if (locked && countdown > 0) {
+      const timer = setInterval(() => {
+        setCountdown((prev) => prev - 1);
+      }, 1000);
+      return () => clearInterval(timer);
+    }
+  }, [locked, countdown]);
+
   const handleNumberClick = (num: string) => {
+    if (locked) return;
     if (password.length < 6) {
       setPassword((prev) => prev + num);
     }
   };
 
   const handleDelete = () => {
+    if (locked) return;
     setPassword((prev) => prev.slice(0, -1));
   };
 
   const handleConfirm = () => {
+    if (locked) return;
     console.log("Password submitted:", password);
   };
 
   const handleCancel = () => {
+    if (locked) return;
     setPassword("");
+  };
+
+  const formatCountdown = (seconds: number) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
   };
 
   return (
@@ -99,7 +123,9 @@ export function KioskAdminLoginScreen() {
               <button
                 key={num}
                 onClick={() => handleNumberClick(num)}
-                className="font-bold rounded-[32px] bg-white border border-gray-100 shadow-lg shadow-gray-200/50 transition-all active:scale-95 active:bg-gray-50 flex items-center justify-center"
+                className={`font-bold rounded-[32px] bg-white border border-gray-100 shadow-lg shadow-gray-200/50 transition-all ${
+                  locked ? "opacity-50 cursor-not-allowed" : "active:scale-95 active:bg-gray-50"
+                } flex items-center justify-center`}
                 style={{ width: "240px", height: "160px", fontSize: "48px" }}
               >
                 {num}
@@ -111,22 +137,28 @@ export function KioskAdminLoginScreen() {
         <div className="flex gap-6">
           <button
             onClick={handleDelete}
-            className="rounded-[32px] bg-white border border-gray-100 shadow-lg shadow-gray-200/50 transition-all active:scale-95 active:bg-gray-50 flex items-center justify-center"
+            className={`rounded-[32px] bg-white border border-gray-100 shadow-lg shadow-gray-200/50 transition-all ${
+              locked ? "opacity-50 cursor-not-allowed" : "active:scale-95 active:bg-gray-50"
+            } flex items-center justify-center`}
             style={{ width: "240px", height: "160px" }}
           >
             <Delete className="w-16 h-16 text-red-500" />
           </button>
           <button
             onClick={() => handleNumberClick("0")}
-            className="font-bold rounded-[32px] bg-white border border-gray-100 shadow-lg shadow-gray-200/50 transition-all active:scale-95 active:bg-gray-50 flex items-center justify-center"
+            className={`font-bold rounded-[32px] bg-white border border-gray-100 shadow-lg shadow-gray-200/50 transition-all ${
+              locked ? "opacity-50 cursor-not-allowed" : "active:scale-95 active:bg-gray-50"
+            } flex items-center justify-center`}
             style={{ width: "240px", height: "160px", fontSize: "48px" }}
           >
             0
           </button>
           <button
             onClick={handleConfirm}
-            disabled={password.length < 4}
-            className="rounded-[32px] bg-blue-600 text-white shadow-xl shadow-blue-500/30 transition-all active:scale-95 disabled:opacity-30 flex items-center justify-center"
+            disabled={locked || password.length < 4}
+            className={`rounded-[32px] bg-blue-600 text-white shadow-xl shadow-blue-500/30 transition-all ${
+              locked || password.length < 4 ? "opacity-30 cursor-not-allowed" : "active:scale-95"
+            } flex items-center justify-center`}
             style={{ width: "240px", height: "160px" }}
           >
             <Check className="w-16 h-16" strokeWidth={3} />
@@ -141,12 +173,61 @@ export function KioskAdminLoginScreen() {
       >
         <button
           onClick={handleCancel}
-          className="font-bold rounded-[24px] bg-gray-100 text-gray-500 transition-all active:scale-95 flex items-center justify-center"
+          disabled={locked}
+          className={`font-bold rounded-[24px] bg-gray-100 text-gray-500 transition-all ${
+            locked ? "opacity-50 cursor-not-allowed" : "active:scale-95"
+          } flex items-center justify-center`}
           style={{ width: "440px", height: "120px", fontSize: "36px" }}
         >
           취소
         </button>
       </div>
+
+      {/* Locked Overlay */}
+      {locked && (
+        <>
+          <div
+            className="absolute inset-0 z-10 backdrop-blur-sm"
+            style={{
+              backgroundColor: "var(--color-bg-overlay)",
+            }}
+          />
+
+          <div className="absolute inset-0 z-20 flex items-center justify-center">
+            <div
+              className="bg-white flex flex-col items-center justify-center gap-10 shadow-2xl border border-white/20"
+              style={{
+                width: "800px",
+                height: "500px",
+                borderRadius: "60px",
+              }}
+            >
+              <div className="flex flex-col items-center gap-4">
+                <h2 className="text-[42pt] font-black text-center text-gray-900 leading-tight">
+                  5회 연속<br />실패하였습니다
+                </h2>
+                <p className="text-[28pt] font-medium text-center text-gray-500">
+                  보안을 위해 잠시 잠금 처리됩니다
+                </p>
+              </div>
+
+              <div className="flex flex-col items-center gap-2 bg-blue-50 px-12 py-6 rounded-3xl">
+                <p className="text-[20pt] font-bold text-blue-400 uppercase tracking-widest">
+                  Try again in
+                </p>
+                <p
+                  className="text-[64pt] font-black tabular-nums tracking-tighter"
+                  style={{
+                    color: "var(--color-action-primary)",
+                  }}
+                >
+                  {formatCountdown(countdown)}
+                </p>
+              </div>
+            </div>
+          </div>
+        </>
+      )}
     </div>
   );
 }
