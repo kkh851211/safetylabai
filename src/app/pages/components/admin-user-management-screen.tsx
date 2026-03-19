@@ -1,6 +1,10 @@
-import { Search, Edit2, Trash2, ChevronLeft, ChevronRight } from "lucide-react";
+import { Search, Edit2, Trash2, ChevronLeft, ChevronRight, AlertTriangle } from "lucide-react";
 
-export function AdminUserManagementScreen() {
+interface AdminUserManagementScreenProps {
+  showDeleteModal?: boolean;
+}
+
+export function AdminUserManagementScreen({ showDeleteModal = false }: AdminUserManagementScreenProps) {
   const userData = Array.from({ length: 20 }, (_, i) => {
     const names = ["김민준", "이서연", "박지호", "최수진", "정우영", "강예은", "윤도현", "임하늘", "한지우", "오서준"];
     const statuses = ["active", "active", "active", "inactive", "active"];
@@ -287,6 +291,85 @@ export function AdminUserManagementScreen() {
           </div>
         </div>
       </div>
+
+      {/* Delete Confirmation Modal Overlay */}
+      {showDeleteModal && (
+        <div 
+          className="absolute inset-0 z-40 transition-opacity"
+          style={{ 
+            backgroundColor: "rgba(15, 23, 42, 0.4)",
+            backdropFilter: 'blur(4px)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center'
+          }}
+        >
+          {/* Modal Container */}
+          <div 
+            className="bg-white rounded-[32px] shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-300"
+            style={{ 
+              width: "560px", 
+              padding: "48px",
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              textAlign: 'center'
+            }}
+          >
+            {/* Warning Icon Container */}
+            <div 
+              className="mb-8 flex items-center justify-center rounded-3xl"
+              style={{ 
+                width: '80px', 
+                height: '80px', 
+                backgroundColor: 'rgba(239, 68, 68, 0.1)',
+                color: '#EF4444'
+              }}
+            >
+              <AlertTriangle style={{ width: '40px', height: '40px' }} />
+            </div>
+
+            {/* Title */}
+            <h2 style={{ fontSize: '28px', fontWeight: 800, color: '#111827', marginBottom: '16px', letterSpacing: '-0.025em' }}>
+              사용자를 삭제하시겠습니까?
+            </h2>
+
+            {/* Subtitle */}
+            <p style={{ fontSize: '16px', fontWeight: 500, color: '#6B7280', marginBottom: '40px', lineHeight: 1.6 }}>
+              삭제된 사용자 정보는 복구할 수 없습니다.<br />
+              정말로 삭제하시겠습니까?
+            </p>
+
+            {/* Button Layout */}
+            <div className="flex items-center gap-4 w-full" style={{ display: 'flex', width: '100%', gap: '16px' }}>
+              <button
+                className="flex-1 rounded-2xl font-bold transition-all active:scale-95 border hover:bg-gray-50"
+                style={{ 
+                  height: '64px',
+                  backgroundColor: "white",
+                  borderColor: '#E5E7EB',
+                  color: "#374151",
+                  fontSize: '16px',
+                  flex: 1
+                }}
+              >
+                취소
+              </button>
+              <button
+                className="flex-1 rounded-2xl font-bold text-white transition-all active:scale-95 shadow-lg shadow-red-500/20"
+                style={{ 
+                  height: '64px',
+                  backgroundColor: "var(--color-action-danger)",
+                  fontSize: '16px',
+                  flex: 1
+                }}
+              >
+                삭제
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
