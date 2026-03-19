@@ -1,9 +1,13 @@
 import { useState } from "react";
-import { ArrowLeft, Camera } from "lucide-react";
+import { ArrowLeft, Camera, CheckCircle } from "lucide-react";
 
-export function KioskUserRegistrationScreen() {
-  const [name, setName] = useState("");
-  const [photoTaken, setPhotoTaken] = useState(false);
+interface KioskUserRegistrationScreenProps {
+  photoTaken?: boolean;
+}
+
+export function KioskUserRegistrationScreen({ photoTaken: initialPhotoTaken = false }: KioskUserRegistrationScreenProps) {
+  const [name, setName] = useState(initialPhotoTaken ? "홍길동" : "");
+  const [photoTaken, setPhotoTaken] = useState(initialPhotoTaken);
 
   const handleCapture = () => {
     setPhotoTaken(true);
@@ -102,81 +106,123 @@ export function KioskUserRegistrationScreen() {
           gap: '40px'
         }}
       >
-        {/* Camera Preview with Face Guideline */}
+        {/* Camera Preview or Captured Photo */}
         <div 
           className="relative overflow-hidden shadow-2xl"
           style={{ 
             width: "960px", 
             height: "720px", 
             borderRadius: "48px",
-            backgroundColor: '#0F172A',
-            border: '4px solid rgba(255, 255, 255, 0.1)'
+            backgroundColor: photoTaken ? '#F3F4F6' : '#0F172A',
+            border: photoTaken ? '4px solid #F3F4F6' : '4px solid rgba(255, 255, 255, 0.1)'
           }}
         >
-          {/* Camera Preview Placeholder */}
-          <div 
-            className="absolute inset-0 flex flex-col items-center justify-center"
-            style={{ 
-              display: 'flex', 
-              flexDirection: 'column', 
-              alignItems: 'center', 
-              justifyContent: 'center',
-              gap: '24px',
-              color: 'rgba(255, 255, 255, 0.3)'
-            }}
-          >
+          {photoTaken ? (
             <div 
-              className="rounded-full border-4 animate-spin"
-              style={{ 
-                width: '96px', 
-                height: '96px', 
-                borderColor: 'rgba(255, 255, 255, 0.1)',
-                borderTopColor: 'rgba(255, 255, 255, 0.4)'
-              }}
-            />
-            <span style={{ fontSize: '32px' }} className="font-medium">카메라 준비 중...</span>
-          </div>
+              className="absolute inset-0 flex flex-col items-center justify-center"
+              style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '24px' }}
+            >
+              {/* Captured Photo Placeholder */}
+              <div 
+                className="w-48 h-48 rounded-full bg-gray-300 flex items-center justify-center text-gray-500"
+                style={{ fontSize: '24px' }}
+              >
+                PHOTO
+              </div>
+              <span style={{ fontSize: '32px' }} className="font-bold text-gray-400">촬영이 완료되었습니다</span>
 
-          {/* Ellipse Face Guideline Overlay */}
-          <svg
-            className="absolute inset-0 w-full h-full"
-            viewBox="0 0 960 720"
-            style={{ pointerEvents: "none" }}
-          >
-            <ellipse
-              cx="480"
-              cy="360"
-              rx="240"
-              ry="320"
-              fill="none"
-              stroke="white"
-              strokeWidth="4"
-              strokeDasharray="20,10"
-              opacity="0.5"
-            />
-            {/* Corner Brackets */}
-            <path d="M40 40 L120 40 M40 40 L40 120" stroke="white" strokeWidth="8" opacity="0.3" fill="none" />
-            <path d="M920 40 L840 40 M920 40 L920 120" stroke="white" strokeWidth="8" opacity="0.3" fill="none" />
-            <path d="M40 680 L120 680 M40 680 L40 600" stroke="white" strokeWidth="8" opacity="0.3" fill="none" />
-            <path d="M920 680 L840 680 M920 680 L920 600" stroke="white" strokeWidth="8" opacity="0.3" fill="none" />
-          </svg>
+              {/* Success Badge */}
+              <div 
+                className="absolute shadow-lg flex items-center justify-center"
+                style={{ 
+                  top: '40px', 
+                  right: '40px', 
+                  width: '80px', 
+                  height: '80px', 
+                  borderRadius: '50%',
+                  backgroundColor: 'white'
+                }}
+              >
+                <CheckCircle 
+                  style={{ 
+                    width: '60px', 
+                    height: '60px', 
+                    color: 'var(--color-status-allow-text)',
+                    fill: 'rgba(21, 128, 61, 0.1)'
+                  }} 
+                />
+              </div>
+            </div>
+          ) : (
+            <>
+              {/* Camera Preview Placeholder */}
+              <div 
+                className="absolute inset-0 flex flex-col items-center justify-center"
+                style={{ 
+                  display: 'flex', 
+                  flexDirection: 'column', 
+                  alignItems: 'center', 
+                  justifyContent: 'center',
+                  gap: '24px',
+                  color: 'rgba(255, 255, 255, 0.3)'
+                }}
+              >
+                <div 
+                  className="rounded-full border-4 animate-spin"
+                  style={{ 
+                    width: '96px', 
+                    height: '96px', 
+                    borderColor: 'rgba(255, 255, 255, 0.1)',
+                    borderTopColor: 'rgba(255, 255, 255, 0.4)'
+                  }}
+                />
+                <span style={{ fontSize: '32px' }} className="font-medium">카메라 준비 중...</span>
+              </div>
+
+              {/* Ellipse Face Guideline Overlay */}
+              <svg
+                className="absolute inset-0 w-full h-full"
+                viewBox="0 0 960 720"
+                style={{ pointerEvents: "none" }}
+              >
+                <ellipse
+                  cx="480"
+                  cy="360"
+                  rx="240"
+                  ry="320"
+                  fill="none"
+                  stroke="white"
+                  strokeWidth="4"
+                  strokeDasharray="20,10"
+                  opacity="0.5"
+                />
+                {/* Corner Brackets */}
+                <path d="M40 40 L120 40 M40 40 L40 120" stroke="white" strokeWidth="8" opacity="0.3" fill="none" />
+                <path d="M920 40 L840 40 M920 40 L920 120" stroke="white" strokeWidth="8" opacity="0.3" fill="none" />
+                <path d="M40 680 L120 680 M40 680 L40 600" stroke="white" strokeWidth="8" opacity="0.3" fill="none" />
+                <path d="M920 680 L840 680 M920 680 L920 600" stroke="white" strokeWidth="8" opacity="0.3" fill="none" />
+              </svg>
+            </>
+          )}
         </div>
 
-        {/* Capture Button */}
+        {/* Capture/Retake Button */}
         <button
           onClick={handleCapture}
-          className="text-white font-black transition-all active:scale-95 shadow-xl shadow-blue-500/30 flex items-center justify-center gap-4"
+          className="font-black transition-all active:scale-95 flex items-center justify-center gap-4"
           style={{
             width: "480px",
             height: "120px",
             fontSize: "36px",
-            backgroundColor: '#2563EB',
+            backgroundColor: photoTaken ? '#F3F4F6' : '#2563EB',
+            color: photoTaken ? '#6B7280' : 'white',
             borderRadius: '32px',
-            display: 'flex'
+            display: 'flex',
+            boxShadow: photoTaken ? 'none' : '0 20px 25px -5px rgba(37, 99, 235, 0.3)'
           }}
         >
           <Camera style={{ width: "48px", height: "48px" }} strokeWidth={2.5} />
-          촬영하기
+          {photoTaken ? "재촬영하기" : "촬영하기"}
         </button>
       </div>
 
