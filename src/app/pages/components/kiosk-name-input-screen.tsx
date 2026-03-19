@@ -168,13 +168,13 @@ export function KioskNameInputScreen() {
         className="absolute left-0 w-[1080px] flex items-center justify-center"
         style={{ top: "1500px", height: "350px", padding: "0 60px" }}
       >
-        <div className="flex gap-[40px] w-full justify-center">
+        <div className="flex gap-[20px] w-full justify-center">
           {/* 취소 Button */}
           <button
-            className="w-[460px] h-[140px] text-[36pt] font-bold rounded-2xl transition-all shadow-lg active:scale-95"
+            className="w-[470px] h-[120px] text-[32pt] font-medium rounded-xl transition-all active:scale-95"
             style={{
-              backgroundColor: "var(--color-action-secondary, #f3f4f6)",
-              color: "#374151",
+              backgroundColor: "#E5E7EB",
+              color: "#4B5563",
             }}
           >
             취소
@@ -183,9 +183,9 @@ export function KioskNameInputScreen() {
           {/* 확인 Button */}
           <button
             disabled={nameInput.trim() === ""}
-            className="w-[460px] h-[140px] text-[36pt] font-bold rounded-2xl transition-all shadow-lg active:scale-95 disabled:opacity-40 disabled:scale-100 disabled:shadow-none"
+            className="w-[470px] h-[120px] text-[32pt] font-medium rounded-xl transition-all active:scale-95 disabled:opacity-40 disabled:scale-100"
             style={{
-              backgroundColor: "var(--color-primary, #6366f1)",
+              backgroundColor: "#ADC4FF",
               color: "white",
             }}
           >
