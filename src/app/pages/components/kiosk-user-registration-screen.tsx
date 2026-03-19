@@ -3,9 +3,13 @@ import { ArrowLeft, Camera, CheckCircle } from "lucide-react";
 
 interface KioskUserRegistrationScreenProps {
   photoTaken?: boolean;
+  captureError?: boolean;
 }
 
-export function KioskUserRegistrationScreen({ photoTaken: initialPhotoTaken = false }: KioskUserRegistrationScreenProps) {
+export function KioskUserRegistrationScreen({ 
+  photoTaken: initialPhotoTaken = false,
+  captureError = false
+}: KioskUserRegistrationScreenProps) {
   const [name, setName] = useState(initialPhotoTaken ? "홍길동" : "");
   const [photoTaken, setPhotoTaken] = useState(initialPhotoTaken);
 
@@ -25,7 +29,7 @@ export function KioskUserRegistrationScreen({ photoTaken: initialPhotoTaken = fa
     }
   };
 
-  const isSaveEnabled = name.trim() !== "" && photoTaken;
+  const isSaveEnabled = name.trim() !== "" && photoTaken && !captureError;
 
   return (
     <div 
@@ -117,7 +121,28 @@ export function KioskUserRegistrationScreen({ photoTaken: initialPhotoTaken = fa
             border: photoTaken ? '4px solid #F3F4F6' : '4px solid rgba(255, 255, 255, 0.1)'
           }}
         >
-          {photoTaken ? (
+          {captureError ? (
+            <div 
+              className="absolute inset-0 flex flex-col items-center justify-center bg-gray-400"
+              style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '24px' }}
+            >
+              {/* Captured Photo Placeholder with red overlay */}
+              <div 
+                className="w-48 h-48 rounded-full bg-gray-500 flex items-center justify-center text-gray-400"
+                style={{ fontSize: '24px' }}
+              >
+                LOW QUALITY
+              </div>
+              
+              {/* Red warning overlay (alpha 0.3) */}
+              <div
+                className="absolute inset-0"
+                style={{
+                  backgroundColor: "rgba(220, 38, 38, 0.3)",
+                }}
+              />
+            </div>
+          ) : photoTaken ? (
             <div 
               className="absolute inset-0 flex flex-col items-center justify-center"
               style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '24px' }}
@@ -206,24 +231,35 @@ export function KioskUserRegistrationScreen({ photoTaken: initialPhotoTaken = fa
           )}
         </div>
 
-        {/* Capture/Retake Button */}
-        <button
-          onClick={handleCapture}
-          className="font-black transition-all active:scale-95 flex items-center justify-center gap-4"
-          style={{
-            width: "480px",
-            height: "120px",
-            fontSize: "36px",
-            backgroundColor: photoTaken ? '#F3F4F6' : '#2563EB',
-            color: photoTaken ? '#6B7280' : 'white',
-            borderRadius: '32px',
-            display: 'flex',
-            boxShadow: photoTaken ? 'none' : '0 20px 25px -5px rgba(37, 99, 235, 0.3)'
-          }}
-        >
-          <Camera style={{ width: "48px", height: "48px" }} strokeWidth={2.5} />
-          {photoTaken ? "재촬영하기" : "촬영하기"}
-        </button>
+        {/* Error Message and Retake Button OR Capture/Retake Button */}
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '24px' }}>
+          {captureError && (
+            <p
+              className="w-[960px] text-center font-bold leading-tight"
+              style={{ color: "var(--color-action-warning)", fontSize: '28px' }}
+            >
+              얼굴이 선명하게 촬영되지 않았습니다. 다시 촬영해 주세요
+            </p>
+          )}
+
+          <button
+            onClick={handleCapture}
+            className="font-black transition-all active:scale-95 flex items-center justify-center gap-4"
+            style={{
+              width: "480px",
+              height: "120px",
+              fontSize: "36px",
+              backgroundColor: (photoTaken && !captureError) ? '#F3F4F6' : '#2563EB',
+              color: (photoTaken && !captureError) ? '#6B7280' : 'white',
+              borderRadius: '32px',
+              display: 'flex',
+              boxShadow: (photoTaken && !captureError) ? 'none' : '0 20px 25px -5px rgba(37, 99, 235, 0.3)'
+            }}
+          >
+            <Camera style={{ width: "48px", height: "48px" }} strokeWidth={2.5} />
+            {(photoTaken && !captureError) ? "재촬영하기" : "촬영하기"}
+          </button>
+        </div>
       </div>
 
       {/* Bottom Buttons Area */}
