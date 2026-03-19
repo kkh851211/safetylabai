@@ -15,6 +15,7 @@ const App: React.FC = () => {
             const name = path.split('/').pop()?.replace('.tsx', '') || '';
             if (name === 'IndexPage') return null;
             
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             const Component = lazy(importFn as any);
             
             return (
