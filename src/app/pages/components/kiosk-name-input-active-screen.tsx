@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { ArrowLeft } from "lucide-react";
+import * as Hangul from 'hangul-js';
 
 export function KioskNameInputActiveScreen() {
   const [currentTime, setCurrentTime] = useState("");
@@ -35,11 +36,19 @@ export function KioskNameInputActiveScreen() {
   const currentKeys = isKorean ? koreanKeys : englishKeys;
 
   const handleKeyPress = (key: string) => {
-    setNameInput((prev) => prev + key);
+    setNameInput((prev) => {
+      const chars = Hangul.disassemble(prev);
+      chars.push(key);
+      return Hangul.assemble(chars);
+    });
   };
 
   const handleBackspace = () => {
-    setNameInput((prev) => prev.slice(0, -1));
+    setNameInput((prev) => {
+      const chars = Hangul.disassemble(prev);
+      chars.pop();
+      return Hangul.assemble(chars);
+    });
   };
 
   const handleSpace = () => {
@@ -197,7 +206,7 @@ export function KioskNameInputActiveScreen() {
               width: '460px',
               height: '160px',
               fontSize: '52px',
-              backgroundColor: "#ADC4FF",
+              backgroundColor: nameInput.trim() === "" ? "#ADC4FF" : "#0066FF",
               color: "white",
             }}
           >
