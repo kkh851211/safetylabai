@@ -100,7 +100,7 @@ export function KioskNameInputActiveScreen() {
             value={nameInput}
             readOnly
             placeholder="이름"
-            className="w-full h-[120px] px-8 text-[36pt] border-[3px] border-blue-500 rounded-2xl focus:outline-none bg-blue-50/30"
+            className="w-full h-[120px] px-8 text-[36pt] text-[#111827] border-[3px] border-blue-500 rounded-2xl focus:outline-none bg-blue-50/30"
             style={{ borderColor: 'var(--color-primary)' }}
           />
           {nameInput === "" && (
