@@ -5,10 +5,6 @@ export function KioskExitNoticeScreen() {
   const [countdown, setCountdown] = useState(10);
 
   useEffect(() => {
-    const updateTime = () => {
-      // Logic for countdown if needed, but the user's code uses a simple interval
-    };
-    
     const interval = setInterval(() => {
       setCountdown((prev) => {
         if (prev <= 1) {
