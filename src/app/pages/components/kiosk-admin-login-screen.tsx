@@ -80,10 +80,16 @@ export function KioskAdminLoginScreen({ locked = false }: KioskAdminLoginScreenP
         className="absolute left-0 w-[1080px] flex flex-col items-center gap-6"
         style={{ top: "250px" }}
       >
-        <h1 className="text-[48pt] font-black text-center tracking-tight">
+        <h1 
+          className="font-black text-center tracking-tight"
+          style={{ fontSize: '64px' }}
+        >
           관리자 모드
         </h1>
-        <p className="text-[24pt] text-gray-500 font-medium">
+        <p 
+          className="text-gray-500 font-medium"
+          style={{ fontSize: '32px' }}
+        >
           비밀번호를 입력해 주세요
         </p>
       </div>
@@ -94,15 +100,16 @@ export function KioskAdminLoginScreen({ locked = false }: KioskAdminLoginScreenP
         style={{ top: "480px" }}
       >
         <div
-          className="flex items-center justify-center gap-6 bg-gray-50 rounded-[32px] border-2 border-gray-100 shadow-inner"
-          style={{ width: "720px", height: "180px" }}
+          className="flex items-center justify-center bg-gray-50 border-2 border-gray-100 shadow-inner"
+          style={{ width: "720px", height: "180px", borderRadius: "32px", gap: '24px' }}
         >
           {[...Array(6)].map((_, i) => (
             <div
               key={i}
-              className={`w-10 h-10 rounded-full transition-all duration-200 ${
+              className={`rounded-full transition-all duration-200 ${
                 i < password.length ? "bg-blue-600 scale-125" : "bg-gray-200"
               }`}
+              style={{ width: '40px', height: '40px' }}
             />
           ))}
         </div>
@@ -123,10 +130,16 @@ export function KioskAdminLoginScreen({ locked = false }: KioskAdminLoginScreenP
               <button
                 key={num}
                 onClick={() => handleNumberClick(num)}
-                className={`font-bold rounded-[32px] bg-white border border-gray-100 shadow-lg shadow-gray-200/50 transition-all ${
-                  locked ? "opacity-50 cursor-not-allowed" : "active:scale-95 active:bg-gray-50"
+                className={`font-bold border border-gray-100 shadow-lg shadow-gray-200/50 transition-all ${
+                  locked ? "opacity-30 cursor-not-allowed" : "active:scale-95 active:bg-gray-50"
                 } flex items-center justify-center`}
-                style={{ width: "240px", height: "160px", fontSize: "48px" }}
+                style={{ 
+                  width: "240px", 
+                  height: "160px", 
+                  fontSize: "48px", 
+                  borderRadius: "32px",
+                  backgroundColor: 'white'
+                }}
               >
                 {num}
               </button>
@@ -137,31 +150,47 @@ export function KioskAdminLoginScreen({ locked = false }: KioskAdminLoginScreenP
         <div className="flex gap-6">
           <button
             onClick={handleDelete}
-            className={`rounded-[32px] bg-white border border-gray-100 shadow-lg shadow-gray-200/50 transition-all ${
-              locked ? "opacity-50 cursor-not-allowed" : "active:scale-95 active:bg-gray-50"
+            className={`border border-gray-100 shadow-lg shadow-gray-200/50 transition-all ${
+              locked ? "opacity-30 cursor-not-allowed" : "active:scale-95 active:bg-gray-50"
             } flex items-center justify-center`}
-            style={{ width: "240px", height: "160px" }}
+            style={{ 
+              width: "240px", 
+              height: "160px", 
+              borderRadius: "32px",
+              backgroundColor: 'white'
+            }}
           >
-            <Delete className="w-16 h-16 text-red-500" />
+            <Delete style={{ width: '64px', height: '64px' }} className="text-red-500" />
           </button>
           <button
             onClick={() => handleNumberClick("0")}
-            className={`font-bold rounded-[32px] bg-white border border-gray-100 shadow-lg shadow-gray-200/50 transition-all ${
-              locked ? "opacity-50 cursor-not-allowed" : "active:scale-95 active:bg-gray-50"
+            className={`font-bold border border-gray-100 shadow-lg shadow-gray-200/50 transition-all ${
+              locked ? "opacity-30 cursor-not-allowed" : "active:scale-95 active:bg-gray-50"
             } flex items-center justify-center`}
-            style={{ width: "240px", height: "160px", fontSize: "48px" }}
+            style={{ 
+              width: "240px", 
+              height: "160px", 
+              fontSize: "48px", 
+              borderRadius: "32px",
+              backgroundColor: 'white'
+            }}
           >
             0
           </button>
           <button
             onClick={handleConfirm}
             disabled={locked || password.length < 4}
-            className={`rounded-[32px] bg-blue-600 text-white shadow-xl shadow-blue-500/30 transition-all ${
+            className={`text-white shadow-xl shadow-blue-500/30 transition-all ${
               locked || password.length < 4 ? "opacity-30 cursor-not-allowed" : "active:scale-95"
             } flex items-center justify-center`}
-            style={{ width: "240px", height: "160px" }}
+            style={{ 
+              width: "240px", 
+              height: "160px", 
+              borderRadius: "32px",
+              backgroundColor: '#2563EB'
+            }}
           >
-            <Check className="w-16 h-16" strokeWidth={3} />
+            <Check style={{ width: '64px', height: '64px' }} strokeWidth={3} />
           </button>
         </div>
       </div>
@@ -174,10 +203,16 @@ export function KioskAdminLoginScreen({ locked = false }: KioskAdminLoginScreenP
         <button
           onClick={handleCancel}
           disabled={locked}
-          className={`font-bold rounded-[24px] bg-gray-100 text-gray-500 transition-all ${
-            locked ? "opacity-50 cursor-not-allowed" : "active:scale-95"
+          className={`font-bold text-gray-500 transition-all ${
+            locked ? "opacity-30 cursor-not-allowed" : "active:scale-95"
           } flex items-center justify-center`}
-          style={{ width: "440px", height: "120px", fontSize: "36px" }}
+          style={{ 
+            width: "440px", 
+            height: "120px", 
+            fontSize: "36px", 
+            borderRadius: "24px",
+            backgroundColor: '#F3F4F6'
+          }}
         >
           취소
         </button>
@@ -195,29 +230,43 @@ export function KioskAdminLoginScreen({ locked = false }: KioskAdminLoginScreenP
 
           <div className="absolute inset-0 z-20 flex items-center justify-center">
             <div
-              className="bg-white flex flex-col items-center justify-center gap-10 shadow-2xl border border-white/20"
+              className="bg-white flex flex-col items-center justify-center shadow-2xl border border-white/20"
               style={{
-                width: "800px",
-                height: "500px",
+                width: "840px",
+                height: "600px",
                 borderRadius: "60px",
+                gap: '48px'
               }}
             >
               <div className="flex flex-col items-center gap-4">
-                <h2 className="text-[42pt] font-black text-center text-gray-900 leading-tight">
+                <h2 
+                  className="font-black text-center text-gray-900 leading-tight"
+                  style={{ fontSize: '56px' }}
+                >
                   5회 연속<br />실패하였습니다
                 </h2>
-                <p className="text-[28pt] font-medium text-center text-gray-500">
+                <p 
+                  className="font-medium text-center text-gray-500"
+                  style={{ fontSize: '32px' }}
+                >
                   보안을 위해 잠시 잠금 처리됩니다
                 </p>
               </div>
 
-              <div className="flex flex-col items-center gap-2 bg-blue-50 px-12 py-6 rounded-3xl">
-                <p className="text-[20pt] font-bold text-blue-400 uppercase tracking-widest">
+              <div 
+                className="flex flex-col items-center justify-center bg-blue-50"
+                style={{ width: '500px', height: '220px', borderRadius: '40px', gap: '8px' }}
+              >
+                <p 
+                  className="font-bold text-blue-400 uppercase tracking-widest"
+                  style={{ fontSize: '24px' }}
+                >
                   Try again in
                 </p>
                 <p
-                  className="text-[64pt] font-black tabular-nums tracking-tighter"
+                  className="font-black tabular-nums tracking-tighter"
                   style={{
+                    fontSize: '96px',
                     color: "var(--color-action-primary)",
                   }}
                 >
