@@ -1,0 +1,128 @@
+import { useState, useEffect } from "react";
+
+export function KioskFaceRecognitionProcessingScreen() {
+  const [currentTime, setCurrentTime] = useState("");
+
+  useEffect(() => {
+    const updateTime = () => {
+      const now = new Date();
+      const hours = String(now.getHours()).padStart(2, '0');
+      const minutes = String(now.getMinutes()).padStart(2, '0');
+      setCurrentTime(`${hours}:${minutes}`);
+    };
+
+    updateTime();
+    const interval = setInterval(updateTime, 1000);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  return (
+    <div className="relative w-[1080px] h-[1920px] bg-white overflow-hidden">
+      {/* Top Area - y=0 to y=200 */}
+      <div className="absolute top-0 left-0 w-[1080px] h-[200px] flex items-center justify-between px-[60px]">
+        {/* Service Logo Placeholder */}
+        <div className="w-[140px] h-[80px] bg-gray-300 flex items-center justify-center">
+          <span className="text-gray-600 text-sm">LOGO</span>
+        </div>
+        
+        {/* Current Time */}
+        <div className="text-[20pt] font-medium">
+          {currentTime}
+        </div>
+      </div>
+
+      {/* Camera Preview Area - y=200 to y=800 */}
+      <div 
+        className="absolute left-1/2 -translate-x-1/2 bg-gray-900 overflow-hidden rounded-lg"
+        style={{ top: '200px', width: '960px', height: '600px' }}
+      >
+        {/* Camera Preview Placeholder */}
+        <div className="w-full h-full bg-gradient-to-br from-gray-800 to-gray-900 flex items-center justify-center">
+          <span className="text-gray-500 text-lg">Camera Preview</span>
+        </div>
+
+        {/* Face Guideline Overlay - White Ellipse */}
+        <div 
+          className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 border-4 rounded-full opacity-70"
+          style={{ 
+            width: '400px', 
+            height: '500px',
+            boxShadow: '0 0 0 9999px rgba(0, 0, 0, 0.4)',
+            borderColor: 'var(--color-action-primary)',
+            animation: 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite'
+          }}
+        />
+      </div>
+
+      {/* Instruction Text and Loading Indicator - y=800 to y=1200 */}
+      <div 
+        className="absolute left-0 w-[1080px] flex flex-col items-center justify-center gap-6"
+        style={{ top: '800px', height: '400px' }}
+      >
+        <p 
+          className="text-[28pt] text-center px-[60px]"
+          style={{ color: 'var(--color-text-primary)' }}
+        >
+          인식 중입니다...
+        </p>
+        
+        {/* Circular Loading Indicator */}
+        <div 
+          className="rounded-full shadow-lg"
+          style={{ 
+            width: '120px',
+            height: '120px',
+            border: '12px solid var(--color-action-primary)',
+            borderTopColor: 'transparent',
+            animation: 'spin 1.5s linear infinite'
+          }}
+        />
+      </div>
+
+      {/* Help Section - y=1200 to y=1600 */}
+      <div 
+        className="absolute left-0 w-[1080px] flex flex-col items-center justify-center gap-4"
+        style={{ top: '1200px', height: '400px' }}
+      >
+        <p className="text-[20pt] text-gray-600">
+          인식이 어려우신가요?
+        </p>
+        
+        {/* 직접 입력 Button */}
+        <button
+          className="w-[360px] h-[80px] rounded-lg text-[24pt] font-medium transition-all"
+          style={{
+            backgroundColor: 'var(--color-action-secondary)',
+            color: '#374151',
+          }}
+        >
+          직접 입력
+        </button>
+      </div>
+
+      {/* CSS animations inline */}
+      <style>{`
+        @keyframes pulse {
+          0%, 100% {
+            opacity: 0.7;
+            transform: translate(-50%, -50%) scale(1);
+          }
+          50% {
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1.02);
+          }
+        }
+        
+        @keyframes spin {
+          from {
+            transform: rotate(0deg);
+          }
+          to {
+            transform: rotate(360deg);
+          }
+        }
+      `}</style>
+    </div>
+  );
+}
