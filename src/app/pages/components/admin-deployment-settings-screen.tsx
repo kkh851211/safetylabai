@@ -1,14 +1,16 @@
-import { ArrowLeft, ChevronDown } from "lucide-react";
+import { ArrowLeft, ChevronDown, Lock } from "lucide-react";
 import { useState } from "react";
 
 interface AdminDeploymentSettingsScreenProps {
   headOfficeSyncStatus?: "complete" | "waiting" | "failed";
   branchOfficeSyncStatus?: "complete" | "waiting" | "failed";
+  headOfficeLocked?: boolean;
 }
 
 export function AdminDeploymentSettingsScreen({
   headOfficeSyncStatus = "complete",
   branchOfficeSyncStatus = "waiting",
+  headOfficeLocked = false,
 }: AdminDeploymentSettingsScreenProps) {
   const [headOfficeContent, setHeadOfficeContent] = useState("홍보영상_최종.mp4");
   const [headOfficeTimeout, setHeadOfficeTimeout] = useState("60");
@@ -101,64 +103,104 @@ export function AdminDeploymentSettingsScreen({
         <div className="flex-1 p-8 overflow-y-auto">
           <div className="max-w-4xl mx-auto space-y-8">
             {/* Section 1: Head Office Common Content */}
-            <div className="bg-white rounded-lg p-6 shadow-sm border border-gray-200">
-              <h2 className="text-xl font-bold mb-6">본점 공통 콘텐츠</h2>
+            <div
+              className="rounded-lg p-6 shadow-sm border border-gray-200"
+              style={{
+                backgroundColor: headOfficeLocked
+                  ? "var(--color-bg-default)"
+                  : "white",
+              }}
+            >
+              <div className="flex items-center gap-2 mb-6">
+                <h2 className="text-xl font-bold">본점 공통 콘텐츠</h2>
+                {headOfficeLocked && (
+                  <Lock className="w-4 h-4 text-gray-400" />
+                )}
+              </div>
 
               <div className="space-y-4">
-                {/* Content Dropdown */}
+                {/* Content Dropdown or Static Text */}
                 <div className="flex items-center gap-4">
                   <label className="w-32 text-sm font-medium text-gray-700">
                     콘텐츠
                   </label>
                   <div className="flex-1 flex items-center gap-4">
-                    <div className="relative flex-1">
-                      <select
-                        value={headOfficeContent}
-                        onChange={(e) => setHeadOfficeContent(e.target.value)}
-                        className="w-full px-4 py-3 pr-10 border rounded-lg focus:outline-none focus:ring-2 appearance-none cursor-pointer"
-                        style={{
-                          borderColor: "var(--color-border-default)",
-                        }}
-                      >
-                        <option value="홍보영상_최종.mp4">
-                          홍보영상_최종.mp4
-                        </option>
-                        <option value="신년인사_2026.mp4">
-                          신년인사_2026.mp4
-                        </option>
-                        <option value="안전수칙_영상.mp4">
-                          안전수칙_영상.mp4
-                        </option>
-                      </select>
-                      <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none" />
-                    </div>
+                    {headOfficeLocked ? (
+                      <div className="flex-1">
+                        <span
+                          className="text-sm"
+                          style={{
+                            color: "var(--color-text-disabled)",
+                          }}
+                        >
+                          {headOfficeContent}
+                        </span>
+                      </div>
+                    ) : (
+                      <div className="relative flex-1">
+                        <select
+                          value={headOfficeContent}
+                          onChange={(e) => setHeadOfficeContent(e.target.value)}
+                          className="w-full px-4 py-3 pr-10 border rounded-lg focus:outline-none focus:ring-2 appearance-none cursor-pointer"
+                          style={{
+                            borderColor: "var(--color-border-default)",
+                          }}
+                        >
+                          <option value="홍보영상_최종.mp4">
+                            홍보영상_최종.mp4
+                          </option>
+                          <option value="신년인사_2026.mp4">
+                            신년인사_2026.mp4
+                          </option>
+                          <option value="안전수칙_영상.mp4">
+                            안전수칙_영상.mp4
+                          </option>
+                        </select>
+                        <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none" />
+                      </div>
+                    )}
                     {getSyncStatusBadge(headOfficeSyncStatus)}
                   </div>
                 </div>
 
-                {/* Timeout Input */}
+                {/* Timeout Input or Static Text */}
                 <div className="flex items-center gap-4">
                   <label className="w-32 text-sm font-medium text-gray-700">
                     노출 시간
                   </label>
                   <div className="flex-1 flex items-center gap-4">
-                    <div className="relative">
-                      <input
-                        type="number"
-                        value={headOfficeTimeout}
-                        onChange={(e) => setHeadOfficeTimeout(e.target.value)}
-                        min="10"
-                        max="300"
-                        className="w-40 px-4 py-3 border rounded-lg focus:outline-none focus:ring-2"
-                        style={{
-                          borderColor: "var(--color-border-default)",
-                        }}
-                      />
-                      <span className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 text-sm pointer-events-none">
-                        초
-                      </span>
-                    </div>
-                    <span className="text-gray-400 text-sm">10~300초</span>
+                    {headOfficeLocked ? (
+                      <div className="flex items-center gap-2">
+                        <span
+                          className="text-sm"
+                          style={{
+                            color: "var(--color-text-disabled)",
+                          }}
+                        >
+                          {headOfficeTimeout}초
+                        </span>
+                      </div>
+                    ) : (
+                      <>
+                        <div className="relative">
+                          <input
+                            type="number"
+                            value={headOfficeTimeout}
+                            onChange={(e) => setHeadOfficeTimeout(e.target.value)}
+                            min="10"
+                            max="300"
+                            className="w-40 px-4 py-3 border rounded-lg focus:outline-none focus:ring-2"
+                            style={{
+                              borderColor: "var(--color-border-default)",
+                            }}
+                          />
+                          <span className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 text-sm pointer-events-none">
+                            초
+                          </span>
+                        </div>
+                        <span className="text-gray-400 text-sm">10~300초</span>
+                      </>
+                    )}
                   </div>
                 </div>
               </div>
