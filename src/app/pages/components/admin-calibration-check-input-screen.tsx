@@ -1,6 +1,12 @@
-import { ArrowLeft, Download } from "lucide-react";
+import { ArrowLeft, Download, AlertTriangle } from "lucide-react";
 
-export function AdminCalibrationCheckInputScreen() {
+interface AdminCalibrationCheckInputScreenProps {
+  showFaultWarning?: boolean;
+}
+
+export function AdminCalibrationCheckInputScreen({
+  showFaultWarning = false,
+}: AdminCalibrationCheckInputScreenProps) {
   const checkHistory = [
     {
       datetime: "2024-02-15 14:30",
@@ -136,6 +142,31 @@ export function AdminCalibrationCheckInputScreen() {
               </div>
             </div>
 
+            {/* Warning Banner - shown when fault is selected */}
+            {showFaultWarning && (
+              <div
+                className="rounded-lg border p-4 mb-6 flex items-center gap-3"
+                style={{
+                  backgroundColor: "var(--color-bg-result-deny)",
+                  borderColor: "var(--color-status-deny-text)",
+                }}
+              >
+                <AlertTriangle
+                  className="w-5 h-5 flex-shrink-0"
+                  style={{ color: "var(--color-status-deny-text)" }}
+                  strokeWidth={2.5}
+                />
+                <p
+                  className="text-sm font-medium"
+                  style={{
+                    color: "var(--color-status-deny-text)",
+                  }}
+                >
+                  불량 판정 시 담당 관리자에게 즉시 알림이 발송됩니다
+                </p>
+              </div>
+            )}
+
             {/* Form */}
             <div className="bg-white rounded-lg border border-gray-200 p-6 mb-6">
               <div className="space-y-6">
@@ -150,7 +181,7 @@ export function AdminCalibrationCheckInputScreen() {
                         type="radio"
                         name="result"
                         value="normal"
-                        defaultChecked
+                        defaultChecked={!showFaultWarning}
                         className="w-4 h-4"
                         style={{ accentColor: "var(--color-action-primary)" }}
                       />
@@ -161,6 +192,7 @@ export function AdminCalibrationCheckInputScreen() {
                         type="radio"
                         name="result"
                         value="fault"
+                        defaultChecked={showFaultWarning}
                         className="w-4 h-4"
                         style={{ accentColor: "var(--color-action-primary)" }}
                       />
