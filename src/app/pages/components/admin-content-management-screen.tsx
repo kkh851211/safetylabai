@@ -1,4 +1,4 @@
-import { GripVertical, Trash2, Upload, Settings } from "lucide-react";
+import { GripVertical, Trash2, Upload, Settings, AlertTriangle } from "lucide-react";
 
 interface Content {
   id: number;
@@ -10,10 +10,12 @@ interface Content {
 
 interface AdminContentManagementScreenProps {
   showExpired?: boolean;
+  showDeleteModal?: boolean;
 }
 
 export function AdminContentManagementScreen({
   showExpired = false,
+  showDeleteModal = false,
 }: AdminContentManagementScreenProps) {
   const contents: Content[] = [
     {
@@ -255,6 +257,86 @@ export function AdminContentManagementScreen({
           </div>
         </div>
       </div>
+
+      {/* Delete Confirmation Modal */}
+      {showDeleteModal && (
+        <>
+          {/* Overlay */}
+          <div
+            className="absolute inset-0"
+            style={{
+              backgroundColor: "var(--color-bg-overlay)",
+              opacity: 0.6,
+            }}
+          ></div>
+
+          {/* Modal */}
+          <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+            <div
+              className="relative bg-white flex flex-col items-center justify-center p-8 pointer-events-auto shadow-2xl"
+              style={{
+                width: "560px",
+                height: "240px",
+                borderRadius: "24px",
+              }}
+            >
+              {/* Warning Icon */}
+              <AlertTriangle
+                className="mb-2"
+                style={{
+                  width: "48px",
+                  height: "48px",
+                  color: "#f59e0b", // Direct warning color
+                }}
+              />
+
+              {/* Title */}
+              <h2
+                className="mb-1 font-bold text-center"
+                style={{
+                  fontSize: "20pt",
+                }}
+              >
+                콘텐츠를 삭제하시겠습니까?
+              </h2>
+
+              {/* Subtitle */}
+              <p
+                className="mb-4 text-center text-gray-500"
+                style={{
+                  fontSize: "12pt",
+                }}
+              >
+                기기 캐시는 다음 동기화 시 삭제됩니다
+              </p>
+
+              {/* Buttons */}
+              <div className="flex gap-4">
+                <button
+                  className="text-sm font-medium text-white rounded-lg hover:brightness-95 transition-all"
+                  style={{
+                    width: "240px",
+                    height: "60px",
+                    backgroundColor: "var(--color-action-secondary)",
+                  }}
+                >
+                  취소
+                </button>
+                <button
+                  className="text-sm font-medium text-white rounded-lg hover:brightness-95 transition-all"
+                  style={{
+                    width: "240px",
+                    height: "60px",
+                    backgroundColor: "var(--color-action-danger)",
+                  }}
+                >
+                  삭제
+                </button>
+              </div>
+            </div>
+          </div>
+        </>
+      )}
     </div>
   );
 }
