@@ -1,318 +1,175 @@
-import { ArrowLeft, Camera, Check } from "lucide-react";
+import { ArrowLeft, Camera, Check, AlertTriangle } from "lucide-react";
 
 interface AdminUserRegistrationFormScreenProps {
   hasFaceImage?: boolean;
   isEditMode?: boolean;
+  hasFaceError?: boolean;
 }
 
-export function AdminUserRegistrationFormScreen({ 
-  hasFaceImage = false, 
-  isEditMode = false 
-}: AdminUserRegistrationFormScreenProps) {
+export function AdminUserRegistrationFormScreen({ hasFaceImage = false, isEditMode = false, hasFaceError = false }: AdminUserRegistrationFormScreenProps) {
   return (
-    <div 
-      className="relative overflow-hidden flex"
-      style={{ 
-        width: "1440px", 
-        height: "900px", 
-        backgroundColor: "#F9FAFB",
-        display: 'flex'
-      }}
-    >
+    <div className="relative w-[1440px] h-[900px] bg-gray-50 overflow-hidden flex">
       {/* Left Sidebar */}
-      <div 
-        className="flex flex-col h-full"
-        style={{ 
-          width: "240px", 
-          backgroundColor: "#0F172A",
-          display: 'flex',
-          flexDirection: 'column'
-        }}
-      >
-        <div 
-          className="flex items-center px-6 border-b"
-          style={{ 
-            height: "80px", 
-            borderBottomColor: "rgba(255, 255, 255, 0.1)",
-            display: 'flex',
-            alignItems: 'center'
-          }}
-        >
-          <span style={{ color: 'white', fontSize: '20px', fontWeight: 800, letterSpacing: '-0.025em' }}>
-            ACCESS CONTROL
-          </span>
+      <div className="w-[220px] h-[900px] bg-[#1e293b] flex flex-col">
+        <div className="h-[60px] flex items-center justify-center border-b border-white/10">
+          <span className="text-white text-lg font-bold">ACCESS CONTROL</span>
         </div>
-        <nav style={{ flex: 1, padding: "24px", display: 'flex', flexDirection: 'column', gap: '8px' }}>
-          <div 
-            className="flex items-center px-4 hover:bg-white/5 transition-colors cursor-pointer"
-            style={{ 
-              height: '48px',
-              borderRadius: "12px",
-              color: 'rgba(255, 255, 255, 0.5)',
-              fontSize: '15px',
-              fontWeight: 500,
-              display: 'flex'
-            }}
-          >
+        <nav className="flex-1 p-4">
+          <div className="px-4 py-3 mb-2 text-white/60 hover:text-white hover:bg-white/5 rounded-lg cursor-pointer text-sm">
             실시간 모니터
           </div>
-          <div 
-            className="flex items-center px-4 hover:bg-white/5 transition-colors cursor-pointer"
-            style={{ 
-              height: '48px',
-              borderRadius: "12px",
-              color: 'rgba(255, 255, 255, 0.5)',
-              fontSize: '15px',
-              fontWeight: 500,
-              display: 'flex'
-            }}
-          >
+          <div className="px-4 py-3 mb-2 text-white/60 hover:text-white hover:bg-white/5 rounded-lg cursor-pointer text-sm">
             출입 기록
           </div>
-          <div 
-            className="flex items-center px-4"
-            style={{ 
-              height: '48px',
-              backgroundColor: "rgba(255, 255, 255, 0.05)", 
-              borderRadius: "12px",
-              color: 'white',
-              fontSize: '15px',
-              fontWeight: 600,
-              display: 'flex'
-            }}
-          >
-            사용자 관리
+          <div className="bg-white/10 rounded-lg px-4 py-3 mb-2">
+            <span className="text-white text-sm font-medium">사용자 관리</span>
           </div>
-          <div 
-            className="flex items-center px-4 hover:bg-white/5 transition-colors cursor-pointer"
-            style={{ 
-              height: '48px',
-              borderRadius: "12px",
-              color: 'rgba(255, 255, 255, 0.5)',
-              fontSize: '15px',
-              fontWeight: 500,
-              display: 'flex'
-            }}
-          >
+          <div className="px-4 py-3 mb-2 text-white/60 hover:text-white hover:bg-white/5 rounded-lg cursor-pointer text-sm">
             기기 관리
           </div>
         </nav>
       </div>
 
       {/* Main Content Area */}
-      <div className="flex-1 flex flex-col" style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+      <div className="flex-1 flex flex-col">
         {/* Top Header */}
-        <div 
-          className="bg-white border-b flex items-center px-8 relative"
-          style={{ 
-            height: "80px", 
-            borderColor: "#E5E7EB",
-            display: 'flex',
-            alignItems: 'center'
-          }}
-        >
-          <button 
-            className="p-2 rounded-lg hover:bg-gray-100 transition-colors"
-            style={{ 
-              display: 'flex', 
-              alignItems: 'center', 
-              justifyContent: 'center',
-              color: '#374151'
-            }}
-          >
-            <ArrowLeft style={{ width: '24px', height: '24px' }} />
+        <div className="h-[60px] bg-white border-b border-gray-200 flex items-center px-6 relative">
+          <button className="absolute left-6 p-2 rounded-lg hover:bg-gray-100 transition-colors">
+            <ArrowLeft className="w-5 h-5 text-gray-700" />
           </button>
-          <h1 
-            style={{ 
-              fontSize: '24px', 
-              fontWeight: 800, 
-              color: '#111827',
-              position: 'absolute',
-              left: '50%',
-              transform: 'translateX(-50%)'
-            }}
-          >
+          <h1 className="text-2xl font-bold absolute left-1/2 -translate-x-1/2">
             {isEditMode ? "사용자 수정" : "사용자 등록"}
           </h1>
         </div>
 
-        {/* Main Content Form */}
-        <div className="flex-1 p-12 overflow-y-auto flex flex-col items-center" style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', overflowY: 'auto' }}>
-          <div className="w-[600px] flex flex-col" style={{ width: '600px', display: 'flex', flexDirection: 'column' }}>
-            {/* Info Banner for Edit Mode */}
+        {/* Main Content */}
+        <div className="flex-1 p-6 overflow-y-auto flex flex-col">
+          <div className="max-w-2xl mx-auto w-full">
+            {/* Info Banner */}
             {isEditMode && (
               <div
-                className="mb-8 rounded-2xl flex items-center px-6"
-                style={{ 
-                  height: '56px',
-                  backgroundColor: "rgba(59, 130, 246, 0.1)",
-                  border: '1px solid rgba(59, 130, 246, 0.2)'
+                className="mb-6 px-4 py-3 rounded-lg"
+                style={{
+                  backgroundColor: "var(--color-status-info-bg)",
                 }}
               >
-                <p style={{ fontSize: '15px', fontWeight: 700, color: "#2563EB" }}>
-                  기존 사용자 정보를 수정합니다.
+                <p
+                  className="text-[14pt]"
+                  style={{ color: "var(--color-status-info-text)" }}
+                >
+                  기존 정보를 수정합니다
                 </p>
               </div>
             )}
 
-            {/* Name Input Group */}
-            <div className="mb-8" style={{ marginBottom: '32px' }}>
-              <label 
-                style={{ 
-                  display: 'block', 
-                  fontSize: '15px', 
-                  fontWeight: 700, 
-                  color: '#374151', 
-                  marginBottom: '10px' 
-                }}
-              >
-                이름 <span style={{ color: '#EF4444' }}>(필수)</span>
+            {/* Name Input */}
+            <div className="mb-6">
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                이름 (필수)
               </label>
               <input
                 type="text"
                 placeholder="이름을 입력하세요"
                 defaultValue={hasFaceImage ? "홍길동" : ""}
-                className="w-full border rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all font-medium"
-                style={{ 
-                  height: '56px',
-                  padding: '0 20px',
-                  fontSize: '16px',
-                  borderColor: '#E5E7EB',
-                  color: '#111827',
-                  backgroundColor: 'white'
-                }}
+                className="w-full border border-gray-300 rounded-lg px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
 
-            {/* Department Input Group */}
-            <div className="mb-10" style={{ marginBottom: '40px' }}>
-              <label 
-                style={{ 
-                  display: 'block', 
-                  fontSize: '15px', 
-                  fontWeight: 700, 
-                  color: '#374151', 
-                  marginBottom: '10px' 
-                }}
-              >
-                소속/부서 <span style={{ color: '#9CA3AF', fontWeight: 500 }}>(선택)</span>
+            {/* Department Input */}
+            <div className="mb-8">
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                소속/부서 (선택)
               </label>
               <input
                 type="text"
                 placeholder="소속 또는 부서를 입력하세요"
                 defaultValue={isEditMode ? "안전관리팀" : ""}
-                className="w-full border rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all font-medium"
-                style={{ 
-                  height: '56px',
-                  padding: '0 20px',
-                  fontSize: '16px',
-                  borderColor: '#E5E7EB',
-                  color: '#111827',
-                  backgroundColor: 'white'
-                }}
+                className="w-full border border-gray-300 rounded-lg px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
 
             {/* Face Registration Area */}
-            <div className="mb-12" style={{ marginBottom: '48px' }}>
-              <label 
-                style={{ 
-                  display: 'block', 
-                  fontSize: '15px', 
-                  fontWeight: 700, 
-                  color: '#374151', 
-                  marginBottom: '10px' 
-                }}
-              >
-                안면 데이터 등록
-              </label>
-              
-              {hasFaceImage ? (
-                <div className="flex flex-col items-center">
-                  <div className="relative w-full overflow-hidden rounded-3xl group" style={{ height: '320px', backgroundColor: '#F3F4F6' }}>
+            <div className="mb-8 flex flex-col items-center">
+              {hasFaceError ? (
+                <>
+                  <div
+                    className="w-[400px] h-[300px] border-2 border-dashed rounded-lg flex flex-col items-center justify-center cursor-pointer hover:bg-gray-50 transition-colors mb-3"
+                    style={{ borderColor: "var(--color-action-danger)" }}
+                  >
+                    <Camera className="w-12 h-12 text-gray-400 mb-4" />
+                    <p className="text-[16pt] text-gray-500">
+                      촬영 또는 파일 업로드
+                    </p>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <AlertTriangle
+                      className="w-5 h-5"
+                      style={{ color: "var(--color-action-danger)" }}
+                    />
+                    <p
+                      className="text-[14pt]"
+                      style={{ color: "var(--color-action-danger)" }}
+                    >
+                      얼굴이 감지되지 않았습니다. 다시 등록해 주세요
+                    </p>
+                  </div>
+                </>
+              ) : hasFaceImage ? (
+                <>
+                  <div className="relative w-[400px] h-[300px] mb-3">
                     <img
-                      src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800&h=600&fit=crop"
+                      src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=300&fit=crop"
                       alt="Captured face"
-                      className="w-full h-full object-cover"
+                      className="w-full h-full object-cover rounded-lg"
                     />
                     {/* Checkmark Badge */}
                     <div
-                      className="absolute shadow-xl flex items-center justify-center rounded-2xl"
+                      className="absolute top-3 right-3 w-10 h-10 rounded-full flex items-center justify-center"
                       style={{
-                        top: '24px',
-                        right: '24px',
-                        width: '56px',
-                        height: '56px',
                         backgroundColor: "var(--color-bg-result-allow)",
                       }}
                     >
                       <Check
-                        style={{ width: '32px', height: '32px', color: "var(--color-status-allow-text)" }}
+                        className="w-6 h-6"
+                        style={{ color: "var(--color-status-allow-text)" }}
                       />
                     </div>
                   </div>
                   <button
-                    className="mt-4 text-sm font-bold underline transition-colors hover:text-primary/70"
-                    style={{ color: "var(--primary)" }}
+                    className="text-sm font-medium underline"
+                    style={{ color: "var(--color-action-primary)" }}
                   >
                     재등록
                   </button>
-                </div>
+                </>
               ) : (
                 <div
-                  className="w-full border-2 border-dashed rounded-3xl flex flex-col items-center justify-center cursor-pointer hover:bg-gray-50 transition-all group"
-                  style={{ 
-                    height: '320px',
-                    borderColor: "#E5E7EB",
-                    backgroundColor: 'white'
-                  }}
+                  className="w-[400px] h-[300px] border-2 border-dashed rounded-lg flex flex-col items-center justify-center cursor-pointer hover:bg-gray-50 transition-colors"
+                  style={{ borderColor: "var(--color-border-default)" }}
                 >
-                  <div 
-                    className="mb-4 flex items-center justify-center rounded-3xl group-hover:scale-110 transition-transform"
-                    style={{ 
-                      width: '72px', 
-                      height: '72px', 
-                      backgroundColor: '#F3F4F6',
-                      color: '#9CA3AF'
-                    }}
-                  >
-                    <Camera style={{ width: '32px', height: '32px' }} />
-                  </div>
-                  <p style={{ fontSize: '18px', fontWeight: 700, color: '#4B5563', marginBottom: '4px' }}>
+                  <Camera className="w-12 h-12 text-gray-400 mb-4" />
+                  <p className="text-[16pt] text-gray-500">
                     촬영 또는 파일 업로드
-                  </p>
-                  <p style={{ fontSize: '14px', fontWeight: 500, color: '#9CA3AF' }}>
-                    정면 얼굴이 잘 보이도록 촬영해 주세요
                   </p>
                 </div>
               )}
             </div>
 
-            {/* Footer Buttons */}
-            <div className="flex items-center justify-between" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            {/* Bottom Buttons */}
+            <div className="flex items-center justify-between">
               <button
-                className="rounded-2xl font-bold transition-all active:scale-95 border hover:bg-gray-50"
-                style={{ 
-                  width: '180px',
-                  height: '56px',
-                  backgroundColor: "white",
-                  borderColor: '#E5E7EB',
-                  color: "#374151",
-                  fontSize: '16px'
-                }}
+                className="px-8 py-3 rounded-lg font-medium text-gray-700 hover:brightness-95"
+                style={{ backgroundColor: "var(--color-action-secondary)" }}
               >
                 취소
               </button>
               <button
                 disabled={!hasFaceImage}
-                className="rounded-2xl font-bold text-white transition-all active:scale-95 shadow-lg shadow-blue-500/20"
-                style={{ 
-                  width: '180px',
-                  height: '56px',
-                  backgroundColor: "var(--primary)",
-                  fontSize: '16px',
+                className="px-8 py-3 rounded-lg font-medium text-white"
+                style={{
+                  backgroundColor: "var(--color-action-primary)",
                   opacity: hasFaceImage ? 1 : 0.4,
-                  cursor: hasFaceImage ? 'pointer' : 'not-allowed'
+                  cursor: hasFaceImage ? "pointer" : "not-allowed",
                 }}
               >
                 저장

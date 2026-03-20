@@ -30,6 +30,10 @@
   --color-status-allow-text: #15803D;
   --color-bg-result-deny: #FEF2F2;
   --color-status-deny-text: #B91C1C;
+  
+  --color-status-info-bg: rgba(59, 130, 246, 0.1);
+  --color-status-info-text: #2563EB;
+  --color-border-default: #E5E7EB;
 }
 
 @media (prefers-color-scheme: dark) {
