@@ -1,10 +1,14 @@
-import { ArrowLeft, AlertTriangle } from "lucide-react";
+import { ArrowLeft, AlertTriangle, Loader2 } from "lucide-react";
 
 interface AdminDeviceResetConfirmScreenProps {
   showOverlay?: boolean;
+  isLoading?: boolean;
 }
 
-export function AdminDeviceResetConfirmScreen({ showOverlay = false }: AdminDeviceResetConfirmScreenProps) {
+export function AdminDeviceResetConfirmScreen({ 
+  showOverlay = false,
+  isLoading = false 
+}: AdminDeviceResetConfirmScreenProps) {
   return (
     <div className="relative w-[1440px] h-[900px] bg-gray-50 overflow-hidden flex">
       {/* Left Sidebar */}
@@ -76,10 +80,26 @@ export function AdminDeviceResetConfirmScreen({ showOverlay = false }: AdminDevi
               </div>
             </div>
 
-            {/* Confirmation Text */}
-            <p className="text-center text-lg text-gray-900 mb-12">
-              해당 기기를 원격 리셋하시겠습니까?
-            </p>
+            {/* Middle Section: Confirmation Text or Loading Indicator */}
+            {isLoading ? (
+              <div className="flex flex-col items-center mb-12">
+                <Loader2
+                  className="animate-spin mb-4"
+                  style={{
+                    width: "48px",
+                    height: "48px",
+                    color: "var(--color-action-primary)",
+                  }}
+                />
+                <p className="text-center text-lg text-gray-900">
+                  리셋 명령을 전송 중입니다...
+                </p>
+              </div>
+            ) : (
+              <p className="text-center text-lg text-gray-900 mb-12">
+                해당 기기를 원격 리셋하시겠습니까?
+              </p>
+            )}
 
             {/* Action Buttons */}
             <div className="flex items-center justify-between">
@@ -93,9 +113,13 @@ export function AdminDeviceResetConfirmScreen({ showOverlay = false }: AdminDevi
                 취소
               </button>
               <button
-                className="px-8 py-3 text-base font-medium text-white rounded-lg hover:brightness-95 transition-all"
+                disabled={isLoading}
+                className={`px-8 py-3 text-base font-medium text-white rounded-lg transition-all ${
+                  isLoading ? "cursor-not-allowed" : "hover:brightness-95"
+                }`}
                 style={{
                   backgroundColor: "var(--color-action-danger)",
+                  opacity: isLoading ? 0.4 : 1,
                 }}
               >
                 리셋 실행
@@ -106,7 +130,7 @@ export function AdminDeviceResetConfirmScreen({ showOverlay = false }: AdminDevi
       </div>
 
       {/* Modal Overlay */}
-      {showOverlay && (
+      {showOverlay && !isLoading && (
         <div
           className="absolute inset-0 flex items-center justify-center"
           style={{ backgroundColor: "var(--color-bg-overlay)" }}
