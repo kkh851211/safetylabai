@@ -32,7 +32,9 @@ const IndexPage: React.FC = () => {
       const name = codeMatch ? codeMatch[2] : fullTitle;
 
       // Special categorization for K-1, K-2, and K-3
-      if (code.startsWith('K-1-')) {
+      if (code === 'K-3-03') {
+        category = 'ADDITIONAL_KIOSK';
+      } else if (code.startsWith('K-1-')) {
         category = 'K-1';
       } else if (code.startsWith('K-2-')) {
         category = 'K-2';
@@ -86,6 +88,7 @@ const IndexPage: React.FC = () => {
   // Define super-categories grouping
   const superCategoryMap: Record<string, string[]> = {
     '키오스크 화면': ['K-1', 'K-2', 'K-3', 'K-4'],
+    '추가 화면 - 키오스크': ['ADDITIONAL_KIOSK'],
     '관리자': ['ADMIN', 'A-1', 'A-2', 'A-3', 'A-4', 'A-5', 'A-6'],
     '기타 페이지': ['기본 페이지']
   };
