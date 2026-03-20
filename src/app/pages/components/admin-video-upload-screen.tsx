@@ -4,11 +4,13 @@ import { useState } from "react";
 interface AdminVideoUploadScreenProps {
   hasFile?: boolean;
   errorState?: "size" | "format" | "duration" | null;
+  uploadProgress?: number | null;
 }
 
 export function AdminVideoUploadScreen({
   hasFile = false,
   errorState = null,
+  uploadProgress = null,
 }: AdminVideoUploadScreenProps) {
   const [isMuted, setIsMuted] = useState(true);
 
@@ -91,7 +93,7 @@ export function AdminVideoUploadScreen({
           <button
             className="absolute left-6 flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg hover:bg-gray-100 transition-all"
             style={{
-              color: "#6B7280", // var(--secondary)
+              color: "var(--color-action-secondary)",
             }}
           >
             <ArrowLeft className="w-5 h-5" />
@@ -147,13 +149,45 @@ export function AdminVideoUploadScreen({
                 />
               </div>
 
-              {/* File Spec Note */}
-              <p
-                className="text-gray-400 text-center mb-8"
-                style={{ fontSize: "14pt" }}
-              >
-                MP4 · 최대 500MB · 최대 3분
-              </p>
+              {uploadProgress !== null ? (
+                <>
+                  {/* Progress Bar */}
+                  <div className="mb-8">
+                    <div
+                      className="w-full bg-gray-200 rounded-full overflow-hidden"
+                      style={{ height: "8px" }}
+                    >
+                      <div
+                        className="h-full transition-all duration-300"
+                        style={{
+                          width: `${uploadProgress}%`,
+                          backgroundColor: "var(--color-action-primary)",
+                        }}
+                      />
+                    </div>
+                    <div className="flex justify-end mt-2">
+                      <p
+                        style={{
+                          fontSize: "14pt",
+                          color: "var(--color-text-secondary)",
+                        }}
+                      >
+                        업로드 중... {uploadProgress}%
+                      </p>
+                    </div>
+                  </div>
+                </>
+              ) : (
+                <>
+                  {/* File Spec Note */}
+                  <p
+                    className="text-gray-400 text-center mb-8"
+                    style={{ fontSize: "14pt" }}
+                  >
+                    MP4 · 최대 500MB · 최대 3분
+                  </p>
+                </>
+              )}
             </>
           ) : errorState ? (
             <>
@@ -299,25 +333,24 @@ export function AdminVideoUploadScreen({
           {/* Bottom Buttons */}
           <div className="flex items-center justify-between pt-6 max-w-2xl mx-auto w-full">
             <button
-              className="px-6 py-3 text-sm font-medium rounded-lg hover:brightness-95 transition-all"
+              className="px-6 py-3 text-sm font-medium text-white rounded-lg hover:brightness-95 transition-all"
               style={{
                 backgroundColor: "var(--color-action-secondary)",
-                color: "var(--color-text-primary)",
               }}
             >
               취소
             </button>
             <button
               className={`px-6 py-3 text-sm font-medium text-white rounded-lg transition-all ${
-                hasFile ? "hover:brightness-95" : "cursor-not-allowed"
+                hasFile && uploadProgress === null ? "hover:brightness-95" : "cursor-not-allowed"
               }`}
               style={{
                 backgroundColor: "var(--color-action-primary)",
-                opacity: hasFile ? 1 : 0.4,
+                opacity: hasFile && uploadProgress === null ? 1 : 0.4,
               }}
-              disabled={!hasFile}
+              disabled={!hasFile || uploadProgress !== null}
             >
-              업로드
+              {uploadProgress !== null ? "업로드 중" : "업로드"}
             </button>
           </div>
         </div>
