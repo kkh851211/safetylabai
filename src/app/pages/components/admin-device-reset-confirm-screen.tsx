@@ -1,16 +1,21 @@
-import { ArrowLeft, AlertTriangle, Loader2, CheckCircle } from "lucide-react";
+import { ArrowLeft, AlertTriangle, Loader2, CheckCircle, XCircle, Clock } from "lucide-react";
+
+export type ResetStatus = 'confirm' | 'overlay' | 'loading' | 'success' | 'failure' | 'no-response';
 
 interface AdminDeviceResetConfirmScreenProps {
-  showOverlay?: boolean;
-  isLoading?: boolean;
-  isSuccess?: boolean;
+  status: ResetStatus;
 }
 
 export function AdminDeviceResetConfirmScreen({ 
-  showOverlay = false,
-  isLoading = false,
-  isSuccess = false 
+  status = 'confirm'
 }: AdminDeviceResetConfirmScreenProps) {
+  const isConfirm = status === 'confirm' || status === 'overlay';
+  const showOverlay = status === 'overlay';
+  const isLoading = status === 'loading';
+  const isSuccess = status === 'success';
+  const isFailure = status === 'failure';
+  const isNoResponse = status === 'no-response';
+
   return (
     <div className="relative w-[1440px] h-[900px] bg-gray-50 overflow-hidden flex">
       {/* Left Sidebar */}
@@ -82,49 +87,87 @@ export function AdminDeviceResetConfirmScreen({
               </div>
             </div>
 
-            {/* Middle Section: Confirmation, Loading, or Success */}
-            {isSuccess ? (
-              <div className="flex flex-col items-center mb-12">
-                <CheckCircle
-                  className="mb-4"
-                  style={{
-                    width: "64px",
-                    height: "64px",
-                    color: "var(--color-status-allow-text)",
-                  }}
-                />
-                <p
-                  className="text-center text-lg"
-                  style={{
-                    color: "var(--color-status-allow-text)",
-                  }}
-                >
-                  리셋 명령이 성공적으로 전송되었습니다
-                </p>
-              </div>
-            ) : isLoading ? (
-              <div className="flex flex-col items-center mb-12">
-                <Loader2
-                  className="animate-spin mb-4"
-                  style={{
-                    width: "48px",
-                    height: "48px",
-                    color: "var(--color-action-primary)",
-                  }}
-                />
+            {/* Middle Section: Based on status */}
+            <div className="flex flex-col items-center mb-12">
+              {isSuccess && (
+                <>
+                  <CheckCircle
+                    className="mb-4"
+                    style={{
+                      width: "64px",
+                      height: "64px",
+                      color: "var(--color-status-allow-text)",
+                    }}
+                  />
+                  <p
+                    className="text-center text-lg"
+                    style={{ color: "var(--color-status-allow-text)" }}
+                  >
+                    리셋 명령이 성공적으로 전송되었습니다
+                  </p>
+                </>
+              )}
+              {isFailure && (
+                <>
+                  <XCircle
+                    className="mb-4"
+                    style={{
+                      width: "64px",
+                      height: "64px",
+                      color: "var(--color-status-deny-text)",
+                    }}
+                  />
+                  <p
+                    className="text-center text-lg"
+                    style={{ color: "var(--color-status-deny-text)" }}
+                  >
+                    리셋 명령 전송에 실패하였습니다
+                  </p>
+                </>
+              )}
+              {isNoResponse && (
+                <>
+                  <Clock
+                    className="mb-4"
+                    style={{
+                      width: "64px",
+                      height: "64px",
+                      color: "var(--color-action-warning)",
+                    }}
+                  />
+                  <p
+                    className="text-center text-lg"
+                    style={{ color: "var(--color-action-warning)" }}
+                  >
+                    기기 응답이 없습니다. 재연결 후 자동 실행됩니다
+                  </p>
+                </>
+              )}
+              {isLoading && (
+                <>
+                  <Loader2
+                    className="animate-spin mb-4"
+                    style={{
+                      width: "48px",
+                      height: "48px",
+                      color: "var(--color-action-primary)",
+                    }}
+                  />
+                  <p className="text-center text-lg text-gray-900">
+                    리셋 명령을 전송 중입니다...
+                  </p>
+                </>
+              )}
+              {isConfirm && (
                 <p className="text-center text-lg text-gray-900">
-                  리셋 명령을 전송 중입니다...
+                  해당 기기를 원격 리셋하시겠습니까?
                 </p>
-              </div>
-            ) : (
-              <p className="text-center text-lg text-gray-900 mb-12">
-                해당 기기를 원격 리셋하시겠습니까?
-              </p>
-            )}
+              )}
+            </div>
 
             {/* Action Buttons */}
             <div className="flex items-center justify-center w-full">
-              {isSuccess ? (
+              {(isSuccess || isFailure || isNoResponse) ? (
                 <button
                   className="text-base font-medium text-white rounded-lg hover:brightness-95 transition-all"
                   style={{
@@ -166,7 +209,7 @@ export function AdminDeviceResetConfirmScreen({
       </div>
 
       {/* Modal Overlay */}
-      {showOverlay && !isLoading && !isSuccess && (
+      {showOverlay && (
         <div
           className="absolute inset-0 flex items-center justify-center"
           style={{ backgroundColor: "var(--color-bg-overlay)" }}

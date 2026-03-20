@@ -6,7 +6,7 @@ export const title = "A-3-02-1 원격 리셋 - 실행 전 (기본)";
 export default function AdminDeviceResetConfirmPage() {
   return (
     <AdminPageLayout>
-      <AdminDeviceResetConfirmScreen />
+      <AdminDeviceResetConfirmScreen status="confirm" />
     </AdminPageLayout>
   );
 }

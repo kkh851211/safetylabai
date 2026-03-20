@@ -6,7 +6,7 @@ export const title = "A-3-02-3 원격 리셋 - 처리 중";
 export default function AdminDeviceResetLoadingPage() {
   return (
     <AdminPageLayout>
-      <AdminDeviceResetConfirmScreen isLoading={true} />
+      <AdminDeviceResetConfirmScreen status="loading" />
     </AdminPageLayout>
   );
 }
