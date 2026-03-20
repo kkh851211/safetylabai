@@ -1,6 +1,10 @@
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, Lock } from "lucide-react";
 
-export function AdminDeviceManagementScreen() {
+interface AdminDeviceManagementScreenProps {
+  canReset?: boolean;
+}
+
+export function AdminDeviceManagementScreen({ canReset = true }: AdminDeviceManagementScreenProps) {
   const devices = [
     {
       id: "DEVICE-001",
@@ -191,14 +195,28 @@ export function AdminDeviceManagementScreen() {
                       {device.lastConnection}
                     </td>
                     <td className="px-6 py-4 text-center">
-                      <button
-                        className="px-4 py-2 text-sm font-medium text-white rounded-lg hover:brightness-95 transition-all"
-                        style={{
-                          backgroundColor: "var(--color-action-primary)",
-                        }}
-                      >
-                        원격 리셋
-                      </button>
+                      {canReset ? (
+                        <button
+                          className="px-4 py-2 text-sm font-medium text-white rounded-lg hover:brightness-95 transition-all"
+                          style={{
+                            backgroundColor: "var(--color-action-primary)",
+                          }}
+                        >
+                          원격 리셋
+                        </button>
+                      ) : (
+                        <button
+                          disabled
+                          className="px-4 py-2 text-sm font-medium text-white rounded-lg cursor-not-allowed flex items-center gap-2 mx-auto"
+                          style={{
+                            backgroundColor: "var(--color-action-secondary)",
+                            opacity: 0.4,
+                          }}
+                        >
+                          <Lock className="w-4 h-4" />
+                          원격 리셋
+                        </button>
+                      )}
                     </td>
                   </tr>
                 ))}
