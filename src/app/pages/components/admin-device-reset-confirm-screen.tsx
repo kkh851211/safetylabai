@@ -1,6 +1,10 @@
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, AlertTriangle } from "lucide-react";
 
-export function AdminDeviceResetConfirmScreen() {
+interface AdminDeviceResetConfirmScreenProps {
+  showOverlay?: boolean;
+}
+
+export function AdminDeviceResetConfirmScreen({ showOverlay = false }: AdminDeviceResetConfirmScreenProps) {
   return (
     <div className="relative w-[1440px] h-[900px] bg-gray-50 overflow-hidden flex">
       {/* Left Sidebar */}
@@ -100,6 +104,70 @@ export function AdminDeviceResetConfirmScreen() {
           </div>
         </div>
       </div>
+
+      {/* Modal Overlay */}
+      {showOverlay && (
+        <div
+          className="absolute inset-0 flex items-center justify-center"
+          style={{ backgroundColor: "var(--color-bg-overlay)" }}
+        >
+          {/* Modal */}
+          <div
+            className="bg-white flex flex-col items-center justify-center p-8"
+            style={{
+              width: "560px",
+              height: "260px",
+              borderRadius: "24px",
+            }}
+          >
+            {/* Warning Icon */}
+            <div
+              className="rounded-full flex items-center justify-center mb-4"
+              style={{
+                width: "48px",
+                height: "48px",
+                backgroundColor: "var(--color-action-warning)",
+              }}
+            >
+              <AlertTriangle className="w-6 h-6 text-white" />
+            </div>
+
+            {/* Title */}
+            <h2 className="text-2xl font-bold text-gray-900 mb-2">
+              정말 리셋하시겠습니까?
+            </h2>
+
+            {/* Subtitle */}
+            <p className="text-base text-gray-500 mb-8">
+              리셋 후 키오스크가 재시작됩니다
+            </p>
+
+            {/* Buttons */}
+            <div className="flex items-center gap-4">
+              <button
+                className="text-base font-medium text-white rounded-lg transition-colors"
+                style={{
+                  width: "240px",
+                  height: "60px",
+                  backgroundColor: "var(--color-action-secondary)",
+                }}
+              >
+                취소
+              </button>
+              <button
+                className="text-base font-medium text-white rounded-lg hover:brightness-95 transition-all"
+                style={{
+                  width: "240px",
+                  height: "60px",
+                  backgroundColor: "var(--color-action-danger)",
+                }}
+              >
+                리셋 실행
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
