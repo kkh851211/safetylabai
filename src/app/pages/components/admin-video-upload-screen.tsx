@@ -1,7 +1,13 @@
-import { ArrowLeft, Upload, Calendar } from "lucide-react";
+import { ArrowLeft, Upload, Calendar, CheckCircle, FileVideo } from "lucide-react";
 import { useState } from "react";
 
-export function AdminVideoUploadScreen() {
+interface AdminVideoUploadScreenProps {
+  hasFile?: boolean;
+}
+
+export function AdminVideoUploadScreen({
+  hasFile = false,
+}: AdminVideoUploadScreenProps) {
   const [isMuted, setIsMuted] = useState(true);
 
   // Calculate default dates (today ~ 30 days later)
@@ -69,28 +75,83 @@ export function AdminVideoUploadScreen() {
 
         {/* Main Content */}
         <div className="flex-1 p-8 overflow-y-auto flex flex-col">
-          {/* Upload Drop Zone */}
-          <div
-            className="w-full flex flex-col items-center justify-center cursor-pointer hover:bg-gray-50/50 transition-colors mb-2"
-            style={{
-              height: "200px",
-              border: "2px dashed var(--color-border-default)",
-              borderRadius: "12px",
-            }}
-          >
-            <Upload className="w-12 h-12 text-gray-400 mb-4" />
-            <p className="text-gray-500" style={{ fontSize: "16pt" }}>
-              파일을 드래그하거나 클릭하여 선택하세요
-            </p>
-          </div>
+          {hasFile ? (
+            <>
+              {/* File Preview Card */}
+              <div
+                className="w-full bg-white p-6 mb-2 relative"
+                style={{
+                  height: "200px",
+                  border: "1px solid var(--color-border-default)",
+                  borderRadius: "12px",
+                }}
+              >
+                <div className="flex items-center gap-6 h-full">
+                  {/* Video Thumbnail Placeholder */}
+                  <div
+                    className="bg-gray-200 rounded-lg flex items-center justify-center flex-shrink-0"
+                    style={{ width: "240px", height: "135px" }}
+                  >
+                    <FileVideo className="w-16 h-16 text-gray-400" />
+                  </div>
 
-          {/* File Spec Note */}
-          <p
-            className="text-gray-400 text-center mb-8"
-            style={{ fontSize: "14pt" }}
-          >
-            MP4 · 최대 500MB · 최대 3분
-          </p>
+                  {/* File Info */}
+                  <div className="flex flex-col justify-center">
+                    <h3 className="font-bold mb-2" style={{ fontSize: "16pt" }}>
+                      홍보영상_최종.mp4
+                    </h3>
+                    <p className="text-gray-500" style={{ fontSize: "14pt" }}>
+                      245MB · 1분 32초
+                    </p>
+                  </div>
+                </div>
+
+                {/* Green Checkmark Badge */}
+                <CheckCircle
+                  className="absolute top-4 right-4"
+                  style={{
+                    width: "32px",
+                    height: "32px",
+                    color: "var(--color-status-allow-text)",
+                    fill: "currentColor",
+                  }}
+                />
+              </div>
+
+              {/* File Spec Note */}
+              <p
+                className="text-gray-400 text-center mb-8"
+                style={{ fontSize: "14pt" }}
+              >
+                MP4 · 최대 500MB · 최대 3분
+              </p>
+            </>
+          ) : (
+            <>
+              {/* Upload Drop Zone */}
+              <div
+                className="w-full flex flex-col items-center justify-center cursor-pointer hover:bg-gray-50/50 transition-colors mb-2"
+                style={{
+                  height: "200px",
+                  border: "2px dashed var(--color-border-default)",
+                  borderRadius: "12px",
+                }}
+              >
+                <Upload className="w-12 h-12 text-gray-400 mb-4" />
+                <p className="text-gray-500" style={{ fontSize: "16pt" }}>
+                  파일을 드래그하거나 클릭하여 선택하세요
+                </p>
+              </div>
+
+              {/* File Spec Note */}
+              <p
+                className="text-gray-400 text-center mb-8"
+                style={{ fontSize: "14pt" }}
+              >
+                MP4 · 최대 500MB · 최대 3분
+              </p>
+            </>
+          )}
 
           {/* Form Section */}
           <div className="max-w-2xl mx-auto w-full space-y-6">
@@ -168,12 +229,14 @@ export function AdminVideoUploadScreen() {
               취소
             </button>
             <button
-              className="px-6 py-3 text-sm font-medium text-white rounded-lg cursor-not-allowed"
+              className={`px-6 py-3 text-sm font-medium text-white rounded-lg transition-all ${
+                hasFile ? "hover:brightness-95" : "cursor-not-allowed"
+              }`}
               style={{
                 backgroundColor: "var(--color-action-primary)",
-                opacity: 0.4,
+                opacity: hasFile ? 1 : 0.4,
               }}
-              disabled
+              disabled={!hasFile}
             >
               업로드
             </button>
