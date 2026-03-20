@@ -313,11 +313,12 @@ export function AdminContentManagementScreen({
               {/* Buttons */}
               <div className="flex gap-4">
                 <button
-                  className="text-sm font-medium text-white rounded-lg hover:brightness-95 transition-all"
+                  className="text-sm font-medium rounded-lg hover:brightness-95 transition-all"
                   style={{
                     width: "240px",
                     height: "60px",
                     backgroundColor: "var(--color-action-secondary)",
+                    color: "var(--color-text-primary)",
                   }}
                 >
                   취소
