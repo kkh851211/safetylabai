@@ -1,13 +1,15 @@
-import { ArrowLeft, AlertTriangle, Loader2 } from "lucide-react";
+import { ArrowLeft, AlertTriangle, Loader2, CheckCircle } from "lucide-react";
 
 interface AdminDeviceResetConfirmScreenProps {
   showOverlay?: boolean;
   isLoading?: boolean;
+  isSuccess?: boolean;
 }
 
 export function AdminDeviceResetConfirmScreen({ 
   showOverlay = false,
-  isLoading = false 
+  isLoading = false,
+  isSuccess = false 
 }: AdminDeviceResetConfirmScreenProps) {
   return (
     <div className="relative w-[1440px] h-[900px] bg-gray-50 overflow-hidden flex">
@@ -80,8 +82,27 @@ export function AdminDeviceResetConfirmScreen({
               </div>
             </div>
 
-            {/* Middle Section: Confirmation Text or Loading Indicator */}
-            {isLoading ? (
+            {/* Middle Section: Confirmation, Loading, or Success */}
+            {isSuccess ? (
+              <div className="flex flex-col items-center mb-12">
+                <CheckCircle
+                  className="mb-4"
+                  style={{
+                    width: "64px",
+                    height: "64px",
+                    color: "var(--color-status-allow-text)",
+                  }}
+                />
+                <p
+                  className="text-center text-lg"
+                  style={{
+                    color: "var(--color-status-allow-text)",
+                  }}
+                >
+                  리셋 명령이 성공적으로 전송되었습니다
+                </p>
+              </div>
+            ) : isLoading ? (
               <div className="flex flex-col items-center mb-12">
                 <Loader2
                   className="animate-spin mb-4"
@@ -102,35 +123,50 @@ export function AdminDeviceResetConfirmScreen({
             )}
 
             {/* Action Buttons */}
-            <div className="flex items-center justify-between">
-              <button
-                className="px-8 py-3 text-base font-medium rounded-lg transition-colors"
-                style={{
-                  backgroundColor: "var(--color-action-secondary)",
-                  color: "white",
-                }}
-              >
-                취소
-              </button>
-              <button
-                disabled={isLoading}
-                className={`px-8 py-3 text-base font-medium text-white rounded-lg transition-all ${
-                  isLoading ? "cursor-not-allowed" : "hover:brightness-95"
-                }`}
-                style={{
-                  backgroundColor: "var(--color-action-danger)",
-                  opacity: isLoading ? 0.4 : 1,
-                }}
-              >
-                리셋 실행
-              </button>
+            <div className="flex items-center justify-center w-full">
+              {isSuccess ? (
+                <button
+                  className="text-base font-medium text-white rounded-lg hover:brightness-95 transition-all"
+                  style={{
+                    width: "240px",
+                    height: "60px",
+                    backgroundColor: "var(--color-action-primary)",
+                  }}
+                >
+                  확인
+                </button>
+              ) : (
+                <div className="flex items-center justify-between w-full">
+                  <button
+                    className="px-8 py-3 text-base font-medium rounded-lg transition-colors"
+                    style={{
+                      backgroundColor: "var(--color-action-secondary)",
+                      color: "white",
+                    }}
+                  >
+                    취소
+                  </button>
+                  <button
+                    disabled={isLoading}
+                    className={`px-8 py-3 text-base font-medium text-white rounded-lg transition-all ${
+                      isLoading ? "cursor-not-allowed" : "hover:brightness-95"
+                    }`}
+                    style={{
+                      backgroundColor: "var(--color-action-danger)",
+                      opacity: isLoading ? 0.4 : 1,
+                    }}
+                  >
+                    리셋 실행
+                  </button>
+                </div>
+              )}
             </div>
           </div>
         </div>
       </div>
 
       {/* Modal Overlay */}
-      {showOverlay && !isLoading && (
+      {showOverlay && !isLoading && !isSuccess && (
         <div
           className="absolute inset-0 flex items-center justify-center"
           style={{ backgroundColor: "var(--color-bg-overlay)" }}
