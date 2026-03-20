@@ -1,12 +1,14 @@
-import { ArrowLeft, Upload, Calendar, CheckCircle, FileVideo } from "lucide-react";
+import { ArrowLeft, Upload, Calendar, CheckCircle, FileVideo, AlertTriangle } from "lucide-react";
 import { useState } from "react";
 
 interface AdminVideoUploadScreenProps {
   hasFile?: boolean;
+  errorState?: "size" | "format" | "duration" | null;
 }
 
 export function AdminVideoUploadScreen({
   hasFile = false,
+  errorState = null,
 }: AdminVideoUploadScreenProps) {
   const [isMuted, setIsMuted] = useState(true);
 
@@ -24,6 +26,33 @@ export function AdminVideoUploadScreen({
 
   const [startDate, setStartDate] = useState(formatDate(today));
   const [endDate, setEndDate] = useState(formatDate(thirtyDaysLater));
+
+  // Error messages based on error state
+  const getErrorMessage = () => {
+    switch (errorState) {
+      case "size":
+        return "500MB 이하 파일만 업로드 가능합니다";
+      case "format":
+        return "MP4 형식의 파일만 업로드 가능합니다";
+      case "duration":
+        return "3분 이하의 영상만 업로드 가능합니다";
+      default:
+        return "";
+    }
+  };
+
+  const getErrorFileName = () => {
+    switch (errorState) {
+      case "size":
+        return "홍보영상_최종.mp4";
+      case "format":
+        return "홍보영상_최종.avi";
+      case "duration":
+        return "홍보영상_최종.mp4";
+      default:
+        return "";
+    }
+  };
 
   return (
     <div className="relative w-[1440px] h-[900px] bg-gray-50 overflow-hidden flex">
@@ -125,6 +154,56 @@ export function AdminVideoUploadScreen({
               >
                 MP4 · 최대 500MB · 최대 3분
               </p>
+            </>
+          ) : errorState ? (
+            <>
+              {/* Upload Drop Zone with Error */}
+              <div
+                className="w-full flex flex-col items-center justify-center cursor-pointer hover:bg-gray-50/50 transition-colors mb-2"
+                style={{
+                  height: "200px",
+                  border: `2px dashed var(--color-action-danger)`,
+                  borderRadius: "12px",
+                }}
+              >
+                <Upload
+                  className="mb-4"
+                  style={{
+                    width: "48px",
+                    height: "48px",
+                    color: "var(--color-action-danger)",
+                  }}
+                />
+                <p
+                  className="font-medium"
+                  style={{
+                    fontSize: "16pt",
+                    color: "var(--color-action-danger)",
+                  }}
+                >
+                  {getErrorFileName()}
+                </p>
+              </div>
+
+              {/* Error Message */}
+              <div className="flex items-center justify-center gap-2 mb-8">
+                <AlertTriangle
+                  style={{
+                    width: "20px",
+                    height: "20px",
+                    color: "var(--color-action-danger)",
+                  }}
+                />
+                <p
+                  className="font-medium"
+                  style={{
+                    fontSize: "14pt",
+                    color: "var(--color-action-danger)",
+                  }}
+                >
+                  {getErrorMessage()}
+                </p>
+              </div>
             </>
           ) : (
             <>
