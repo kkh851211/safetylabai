@@ -1,7 +1,21 @@
 import { GripVertical, Trash2, Upload, Settings } from "lucide-react";
 
-export function AdminContentManagementScreen() {
-  const contents = [
+interface Content {
+  id: number;
+  filename: string;
+  validPeriod: string;
+  registeredDate: string;
+  isExpired?: boolean;
+}
+
+interface AdminContentManagementScreenProps {
+  showExpired?: boolean;
+}
+
+export function AdminContentManagementScreen({
+  showExpired = false,
+}: AdminContentManagementScreenProps) {
+  const contents: Content[] = [
     {
       id: 1,
       filename: "welcome_video_2024.mp4",
@@ -17,8 +31,9 @@ export function AdminContentManagementScreen() {
     {
       id: 3,
       filename: "company_intro.mp4",
-      validPeriod: "2024-03-01 ~ 2024-06-30",
+      validPeriod: showExpired ? "만료" : "2024-03-01 ~ 2024-06-30",
       registeredDate: "2024-02-28",
+      isExpired: showExpired,
     },
     {
       id: 4,
@@ -127,24 +142,60 @@ export function AdminContentManagementScreen() {
                   {contents.map((content, index) => (
                     <tr
                       key={content.id}
-                      className={`bg-white hover:bg-gray-50 transition-colors ${
+                      className={`transition-colors ${
                         index !== contents.length - 1
                           ? "border-b border-gray-200"
                           : ""
                       }`}
+                      style={{
+                        backgroundColor: content.isExpired ? "#f5f5f5" : "white",
+                      }}
                     >
                       <td className="px-4 py-4">
-                        <button className="cursor-grab active:cursor-grabbing text-gray-400 hover:text-gray-600">
-                          <GripVertical className="w-5 h-5" />
-                        </button>
+                        {content.isExpired ? (
+                          <div className="w-5 h-5 opacity-30">
+                            <GripVertical className="w-5 h-5 text-gray-400" />
+                          </div>
+                        ) : (
+                          <button className="cursor-grab active:cursor-grabbing text-gray-400 hover:text-gray-600">
+                            <GripVertical className="w-5 h-5" />
+                          </button>
+                        )}
                       </td>
-                      <td className="px-6 py-4 text-sm text-gray-900">
+                      <td
+                        className="px-6 py-4 text-sm"
+                        style={{
+                          color: content.isExpired
+                            ? "var(--color-text-disabled)"
+                            : "#111827",
+                        }}
+                      >
                         {content.filename}
                       </td>
-                      <td className="px-6 py-4 text-sm text-gray-900">
-                        {content.validPeriod}
+                      <td className="px-6 py-4 text-sm">
+                        {content.isExpired ? (
+                          <span
+                            style={{
+                              color: "var(--color-action-danger)",
+                              fontWeight: "500",
+                            }}
+                          >
+                            {content.validPeriod}
+                          </span>
+                        ) : (
+                          <span style={{ color: "#111827" }}>
+                            {content.validPeriod}
+                          </span>
+                        )}
                       </td>
-                      <td className="px-6 py-4 text-sm text-gray-900">
+                      <td
+                        className="px-6 py-4 text-sm"
+                        style={{
+                          color: content.isExpired
+                            ? "var(--color-text-disabled)"
+                            : "#111827",
+                        }}
+                      >
                         {content.registeredDate}
                       </td>
                       <td className="px-6 py-4 text-center">
