@@ -41,6 +41,12 @@ const IndexPage: React.FC = () => {
       } else if (code.startsWith('K-4-')) {
         category = 'K-4';
       } else if (code.startsWith('A-1-')) {
+        category = 'A-1';
+      } else if (code.startsWith('A-2-')) {
+        category = 'A-2';
+      } else if (code.startsWith('A-3-')) {
+        category = 'A-3';
+      } else if (category.toLowerCase() === 'admin') {
         category = 'ADMIN';
       } else if (category.toLowerCase() === 'kiosk') {
         category = 'K-1';
@@ -74,7 +80,7 @@ const IndexPage: React.FC = () => {
   // Define super-categories grouping
   const superCategoryMap: Record<string, string[]> = {
     '키오스크 화면': ['K-1', 'K-2', 'K-3', 'K-4'],
-    '관리자': ['ADMIN', 'A-1', 'A-2'],
+    '관리자': ['ADMIN', 'A-1', 'A-2', 'A-3'],
     '기타 페이지': ['기본 페이지']
   };
 
